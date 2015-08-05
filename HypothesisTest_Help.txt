@@ -1,0 +1,170 @@
+0)First screen help, Global help:
+Mention brief help about parametric and non-parametric.
+
+**Some help, somewhere about how to decide which test to choose.
+
+
+
+1)t-test: I)One-sample, II)Two Sample, III)Paired
+
+A)Brief description for each type of the test.
+B)Requirements particular to each test.
+C)Global comments like "press back to go to the prev screen, home button to go to main screen"
+D)Comments about constraints on input, like only numeric values allowed, select 2 columns, etc.
+E)Mention what input options we provide: example enter sample values or upload a file.
+
+To do:
+1)Population Mean
+2)Population SD
+3)Population Size
+4)Sample Mean
+5)Sample SD
+6)Sample Size
+7)Null and Alternate Hypotheses- what are they, will either be selected automatically on selection of columns, how to enter it.
+8)Singificance value.
+9)**Type I, Type II??**
+10)Two sets of values/data to be input for two-sampled t-test.
+11)For matched pairs t-test: two data to be input, same number of elements.
+
+2)Chi-squared test. I)Goodness of fit II)Test of Independence.
+
+A)Brief Description of both the types.
+B)Test-specific help.
+
+To do:
+1)Mention that the input must be categorical data with at least 2 levels.
+2)Mention how to input expected values. Also mention that the level names must match. Also mention all the options for inputting the values.
+3)In independence test, mention that it is allowed to input contingency tables as well as the csv.-For this, mention what contingency table is.
+4)
+
+
+
+
+                                                                        **Help Text Begins**
+
+
+
+0)First Screen Help:
+
+Please select the type of test you want to conduct.
+
+**Tentative:**
+
+Parametric Test: More suited for numerical data.
+
+*On clicking on parametric test* : Please select which parametric test you want to conduct.
+
+1)t test: Population Mean needs to be known beforehand. Sample means, sample sizes and sample Standard Deviations to be input or can be caluclated from the sample data input by the user. 
+
+
+Non-Paramteric Test: More suited for categorical data.
+
+*On clicking on non-parametric test* : Please select which non-parametric test you want to conduct.
+
+1)Chi-squared test: You are required to provide categorical variable(s) with at least two levels. 
+
+
+
+
+                                                                       ***1)t-test***
+
+
+
+
+Select the kind of t-test you wish to conduct.
+
+*On clicking on one sample t-test*: This test requires the sample mean, sample standard deviation and the sample size of one sample. These can be entered or can be calculated from uploaded data.
+
+*On clicking on two-sample t-test*: This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data.
+
+*On clicking on paired-match t-test*: This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data. BOTH THE SAMPLES SHOULD BE OF THE SAME SIZE.
+
+
+
+I)One sample t-test:
+
+Population Mean: Please enter the mean of the population. The value should be numeric.
+
+*On entering population mean, the sample data panel gets activated:* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+
+(i)*On selecting "Enter Values"* Please enter Sample size, mean and standard deviation. Mean and standard deviation must be numeric. Size must be a natural number.
+
+(ii)*On selecting "Upload data"* Please enter the file path. 
+    
+	*On clicking 'Load'* Please Select the column you want to conduct the test on. The values in this column must be numeric.
+
+	**Include a missing values option- the value entered will substitute the missing values in the column. **
+
+Click next to move onto the Null and Alternate Hypotheses.
+
+
+*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis.*
+
+	Please complete the expression for null hypothesis. The choice of the expression determines the alternate hypothesis. The test will tell you if the null hypothesis can be rejected.
+
+	Please select the significance value. Please enter a numeric value. 
+
+	Please click on "Compute" to show the results.
+
+
+II)Two sample t-test: 
+
+Population Mean: Please enter the mean of the population. The value should be numeric.
+
+*On entering population mean, the sample data panel gets activated:* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. You need to provide these for two samples. Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+
+(i)*On selecting "Enter Values"* Please enter Sample sizes, means and standard deviations. Means and standard deviations must be numeric. Sizes must be natural numbers.
+
+(ii)*On selecting "Upload data"* Please enter the file path. 
+    
+	*On clicking 'Load'* Please Select the two columns you want to conduct the test on. The values in this column must be numeric.
+
+	**Include a missing values option- the value entered will substitute the missing values in the column. **
+
+Click next to move onto the Null and Alternate Hypotheses.
+
+
+*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis.*
+
+	Please complete the expression for null hypothesis. The choice of the expression determines the alternate hypothesis. The test will tell you if the null hypothesis can be rejected.
+
+	Please select the significance value. Please enter a numeric value. 
+
+	Please click on "Compute" to show the results.
+
+
+III)Paired t-test:
+
+
+
+Population Mean: Please enter the mean of the population. The value should be numeric.
+
+*On entering population mean, the sample data panel gets activated:* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. You need to provide these for two samples. Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+
+(i)*On selecting "Enter Values"* Please enter Sample sizes, means and standard deviations. Means and standard deviations must be numeric. Sizes must be natural numbers. BOTH SAMPLES MUST HAVE SAME SIZE.
+
+(ii)*On selecting "Upload data"* Please enter the file path. 
+    
+	*On clicking 'Load'* Please Select the two columns you want to conduct the test on. The values in this column must be numeric. BOTH COLUMNS MUST HAVE SAME NUMBER OF VALUES.
+
+	**Include a missing values option- the value entered will substitute the missing values in the column. **
+
+Click next to move onto the Null and Alternate Hypotheses.
+
+
+*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis.*
+
+	Please complete the expression for null hypothesis. The choice of the expression determines the alternate hypothesis. The test will tell you if the null hypothesis can be rejected.
+
+	Please select the significance value. Please enter a numeric value. 
+
+	Please click on "Compute" to show the results.
+
+
+
+                                                                ***Chi-squared Test***
+
+
+
+Select the kind of Chi-squared test you wish to conduct.  
+
