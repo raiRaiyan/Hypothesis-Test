@@ -6,11 +6,16 @@
 					   height="600"
 					   minHeight="600"
 					   minWidth="800"
-					   showStatusBar="false">
+					   showStatusBar="false" xmlns:assets="assets.*">
+
 	
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml">
+				
+		</fx:XML>
 	</fx:Declarations>
 	
 	<fx:Style source="headerStyle.css"/>
@@ -26,11 +31,18 @@
 				 x="{mainGroup.width*0.02}"
 				 y="25"/>
 		
+		<s:TextArea text="{stringCollection.mainScreenText.text}"
+					borderVisible="false"
+					width="{mainGroup.width*0.9}"
+					height="100"
+					x="{mainGroup.width*0.05}"
+					y="75"
+					fontWeight="bold"/>
+	
 		<s:Panel width="{mainGroup.width*0.3}"
 				 height="{mainGroup.height*0.4}"
 				 x="{mainGroup.width*0.35}"
 				 y="{mainGroup.height*0.3}"
-				 />
-		
+				 />		
 	</s:Group>
 </s:WindowedApplication>
