@@ -64,10 +64,10 @@
 		<!-- <minimizable></minimizable> -->
 
 		<!-- Whether the user can maximize the window. Optional. Default true. -->
-		<maximizable>true</maximizable>
+		<!-- <maximizable></maximizable> -->
 
 		<!-- Whether the user can resize the window. Optional. Default true. -->
-		<resizable>true</resizable>
+		<!-- <resizable></resizable> -->
 
 		<!-- The window's initial width in pixels. Optional. -->
 		<!-- <width></width> -->
@@ -76,13 +76,13 @@
 		<!-- <height></height> -->
 
 		<!-- The window's initial x position. Optional. -->
-		<!-- <x></x> -->
+		<x>275</x>
 
 		<!-- The window's initial y position. Optional. -->
-		<!-- <y></y> -->
+		<y>80</y>
 
 		<!-- The window's minimum size, specified as a width/height pair in pixels, such as "400 200". Optional. -->
-		 <minSize>900 600</minSize>
+		<!-- <minSize></minSize> -->
 
 		<!-- The window's initial maximum size, specified as a width/height pair in pixels, such as "1600 1200". Optional. -->
 		<!-- <maxSize></maxSize> -->
@@ -115,7 +115,7 @@
 	<!-- devices supported by AIR. If you wish to restrict deployment -->
 	<!-- (i.e., to only mobile devices) then add this element and list -->
 	<!-- only the profiles which your application does support. -->
-	<!-- <supportedProfiles>desktop extendedDesktop mobileDevice extendedMobileDevice</supportedProfiles> -->
+	<supportedProfiles>extendedDesktop</supportedProfiles>
 
 	<!-- The subpath of the standard default installation location to use. Optional. -->
 	<!-- <installFolder></installFolder> -->
