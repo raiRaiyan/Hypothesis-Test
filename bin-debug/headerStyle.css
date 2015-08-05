@@ -6,10 +6,10 @@
 {
 	backgroundColor: #F52F04;
 	color: #FFFFFF;
-	fontSize: 16;
+	fontSize: 20;
 	fontWeight: bold;
 	paddingLeft: 20;
 	textAlign: left;
 	verticalAlign: middle;
-	
+	fontFamily: Rockwell;
 }

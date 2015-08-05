@@ -6,31 +6,50 @@
 					   height="600"
 					   minHeight="600"
 					   minWidth="800"
+					   currentState="landingPage"
 					   showStatusBar="false">
 	
+	<s:states>
+		<s:State name="landingPage"/>
+		<s:State name="testSelected"/>
+	</s:states>
+	
+	<s:transitions>
+		<s:Transition fromState="landingPage" toState="testSelected">
+			<s:Parallel>
+				<s:Fade target="{panelData}"/>
+				<s:Move target="{panelData}" xTo="-400"/>
+			</s:Parallel>
+		</s:Transition>
+	</s:transitions>
 	
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:ArrayList id="HeaderData">
+			<fx:Object text="Hypothesis Testing"/>
+		</s:ArrayList>
 	</fx:Declarations>
 	
 	<fx:Style source="headerStyle.css"/>
 	
-	<s:Group width="100%" height="100%" id="mainGroup">
+	<s:Group width="100%" height="100%" id="mainGroup"
+			 >
 		<s:layout>
 			<s:BasicLayout/>
 		</s:layout>
-		<s:Label text="Hypothesis Testing"
+		<s:Label id="mainTitle"
+				 text="{HeaderData.getItemAt(0).text}"
 				 styleName="titleHeader"
 				 width="{mainGroup.width*0.96}"
 				 height="40"
 				 x="{mainGroup.width*0.02}"
 				 y="25"/>
-		
-		<s:Panel width="{mainGroup.width*0.3}"
+		<s:Button label="trans" click="currentState='testSelected'"/>
+		<s:Panel id="panelData"
+				 width="{mainGroup.width*0.3}"
 				 height="{mainGroup.height*0.4}"
 				 x="{mainGroup.width*0.35}"
 				 y="{mainGroup.height*0.3}"
-				 />
+				 includeIn="landingPage"/>
 		
 	</s:Group>
 </s:WindowedApplication>

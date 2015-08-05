@@ -41,4 +41,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-bin-debug/Main.swf
+
+#Exclude unwanted files
+*.swf
+.settings
