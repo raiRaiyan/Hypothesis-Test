@@ -66,7 +66,10 @@ Non-Paramteric Test: More suited for categorical data.
 
 
 
-**1)t-test**
+                                                                       ***1)t-test***
+
+
+
 
 Select the kind of t-test you wish to conduct.
 
@@ -95,10 +98,73 @@ Population Mean: Please enter the mean of the population. The value should be nu
 Click next to move onto the Null and Alternate Hypotheses.
 
 
-*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis. 
+*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis.*
+
+	Please complete the expression for null hypothesis. The choice of the expression determines the alternate hypothesis. The test will tell you if the null hypothesis can be rejected.
+
+	Please select the significance value. Please enter a numeric value. 
+
+	Please click on "Compute" to show the results.
+
+
+II)Two sample t-test: 
+
+Population Mean: Please enter the mean of the population. The value should be numeric.
+
+*On entering population mean, the sample data panel gets activated:* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. You need to provide these for two samples. Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+
+(i)*On selecting "Enter Values"* Please enter Sample sizes, means and standard deviations. Means and standard deviations must be numeric. Sizes must be natural numbers.
+
+(ii)*On selecting "Upload data"* Please enter the file path. 
+    
+	*On clicking 'Load'* Please Select the two columns you want to conduct the test on. The values in this column must be numeric.
+
+	**Include a missing values option- the value entered will substitute the missing values in the column. **
+
+Click next to move onto the Null and Alternate Hypotheses.
+
+
+*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis.*
+
+	Please complete the expression for null hypothesis. The choice of the expression determines the alternate hypothesis. The test will tell you if the null hypothesis can be rejected.
+
+	Please select the significance value. Please enter a numeric value. 
+
+	Please click on "Compute" to show the results.
+
+
+III)Paired t-test:
 
 
 
+Population Mean: Please enter the mean of the population. The value should be numeric.
+
+*On entering population mean, the sample data panel gets activated:* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. You need to provide these for two samples. Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+
+(i)*On selecting "Enter Values"* Please enter Sample sizes, means and standard deviations. Means and standard deviations must be numeric. Sizes must be natural numbers. BOTH SAMPLES MUST HAVE SAME SIZE.
+
+(ii)*On selecting "Upload data"* Please enter the file path. 
+    
+	*On clicking 'Load'* Please Select the two columns you want to conduct the test on. The values in this column must be numeric. BOTH COLUMNS MUST HAVE SAME NUMBER OF VALUES.
+
+	**Include a missing values option- the value entered will substitute the missing values in the column. **
+
+Click next to move onto the Null and Alternate Hypotheses.
 
 
+*After clicking next, the third panel appears. This panel has the hypotheses. The column name and the value already appear in the null hypothesis.*
+
+	Please complete the expression for null hypothesis. The choice of the expression determines the alternate hypothesis. The test will tell you if the null hypothesis can be rejected.
+
+	Please select the significance value. Please enter a numeric value. 
+
+	Please click on "Compute" to show the results.
+
+
+
+                                                                ***Chi-squared Test***
+
+
+
+Select the kind of Chi-squared test you wish to conduct.  
 
