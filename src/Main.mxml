@@ -17,8 +17,8 @@
 	<s:transitions>
 		<s:Transition fromState="landingPage" toState="testSelected">
 			<s:Parallel>
-				<s:Fade target="{panelData}"/>
-				<s:Move target="{panelData}" xTo="-400"/>
+				<s:Fade targets="{[panelData,testSelectionGuidance]}" duration="500"/>
+				<s:Move targets="{[panelData,testSelectionGuidance]}" xTo="-400" duration="500"/>
 			</s:Parallel>
 		</s:Transition>
 	</s:transitions>
@@ -41,14 +41,18 @@
 				 height="40"
 				 x="{mainGroup.width*0.02}"
 				 y="25"/>
-		<s:TextArea text="{stringCollection.mainScreenText.text}"
+		<s:TextArea id="testSelectionGuidance"
+				    text="{stringCollection.mainScreenText.text}"
 					borderVisible="false"
 					width="{mainGroup.width*0.9}"
 					height="100"
 					x="{mainGroup.width*0.05}"
 					y="75"
-					fontWeight="bold"/>
+					fontWeight="bold"
+					includeIn="landingPage"/>
+		
 		<s:Button label="trans" click="currentState='testSelected'"/>
+		
 		<s:Panel id="panelData"
 				 width="{mainGroup.width*0.3}"
 				 height="{mainGroup.height*0.4}"
