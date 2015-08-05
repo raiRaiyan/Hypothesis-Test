@@ -67,7 +67,7 @@
 		<maximizable>true</maximizable>
 
 		<!-- Whether the user can resize the window. Optional. Default true. -->
-		<resizable>false</resizable>
+		<resizable>true</resizable>
 
 		<!-- The window's initial width in pixels. Optional. -->
 		<!-- <width></width> -->
@@ -82,7 +82,7 @@
 		<!-- <y></y> -->
 
 		<!-- The window's minimum size, specified as a width/height pair in pixels, such as "400 200". Optional. -->
-		<!-- <minSize></minSize> -->
+		 <minSize>900 600</minSize>
 
 		<!-- The window's initial maximum size, specified as a width/height pair in pixels, such as "1600 1200". Optional. -->
 		<!-- <maxSize></maxSize> -->
