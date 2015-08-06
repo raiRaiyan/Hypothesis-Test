@@ -166,5 +166,94 @@ Click next to move onto the Null and Alternate Hypotheses.
 
 
 
-Select the kind of Chi-squared test you wish to conduct.  
+Select the kind of Chi-squared test you wish to conduct. 
+
+*On selecting Goodness of Fit* For this test, you need to provide the observed and expected values/distribution of a categorical variable. This test tells if the observations are significantly different from the expectations.
+
+*On selecting Test of Independence* For this test, you need to provide two categorical variables or a contingency table. This test tells if the two categorical variables are significantly related.
+
+
+
+(I)Goodness of Fit: 
+
+
+*Observed Values Panel*: Please select 'Upload categorical Variable' if you want to upload a categorical variable with at least 2 levels. The distribution will be calculated. 
+			 
+			 Please select 'Upload distribution' if you want to upload the distribution of the categorical variable.
+
+			 Please select 'Select from CSV' if you want to upload a CSV and choose a column from it for the test.
+
+	
+	*On clicking Select from CSV* Please enter the file path. 
+		
+		*On entering the file path* Please select the column you wish to conduct the test on. The column must be a categorical variable with at least two levels.  
+
+On clicking upload, the Expected Values panel appears.
+
+
+
+*Expected Values Panel*: Please select 'Upload categorical Variable' if you want to upload a categorical variable with at least 2 levels. The distribution will be calculated. Note that the names of the levels and the number of values must match those of the Observed variable.
+
+			
+			 Please select 'Upload frequency distribution' if you want to upload the distribution of the expected categorical variable. Note that the names of the levels and the number of values must match those of the Observed distribution. 
+
+
+			 Please select 'Upload probability distribution' if you want to upload the expected probabibility distribution. Note that the names of the levels must match the names of the levels in the observed data. Also, the sum of all the values in the probability distribution should be 1.
+
+			 
+			 Please select 'Enter Frequencies' if you want to enter the expected frequency for each level. You need not know the level names. This option is recommended if the number of levels is low.
+
+			
+			 Please select 'Enter Probabilities' if you want to enter the expected probability for each level. You need not know the level names. This option is recommended if the number of levels is low.
+
+
+**Note to the self- if the categorical variable has 15000 levels with each level frequency being 1, or being "low", we should probably do something for it. **
+
+**Another note- It is possible to have level names in row names as well as in column names. We need to choose one of these, and ask the user to enter in only one of these format. OR, we could have separate options for both, and transpose the input..?**
+
+**Yet another note- Ask for missing value substitutions somewhere. Will finish once and then figure out exactly where.**
+
+
+After entering the Expected values, the Hypotheses appear. Both of these are already fixed. We just ask the user for confirmation to move on.
+
+
+(II)Test of Independence:
+
+
+
+*Input Values Panel*: Please select 'Upload Categorical Variables' if you want to upload 2 categorical variables, each with at least two levels. These can be input separately or can be chosen as two columns from a CSV.
+
+
+		      Please select 'Upload distributions' if you want to upload the frequency distributions of 2 categorical variables, each with at least two levels. Note that the sum of the frequencies and the level names in both the distributions should be the same.
+
+
+		      Please select 'Upload Contingency Table' if you want to upload the contingency table. 
+
+	
+
+		*On selecting 'Upload Categorical Variables'- the user gets two options- 1)Select columns from CSV. 2)Upload separately. 
+
+
+			*On selecting Select Columns from a CSV*- Please enter the file path.
+			
+			*On entering file path*- Please select two columns. Note that both the columns must be categorical, must have the same number of values and same level names.
+
+
+		*ON selecting 'Upload Distributions' Please enter the file path to Variable 1. 
+		*On entering the path*-Please enter the path to Variable 2. Please note that the level names and sum of frequencies must be the same as those in Variable 1. 
+
+
+		*On selecting 'Upload Contingency Table'- Please enter the file path.
+
+
+
+After the values are input, the hypotheses panel appears. Both the hypotheses are fixed here. We only ask the user to confirm and press compute.		 
+
+
+
+
+
+
+
+
 
