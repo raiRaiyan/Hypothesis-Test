@@ -11,10 +11,11 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import ParametricTests.PairedTTest;
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
 				currentState='testSelected';
-				var p:ParametricBackbone = new ParametricBackbone();
+				var p:PairedTTest = new PairedTTest();
 				testScreen.addElement(p);
 			}
 		]]>
@@ -83,7 +84,8 @@
 						   height="85%"
 						   x="{mainGroup.width*0.02}"
 						   y="{mainGroup.height*0.11}" 
-						   includeIn="testSelected">
+						   includeIn="testSelected"
+						   >
 		</s:BorderContainer>
 		
 	</s:Group>
