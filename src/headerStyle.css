@@ -13,3 +13,9 @@
 	verticalAlign: middle;
 	fontFamily: Rockwell;
 }
+
+s|Button.customButton{
+	skinClass: ClassReference('assets.customButton');
+	color: #000000;
+	fontWeight: bold;
+}

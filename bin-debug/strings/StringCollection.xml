@@ -2,9 +2,10 @@
 
 <textData>
 		<mainScreenText>
-			<text>Please select the type of test you want to conduct.
-
-	Parametric Test:More suited for numerical data.
-	Non-Paramteric Test: More suited for categorical data.</text>
+		<text>Please select the type of test you want to conduct.
+		
+	Parametric Test:   More suited for numerical data.
+	Non-Parametric Test:   More suited for categorical data.
+	</text>
 		</mainScreenText>
 </textData>	
