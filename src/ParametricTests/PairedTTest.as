@@ -11,7 +11,7 @@ package ParametricTests
 			super();
 		}
 		
-		override protected function group1_creationCompleteHandler(event:FlexEvent):void
+		override protected function backboneCreationCompleteHandler(event:FlexEvent):void
 		{
 			var b:Button = new Button();
 			panel1.addElement(b);
