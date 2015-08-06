@@ -12,13 +12,33 @@
 		<s:State name="state2"/>
 		<s:State name="state3"/>
 	</s:states>
+	
+	<s:transitions>
+		<s:Transition fromState="state1" toState="state2">
+			<s:Parallel target="{panel2}">
+				<s:Move3D zFrom="-100" duration="700"/>
+				<s:Fade duration="500"/>
+			</s:Parallel>
+		</s:Transition>
+		<s:Transition fromState="state2" toState="state3">
+			<s:Parallel targets="{[panel3,calc]}">
+				<s:Move3D zFrom="-100" duration="700"/>
+				<s:Fade duration="500"/>
+			</s:Parallel>
+		</s:Transition>
+	</s:transitions>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:HGroup width="95%" height="60%" horizontalAlign="center" verticalAlign="middle">
-		<s:Panel id="panel1" includeIn="state1,state2,state3" width="34%" height="90%"/>
+		<s:Panel id="panel1" includeIn="state1,state2,state3" width="34%" height="90%">
+			<s:Button label="click me" click="currentState='state2';"/>
+		</s:Panel>
 		<s:Spacer width="12%"/>
-		<s:Panel id="panel2" includeIn="state2,state3" width="34%" height="90%"/>
+		<s:Panel id="panel2" includeIn="state2,state3" width="34%" height="90%">
+			<s:Button label="click me" click="currentState='state3';"/>
+		</s:Panel>
 	</s:HGroup>
 	<s:Spacer height="6%"/>
 	<s:HGroup width="95%" height="30%" horizontalAlign="center" verticalAlign="middle">
@@ -26,6 +46,4 @@
 		<s:Spacer width="15%"/>
 		<s:Button width="100" height="50" label="Compute" id="calc" includeIn="state3"/>
 	</s:HGroup>
-	
-	
 </s:Group>
