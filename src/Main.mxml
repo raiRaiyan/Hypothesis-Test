@@ -9,6 +9,18 @@
 					   currentState="landingPage"
 					   showStatusBar="false">
 	
+	<fx:Script>
+		<![CDATA[
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				currentState='testSelected';
+				var p:ParametricBackbone = new ParametricBackbone();
+				testScreen.addElement(p);
+			}
+		]]>
+	</fx:Script>
+	
+	
 	<s:states>
 		<s:State name="landingPage"/>
 		<s:State name="testSelected"/>
@@ -17,8 +29,10 @@
 	<s:transitions>
 		<s:Transition fromState="landingPage" toState="testSelected">
 			<s:Parallel>
-				<s:Fade targets="{[panelData,testSelectionGuidance]}" duration="500"/>
-				<s:Move targets="{[panelData,testSelectionGuidance]}" xTo="-400" duration="500"/>
+				<s:Fade targets="{[testSelection,testSelectionGuidance]}" duration="500"/>
+				<s:Move targets="{[testSelection,testSelectionGuidance]}" xTo="-400" duration="500"/>
+				<s:Fade target="{testScreen}" duration="500"/>
+				<s:Move target="{testScreen}" yFrom="-1600" duration="1000"/>
 			</s:Parallel>
 		</s:Transition>
 	</s:transitions>
@@ -29,8 +43,7 @@
 	
 	<fx:Style source="headerStyle.css"/>
 	
-	<s:Group width="100%" height="100%" id="mainGroup"
-			 >
+	<s:Group width="100%" height="100%" id="mainGroup">
 		<s:layout>
 			<s:BasicLayout/>
 		</s:layout>
@@ -38,11 +51,11 @@
 				 text="Hypothesis Testing"
 				 styleName="titleHeader"
 				 width="{mainGroup.width*0.96}"
-				 height="40"
+				 height="8%"
 				 x="{mainGroup.width*0.02}"
 				 y="25"/>
 		<s:TextArea id="testSelectionGuidance"
-				    text="{stringCollection.mainScreenText.text}"
+					text="{stringCollection.mainScreenText.text}"
 					borderVisible="false"
 					width="{mainGroup.width*0.9}"
 					height="100"
@@ -51,14 +64,22 @@
 					fontWeight="bold"
 					includeIn="landingPage"/>
 		
-		<s:Button label="trans" click="currentState='testSelected'"/>
+		<s:Button label="trans" click="button1_clickHandler(event)"/>
 		
-		<s:Panel id="panelData"
+		<s:Panel id="testSelection"
 				 width="{mainGroup.width*0.3}"
 				 height="{mainGroup.height*0.4}"
 				 x="{mainGroup.width*0.35}"
 				 y="{mainGroup.height*0.3}"
 				 includeIn="landingPage"/>
+		
+		
+		<s:BorderContainer id="testScreen" width="{mainGroup.width*0.96}"
+						   height="85%"
+						   x="{mainGroup.width*0.02}"
+						   y="{mainGroup.height*0.11}" 
+						   includeIn="testSelected">
+		</s:BorderContainer>
 		
 	</s:Group>
 </s:WindowedApplication>
