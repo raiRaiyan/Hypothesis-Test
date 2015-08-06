@@ -8,7 +8,7 @@
 					   minWidth="800"
 					   currentState="landingPage"
 					   showStatusBar="false"
-					   creationComplete="nativeWindow.maximize()"
+					   applicationComplete="nativeWindow.maximize()"
 					   >
 	<fx:Script>
 		<![CDATA[
