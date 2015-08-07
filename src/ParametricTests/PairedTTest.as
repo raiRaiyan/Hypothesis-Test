@@ -13,8 +13,8 @@ package ParametricTests
 		
 		override protected function backboneCreationCompleteHandler(event:FlexEvent):void
 		{
-			var b:Button = new Button();
-			panel1.addElement(b);
+			//var b:Button = new Button();
+			//panel1.addElement(b);
 		}
 	}
 }

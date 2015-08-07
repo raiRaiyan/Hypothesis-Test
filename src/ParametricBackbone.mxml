@@ -7,6 +7,16 @@
 	<s:layout>
 		<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
 	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			protected function loadButton_clickHandler(event:MouseEvent):void
+			{
+				currentState='state1Final';
+			}
+		]]>
+	</fx:Script>
+	
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
@@ -14,7 +24,6 @@
 			protected function backboneCreationCompleteHandler(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
-				
 			}
 			
 		]]>
@@ -22,17 +31,29 @@
 	
 	<s:states>
 		<s:State name="state1"/>
+		<s:State name="loadCSV"/>
+		<s:State name="state1Final"/>
 		<s:State name="state2"/>
 		<s:State name="state3"/>
 	</s:states>
 	
 	<s:transitions>
-		<s:Transition fromState="state1" toState="state2">
+		
+		<s:Transition fromState="state1" toState="loadCSV">
+			<s:Resize target="{panel1}" widthTo="{container.width}" heightTo="{container.height}"/>
+		</s:Transition>
+		
+		<s:Transition fromState="loadCSV" toState="state1Final">
+			<s:Resize target="{panel1}" widthTo="{container.width*0.34}" heightTo="{container.height*0.90}"/>
+		</s:Transition>
+		
+		<s:Transition fromState="state1Final" toState="state2">
 			<s:Parallel target="{panel2}">
 				<s:Move3D zFrom="-100" duration="700"/>
 				<s:Fade duration="500"/>
 			</s:Parallel>
 		</s:Transition>
+		
 		<s:Transition fromState="state2" toState="state3">
 			<s:Parallel targets="{[panel3,calc]}">
 				<s:Move3D zFrom="-100" duration="700"/>
@@ -44,22 +65,54 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:HGroup width="95%" height="60%" horizontalAlign="center" verticalAlign="middle">
-		<s:Panel includeIn="state1,state2,state3" width="34%" height="90%">
-			<s:VGroup id="panel1" horizontalAlign="center" verticalAlign="middle"
-					  width="100%" height="100%">
-				<s:Button label="click me" click="currentState='state2';"/>
+	<s:HGroup id="container" width="95%" height="60%" horizontalAlign="center" verticalAlign="middle">
+
+		<s:Panel id="panel1" width="34%" height="90%">
+			
+			<s:VGroup id="OptionsPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="state1">
+				<s:Button label="I have CSV" click="currentState='loadCSV';"/>
+				<s:Button label="I have data" click="currentState='state1Final';"/>
 			</s:VGroup>
+			
+			<s:VGroup id="csvPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="loadCSV">
+				<s:HGroup width="95%" height="15%" horizontalAlign="center" verticalAlign="middle">
+					<s:TextInput width="70%" id="csvPath" prompt="Click the load Button"/>
+					<s:Spacer width="5%"/>
+					<s:Button width="20%" id="loadButton" label="Load" click="loadButton_clickHandler(event)"/>
+				</s:HGroup>
+				<s:Spacer height="5%"/>
+				<s:HGroup width="95%" height="75%" horizontalAlign="center" verticalAlign="middle">
+					<s:DataGrid width="65%" height="95%" id="csvData"/>
+					<s:Spacer width="5%"/>
+					<s:VGroup width="30%" height="95%" horizontalAlign="center" verticalAlign="middle"
+							  id="columnSelectionPane">
+						
+					</s:VGroup>
+				</s:HGroup>
+			</s:VGroup>
+			
+			<s:VGroup id="finalPanel1" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="state1Final,state2,state3">
+				<s:Button label="Go to next" click="currentState='state2';"/>
+			</s:VGroup>
+		
 		</s:Panel>
+	
 		<s:Spacer width="12%"/>
+		
 		<s:Panel id="panel2" includeIn="state2,state3" width="34%" height="90%">
 			<s:Button label="click me" click="currentState='state3';"/>
 		</s:Panel>
+	
 	</s:HGroup>
+	
 	<s:Spacer height="6%"/>
+	
 	<s:HGroup width="95%" height="30%" horizontalAlign="center" verticalAlign="middle">
 		<s:Panel id="panel3" includeIn="state3" width="60%" height="90%"/>
 		<s:Spacer width="15%"/>
 		<s:Button width="100" height="50" label="Compute" id="calc" includeIn="state3"/>
 	</s:HGroup>
-</s:Group>
+</s:Group> 
