@@ -14,48 +14,48 @@
 		<![CDATA[
 			import ParametricTests.*;
 			import NonParametricTests.*
-			protected function pairedTTestClickHandler(event:MouseEvent):void
-			{
-				currentState='subTestSelected';
-				var p:PairedTTest = new PairedTTest();
-				testScreen.addElement(p);
-				mainTitle.text = "Paired t-Test (Parametric Test)";
-			}
-			protected function oneTTestClickHandler(event:MouseEvent):void
-			{
-				currentState='subTestSelected';
-				var p:PairedTTest = new PairedTTest();
-				testScreen.addElement(p);
-				mainTitle.text = "One Sample t-Test (Parametric Test)";
-			}
-			protected function twoTTestClickHandler(event:MouseEvent):void
-			{
-				currentState='subTestSelected';
-				var p:PairedTTest = new PairedTTest();
-				testScreen.addElement(p);
-				mainTitle.text = "Two Sample t-Test (Parametric Test)";
-			}
-			protected function independenceCTestClickHandler(event:MouseEvent):void
-			{
-				currentState='subTestSelected';
-				var p:IndependenceCTest = new IndependenceCTest();
-				testScreen.addElement(p);
-				mainTitle.text = "Chi-Squared Test for Independence (Non-Parametric Test)";
-			}
-			protected function goodFitCTestClickHandler(event:MouseEvent):void
-			{
-				currentState='subTestSelected';
-				var p:PairedTTest = new PairedTTest();
-				testScreen.addElement(p);
-				mainTitle.text = "Chi-Squared Test for Goodness of Fit (Non-Parametric Test)";
-			}
-			
-			protected function backButton_clickHandler(event:MouseEvent):void
-			{
-				testScreen.removeAllElements();
-				currentState='landingPage';
-			}
-			
+				protected function pairedTTestClickHandler(event:MouseEvent):void
+				{
+					currentState='subTestSelected';
+					var p:PairedTTest = new PairedTTest();
+					testScreen.addElement(p);
+					mainTitle.text = "Paired t-Test (Parametric Test)";
+				}
+				protected function oneTTestClickHandler(event:MouseEvent):void
+				{
+					currentState='subTestSelected';
+					var p:PairedTTest = new PairedTTest();
+					testScreen.addElement(p);
+					mainTitle.text = "One Sample t-Test (Parametric Test)";
+				}
+				protected function twoTTestClickHandler(event:MouseEvent):void
+				{
+					currentState='subTestSelected';
+					var p:PairedTTest = new PairedTTest();
+					testScreen.addElement(p);
+					mainTitle.text = "Two Sample t-Test (Parametric Test)";
+				}
+				protected function independenceCTestClickHandler(event:MouseEvent):void
+				{
+					currentState='subTestSelected';
+					var p:IndependenceCTest = new IndependenceCTest();
+					testScreen.addElement(p);
+					mainTitle.text = "Chi-Squared Test for Independence (Non-Parametric Test)";
+				}
+				protected function goodFitCTestClickHandler(event:MouseEvent):void
+				{
+					currentState='subTestSelected';
+					var p:PairedTTest = new PairedTTest();
+					testScreen.addElement(p);
+					mainTitle.text = "Chi-Squared Test for Goodness of Fit (Non-Parametric Test)";
+				}
+				
+				protected function backButton_clickHandler(event:MouseEvent):void
+				{
+					testScreen.removeAllElements();
+					currentState='landingPage';
+				}
+				
 		]]>
 	</fx:Script>
 	
@@ -141,73 +141,75 @@
 				  excludeFrom="landingPage"
 				  x="{mainGroup.width*0.88}"
 				  y="{mainGroup.height*0.04}"/>
-		<s:TextArea id="testSelectionGuidance"
-					text="{stringCollection.mainScreenText.text}"
-					borderVisible="false"
-					width="{mainGroup.width*0.9}"
-					height="100"
-					x="{mainGroup.width*0.05}"
-					y="{mainGroup.height*0.12}"
-					fontWeight="bold"
-					includeIn="landingPage"/>
-		
-		<s:Panel id="panelData"
-				 width="{mainGroup.width*0.35}"
-				 x="{mainGroup.width*0.35}"
-				 y="{mainGroup.height*0.35}"
-				 excludeFrom = "subTestSelected"
-				 title="Select a test:">	
+		<s:HGroup width="{mainGroup.width*0.9}"
+				  x="{mainGroup.width*0.05}"
+				  y="{mainGroup.height*0.12}"
+				  height="100%"
+				  paddingTop="{mainGroup.height*0.25}">
 			
-			<s:VGroup height="100%" width="100%">
-				<s:Button id="parametricTest"
-						  label="Parametric Tests"
-						  width="100%"
-						  height="40"
-						  styleName="customButton"
-						  click="currentState='parTestSelected'"/>
-				<s:VGroup id="parTestList" paddingLeft="30" width="100%" includeIn="parTestSelected">
-					<s:Button id="oneTTest" 
-							  label="One Sample t-Test" 
-							  width="75%" height="40" 
-							  click="oneTTestClickHandler(event)"
-							  styleName="customButton"/>
-					<s:Button id="twoTTest" 
-							  label="Two Sample t-Test" 
-							  width="75%" height="40"
-							  click="twoTTestClickHandler(event)"
-							  styleName="customButton"/>
-					<s:Button id="pairedTTest" 
-							  label="Paired Sample t-Test" 
-							  width="75%" height="40" 
-							  click="pairedTTestClickHandler(event)"
-							  styleName="customButton"/>
-				</s:VGroup>
+			
+			<s:TextArea id="testSelectionGuidance"
+						text.landingPage="{stringCollection.mainScreenText.initialtext}"
+						text.parTestSelected="{stringCollection.mainScreenText.parametricbuttontext}"
+						text.nparTestSelected="{stringCollection.mainScreenText.nonparametricbuttontext}"
+						width="50%"
+						height="60%"
+						borderVisible="false"/>
+			<s:Spacer width="4%"/>
+			<s:Panel id="panelData"
+					 width="{mainGroup.width*0.35}"
+					 excludeFrom = "subTestSelected"
+					 title="Select a test:">	
 				
-				<s:Button id="nonParametricTest" 
-						  label="Non-Parametric Tests " 
-						  width="100%"
-						  height="40" 
-						  styleName="customButton"
-						  click="currentState='nparTestSelected'"/>
-				
-				<s:VGroup id="nparTestList" includeIn="nparTestSelected" width="100%" paddingLeft="20" >
-					<s:Button id="independenceCTest" 
-							  label="Chi-squared Test for Independence" 
-							  width="75%" height="40" 
-							  click="independenceCTestClickHandler(event)"
-							  styleName="customButton"/>
-					<s:Button id="goodFitCTest" 
-							  label="Chi-squared Test for Goodness Of Fit" 
-							  width="75%" height="40"
-							  click="goodFitCTestClickHandler(event)"
-							  styleName="customButton"/>					
-				</s:VGroup>
-			</s:VGroup>	
-		</s:Panel>
-		<s:Button label="trans" click="pairedTTestClickHandler(event)"/>
-		<s:Button x = "80" label="back" click="currentState='landingPage';"/>
-		
-		
+				<s:VGroup height="100%" width="100%">
+					<s:Button id="parametricTest"
+							  label="Parametric Tests"
+							  width="100%"
+							  height="40"
+							  styleName="customButton"
+							  click="currentState='parTestSelected'"/>
+					<s:VGroup id="parTestList" paddingLeft="30" width="100%" includeIn="parTestSelected">
+						<s:Button id="oneTTest" 
+								  label="One Sample t-Test" 
+								  width="75%" height="40" 
+								  click="oneTTestClickHandler(event)"
+								  styleName="customButton"/>
+						<s:Button id="twoTTest" 
+								  label="Two Sample t-Test" 
+								  width="75%" height="40"
+								  click="twoTTestClickHandler(event)"
+								  styleName="customButton"/>
+						<s:Button id="pairedTTest" 
+								  label="Paired Sample t-Test" 
+								  width="75%" height="40" 
+								  click="pairedTTestClickHandler(event)"
+								  styleName="customButton"/>
+					</s:VGroup>
+					
+					<s:Button id="nonParametricTest" 
+							  label="Non-Parametric Tests " 
+							  width="100%"
+							  height="40" 
+							  styleName="customButton"
+							  click="currentState='nparTestSelected'"/>
+					
+					<s:VGroup id="nparTestList" includeIn="nparTestSelected" width="100%" paddingLeft="20" >
+						<s:Button id="independenceCTest" 
+								  label="Chi-squared Test for Independence" 
+								  width="75%" height="40" 
+								  click="independenceCTestClickHandler(event)"
+								  styleName="customButton"/>
+						<s:Button id="goodFitCTest" 
+								  label="Chi-squared Test for Goodness Of Fit" 
+								  width="75%" height="40"
+								  click="goodFitCTestClickHandler(event)"
+								  styleName="customButton"/>					
+					</s:VGroup>
+				</s:VGroup>	
+			</s:Panel>
+			
+			
+		</s:HGroup>
 		
 		<s:BorderContainer id="testScreen" width="{mainGroup.width*0.96}"
 						   height="85%"

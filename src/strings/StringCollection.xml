@@ -3,19 +3,29 @@
 <textData>
 		<mainScreenText>
 			<initialtext> 
-				Please select the type of test you want to conduct.
+Do you have a hypohtesis? Not sure if the hypothesis is valid? Want to test the hypothesis based on a parameter like mean or want to test a categorical data? You can do it all here.
 
-	Parametric Test:More suited for numerical data.
-	Non-Paramteric Test: More suited for categorical data.
+
+Please select the type of test you want to conduct. 
+
+Parametric Test:      More suited for numerical data.
+	
+Non-Paramteric Test:  More suited for categorical data.
 			</initialtext>
 			
 			<parametricbuttontext>
-				
-				Select the kind of parametric test you wish to conduct.
+			Select the kind of parametric test you wish to conduct.
 			
-			1)one sample t-test: This test requires the sample mean, sample standard deviation and the sample size of one sample. These can be entered or can be calculated from uploaded data.
-			2)two sample t-test: This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data.
-			3)paired-match t-test: This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data. BOTH THE SAMPLES SHOULD BE OF THE SAME SIZE.
+1)One sample t-test:
+This test requires the sample mean, sample standard deviation and the sample size of one sample. These can be entered or can be calculated from uploaded data.
+								 
+								 
+2)Two sample t-test:
+This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data.
+							
+								 
+3)Paired t-test: 
+This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data. BOTH THE SAMPLES SHOULD BE OF THE SAME SIZE.
 			 
 			
 				
@@ -25,8 +35,12 @@
 			<nonparametricbuttontext> 
 			Please select which non-parametric test you want to conduct.
 
-			1)Chi-Squared Test of Independence: For this test, you need to provide two categorical variables or a contingency table. This test tells if the two categorical variables are significantly related.
-			2)Chi-Squared Goodness of fit test: For this test, you need to provide the observed and expected values/distribution of a categorical variable. This test tells if the observations are significantly different from the expectations.
+1)Chi-Squared Test of Independence:
+For this test, you need to provide two categorical variables or a contingency table. This test tells if the two categorical variables are significantly related.
+										
+											 
+2)Chi-Squared Goodness of fit test:
+For this test, you need to provide the observed and expected values/distribution of a categorical variable. This test tells if the observations are significantly different from the expectations.
 			
 			
 			</nonparametricbuttontext>		
@@ -36,7 +50,8 @@
 		<secondScreenText>
 
 			<flowhelpText>
-			
+				<independenceCTest>This is the help for Chi-Square test for Independence
+			</independenceCTest>
 			
 			</flowhelpText>			
 	

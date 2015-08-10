@@ -45,3 +45,4 @@ Temporary Items
 #Exclude unwanted files
 *.swf
 .settings
+bin-debug

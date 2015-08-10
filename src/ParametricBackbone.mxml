@@ -4,15 +4,46 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
 		 currentState="state1"
 		 creationComplete="backboneCreationCompleteHandler(event)">
+
+	<s:layout>
+		<s:BasicLayout />
+	</s:layout>
+
 	
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
+			//File Variable for the browse
+			private var f:File;
+			
+			
 			protected function backboneCreationCompleteHandler(event:FlexEvent):void
 			{
-				// TODO Auto-generated method stub
+				// This will be called in Inherited class to add the test specific components
+			}
+			
+			protected function browseButton_clickHandler(event:MouseEvent):void
+			{
+				f = new File();
+				var ff:FileFilter = new FileFilter("Data File","*.csv");
+				f.browseForOpen("Select a CSV file",[ff]);
+				f.addEventListener(Event.SELECT,fileSelected);
+			}
+			
+			private function fileSelected(evt:Event):void
+			{
+				csvPath.text = f.name+" { "+f.nativePath+" }";
+				//Read CSV here
 				
+				csvData.visible=true;
+			}
+			
+			protected function calc_clickHandler(event:MouseEvent):void
+			{
+				currentState='result';
+				
+				//call native process
 			}
 			
 		]]>
@@ -20,50 +51,159 @@
 	
 	<s:states>
 		<s:State name="state1"/>
+		<s:State name="loadCSV"/>
+		<s:State name="state1Final"/>
 		<s:State name="state2"/>
 		<s:State name="state3"/>
+		<s:State name="result"/>
 	</s:states>
 	
 	<s:transitions>
-		<s:Transition fromState="state1" toState="state2">
+		
+		<s:Transition fromState="state1" toState="loadCSV">
+			<s:Resize target="{panel1}" widthTo="{inputPane.width*0.8}" heightTo="{inputPane.height*0.8}"/>
+		</s:Transition>
+		
+		<s:Transition fromState="loadCSV" toState="state1Final">
+			<s:Resize target="{panel1}" widthTo="{inputPane.width*0.4}" heightTo="{inputPane.height*0.6}"/>
+		</s:Transition>
+		
+		<s:Transition fromState="state1Final" toState="state2">
 			<s:Parallel target="{panel2}">
 				<s:Move3D zFrom="-100" duration="700"/>
 				<s:Fade duration="500"/>
 			</s:Parallel>
 		</s:Transition>
+		
 		<s:Transition fromState="state2" toState="state3">
 			<s:Parallel targets="{[panel3]}">
 				<s:Move3D zFrom="-100" duration="700"/>
 				<s:Fade duration="500"/>
 			</s:Parallel>
 		</s:Transition>
+		
+		<s:Transition fromState="state3" toState="result">
+			<s:Parallel targets="{[output,imgViewer]}">
+				<s:AddAction targets="{[output,imgViewer]}"/>
+				<s:Move3D zFrom="-100" duration="700"/>
+				<s:Fade duration="500"/>
+			</s:Parallel>
+		</s:Transition>
+		
 	</s:transitions>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:HDividedBox width="96%" height="100%">
-		<s:VGroup width="70%" height="100%" minWidth="{this.width*.5}">
-			<s:HGroup width="95%" height="60%" horizontalAlign="center" verticalAlign="middle">
-				<s:Panel includeIn="state1,state2,state3" width="34%" height="90%">
-					<s:VGroup id="panel1" horizontalAlign="center" verticalAlign="middle"
-							  width="100%" height="100%">
-						<s:Button label="click me" click="currentState='state2';"/>
+	<!--<mx:HDividedBox id="divider" width="100%" height="100%">-->
+	
+	<s:Group id="inputPane" width="70%" height="100%" minWidth="{this.width*0.50}">
+		<s:layout>
+			<s:BasicLayout/>
+		</s:layout>
+		
+		<s:Panel id="panel1" width="40%" height="60%" 
+				 width.loadCSV="80%"
+				 height.loadCSV="80%"
+				 x="{inputPane.width*0.07}" y="{inputPane.height*0.06}"
+				 title="Sample Data">
+			
+			<s:VGroup id="OptionsPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="state1">
+				<s:Button label="I have CSV" click="currentState='loadCSV';"/>
+				<s:Button label="I have data" click="currentState='state1Final';"/>
+			</s:VGroup>
+			
+			<s:VGroup id="csvPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="loadCSV">
+				<s:HGroup width="95%" height="15%" horizontalAlign="left" verticalAlign="middle">
+					<s:TextInput width="70%" height="30" id="csvPath" prompt="Browse for the file"
+								 fontSize="14"/>
+					<s:Spacer width="5%"/>
+					<s:Button width="100" height="30" id="browseButton" 
+							  label="Browse" click="browseButton_clickHandler(event)"
+							  fontSize="14"/>
+				</s:HGroup>
+				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
+					<s:Spacer width="1%"/>
+					<s:DataGrid width="68%" height="95%" id="csvData" visible="false"/>
+					<s:Spacer width="1%"/>
+					<s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="middle">
+						
+						<s:VGroup width="100%" height="85%" id="columnSelectionPane"
+								  horizontalAlign="center" verticalAlign="middle">
+							<!--Child components from inherited class goes here-->
+						</s:VGroup>
+						
+						<s:Button click="currentState='state1Final';" label="Done"
+								  width="100" height="30" fontSize="14"/>
+						
 					</s:VGroup>
-				</s:Panel>
-				<s:Spacer width="12%"/>
-				<s:Panel id="panel2" includeIn="state2,state3" width="34%" height="90%">
-					<s:Button label="click me" click="currentState='state3';"/>
-				</s:Panel>
-			</s:HGroup>
-			<s:Spacer height="6%"/>
-			<s:HGroup width="95%" height="30%" horizontalAlign="center" verticalAlign="middle">
-				<s:Panel id="panel3" includeIn="state3" width="60%" height="90%"/>
-				<s:Spacer width="15%"/>
-			</s:HGroup>
-		</s:VGroup>
-		<s:VGroup width="30%" height="100%" minWidth="{this.width*.3}">
-			<s:TextArea text="HELP"/>
-		</s:VGroup>
-	</mx:HDividedBox>
+				</s:HGroup>
+			</s:VGroup>
+			
+			<s:VGroup id="finalPanel1" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="state1Final,state2,state3,result">
+				<s:VGroup id="SampleParams" horizontalAlign="center" verticalAlign="middle"
+						  width="95%" height="85%">
+					<!-- Placeholder for Sample Data elements-->
+				</s:VGroup>
+				<s:Button label="Go to next" click="currentState='state2';"/>
+			</s:VGroup>
+			
+		</s:Panel>
+		
+		<s:Panel id="panel2" includeIn="state2,state3,result" width="40%" height="60%" 
+				 x="{inputPane.width*0.53}" y="{inputPane.height*0.06}"
+				 title="Population Data">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+				<s:VGroup id="PopnParams" horizontalAlign="center" verticalAlign="middle"
+						  width="95%" height="85%">
+					<!-- Placeholder for Population Data elements-->
+				</s:VGroup>
+				<s:Button label="Go to Next" click="currentState='state3';"/>
+			</s:VGroup>
+		</s:Panel>
+		
+		<s:HGroup width="95%" height="30%" horizontalAlign="left" verticalAlign="middle"
+				  x="{inputPane.width*0.07}" y="{inputPane.height*0.7}">
+			<s:Panel id="panel3" includeIn="state3,result" width="60%" height="90%"
+					 title="Hypotheses">
+				<!--Alternate and null hypothesis-->
+			</s:Panel>
+			<s:Spacer width="15%"/>
+			<s:Button width="100" height="50" label="Compute" id="calc" includeIn="state3,result"
+					  click="calc_clickHandler(event)"/>
+		</s:HGroup>
+		
+	</s:Group>
+	
+	<s:Group id="helpResultPane" width="30%" height="100%" minWidth="{this.width*0.30}"
+			 x="{this.width*0.7}" y="0">
+		<s:layout>
+			<s:BasicLayout/>
+		</s:layout>
+		
+		<s:Panel id="help1" width="85%" height="30%" 
+				 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.05}"
+				 title="Flow of Execution" excludeFrom="result">
+			
+		</s:Panel>
+		
+		<s:Panel id="help2" width="85%" height="57%" excludeFrom="result"
+				 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}">
+			
+		</s:Panel>
+		
+		<s:BorderContainer width="85%" height="38%" x="{helpResultPane.width*0.07}"
+						   id="output" y="{helpResultPane.height*0.05}"
+						   includeIn="result"/>
+		<s:Image width="96%" height="48%" includeIn="result"
+				 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
+				 id="imgViewer" source="@Embed('assets/tdist.png')"/>
+		
+	</s:Group>
+	
+	<!--</mx:HDividedBox>-->
+	
 </s:Group>
