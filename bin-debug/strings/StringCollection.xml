@@ -2,10 +2,192 @@
 
 <textData>
 		<mainScreenText>
-		<text>Please select the type of test you want to conduct.
-		
-	Parametric Test:   More suited for numerical data.
-	Non-Parametric Test:   More suited for categorical data.
-	</text>
+			<initialtext> 
+				Please select the type of test you want to conduct.
+
+	Parametric Test:More suited for numerical data.
+	Non-Paramteric Test: More suited for categorical data.
+			</initialtext>
+			
+			<parametricbuttontext>
+				
+				Select the kind of parametric test you wish to conduct.
+			
+			1)one sample t-test: This test requires the sample mean, sample standard deviation and the sample size of one sample. These can be entered or can be calculated from uploaded data.
+			2)two sample t-test: This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data.
+			3)paired-match t-test: This test requires the sample means, sample standard deviations and the sample sizes of two samples. These can be entered or can be calculated from uploaded data. BOTH THE SAMPLES SHOULD BE OF THE SAME SIZE.
+			 
+			
+				
+			
+			</parametricbuttontext>
+	
+			<nonparametricbuttontext> 
+			Please select which non-parametric test you want to conduct.
+
+			1)Chi-Squared Test of Independence: For this test, you need to provide two categorical variables or a contingency table. This test tells if the two categorical variables are significantly related.
+			2)Chi-Squared Goodness of fit test: For this test, you need to provide the observed and expected values/distribution of a categorical variable. This test tells if the observations are significantly different from the expectations.
+			
+			
+			</nonparametricbuttontext>		
+	
 		</mainScreenText>
-</textData>
+		
+		<secondScreenText>
+
+			<flowhelpText>
+			
+			
+			</flowhelpText>			
+	
+			<commonText>
+				<entervalueText>Please enter Sample size, mean and standard deviation. Mean and standard deviation must be numeric.
+							   Size must be a natural number.
+				</entervalueText>
+				
+				<filepathText>Please enter the file path.
+				</filepathText>
+				
+				<parcolumnloadText>Please Select the column(s) you want to conduct the test on. 
+								The values in this column(s) must be numeric.
+				</parcolumnloadText>
+				
+				<nparcolumnloadText>
+				Please select the column(s) you wish to conduct the test on. The column(s) must be categorical variable(s) with at least two levels. 
+				</nparcolumnloadText>
+				
+				<significanceText>
+				Please select the significance value. The value should be numeric. 
+				</significanceText>
+				<missingvalText>
+				Please Enter a value to replace the missing values in the file with. 
+				The value should be numeric. By default, the value is set to be zero.	
+				</missingvalText>
+			
+			
+				<parhyptohesisText>
+				Please complete the expression for null hypothesis.
+				The choice of the expression determines the alternate hypothesis.
+				The test will tell you if the null hypothesis can be rejected.
+				</parhyptohesisText>
+				
+				<nparhypothesisText>
+				The hypotheses appear on the screen. These have been fixed by the data and the column you have selected. Please confirm to move to the next panel.
+				</nparhypothesisText>
+				
+				<computeText>
+				Please click on "Compute" to show the results.
+				</computeText>
+				
+				<backbuttonText>
+				Please click on back to go to the previous step.
+				</backbuttonText>
+				
+				<homebutttonText>
+				Please click on Home button to go to the Home Screen.
+				</homebutttonText>
+			</commonText>
+			
+			
+			
+			
+			<onesamplebuttontext>
+				
+				<sampleText>
+				Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. 
+				Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+				</sampleText>
+				
+				
+				
+				<populationText>
+				Please enter the mean of the population. The value should be numeric.
+				</populationText>
+				
+				
+				
+				
+			</onesamplebuttontext>		
+			
+			
+			<twosamplebuttontext>
+				<sampleText>
+				Please select "Enter Values" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
+				Please select "Upload data" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
+				</sampleText>
+				
+				<populationText>
+				Please enter the difference between means of the two populations. The value should be numeric.
+				</populationText>
+				
+			</twosamplebuttontext>
+			
+			<pairedbuttontext>
+			
+				<sampleText>
+				Please select "Enter Values" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
+				Please select "Upload data" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
+				</sampleText>
+				
+				<populationText>
+				Please enter the mean of the population. The value should be numeric.
+				</populationText>
+			
+			</pairedbuttontext>
+			
+			<independencebuttontext>
+				
+				<observedText>
+				Please select 'Upload Categorical Variables' if you want to upload 2 categorical variables, each with at least two levels.
+				These can be input separately or can be chosen as two columns from a CSV.
+
+
+		      	Please select 'Upload distributions' if you want to upload the frequency distributions of 2 categorical variables, each with at least two levels. 
+		      	Note that the sum of the frequencies and the level names in both the distributions should be the same.
+
+
+		      	Please select 'Upload Contingency Table' if you want to upload the contingency table.
+				</observedText>
+			
+				
+			
+			</independencebuttontext>
+			
+			<goodnessbuttontext>
+			 <observedText>Please select 'Upload categorical Variable' if you want to upload a categorical variable with at least 2 levels. 
+			 The distribution will be calculated. 
+			 
+			 Please select 'Upload distribution' if you want to upload the distribution of the categorical variable.
+
+			 Please select 'Select from CSV' if you want to upload a CSV and choose a column from it for the test.
+			 </observedText>
+			 
+			 <expectedTest>
+			 Please select 'Upload categorical Variable' if you want to upload a categorical variable with at least 2 levels. 
+			 The distribution will be calculated. 
+			 Note that the names of the levels and the number of values must match those of the Observed variable.
+
+			
+			 Please select 'Upload frequency distribution' if you want to upload the distribution of the expected categorical variable. 
+			 Note that the names of the levels and the number of values must match those of the Observed distribution. 
+
+
+			 Please select 'Upload probability distribution' if you want to upload the expected probabibility distribution. 
+			 Note that the names of the levels must match the names of the levels in the observed data. 
+			 Also, the sum of all the values in the probability distribution should be 1.
+
+			 
+			 Please select 'Enter Frequencies' if you want to enter the expected frequency for each level. 
+			 You need not know the level names. This option is recommended if the number of levels is low.
+
+			
+			 Please select 'Enter Probabilities' if you want to enter the expected probability for each level. 
+			 You need not know the level names. This option is recommended if the number of levels is low.
+			 
+			 
+			 
+			 </expectedTest>
+			</goodnessbuttontext>
+			
+		</secondScreenText>
+</textData>	

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		 xmlns:events="air.update.events.*"
+		 currentState="state1">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function browsefButtonClickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var f:File = new File;
+				var ff:FileFilter = new FileFilter("*.csv","*.csv");
+				f.addEventListener(Event.SELECT,onSelect);
+				f.browseForOpen("Selecte a CSV file", [ff]);
+				
+				
+				
+			}
+			
+			
+			
+			protected function onSelect(event:Event):void
+			{
+				currentState = 'showCsvState';
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:states>
+		<s:State name="state1"/>
+		<s:State name="showCsvState"/>
+		<s:State name="state2"/>
+	</s:states>
+	
+	<s:transitions>
+		<s:Transition fromState="state1" toState="showCsvState">
+			<s:Resize target="{csvPanel}"/>
+		</s:Transition>
+		<s:Transition fromState="showCsvState" toState="state2">
+			<s:Sequence>
+				<s:Resize target="{csvPanel}"/>
+				<s:AddAction target="{hypothesisPanel}"/>
+				<s:Fade target="{hypothesisPanel}"/>
+			</s:Sequence>
+			
+		</s:Transition>
+	</s:transitions>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Style source="assets/headerStyle.css"/>
+	
+	<mx:HDividedBox width="96%" height="100%">
+		<s:VGroup width="100%" height="100%" minWidth="{this.width*.5}">
+			<s:Panel height="70%" height.showCsvState="100%" width="100%" id="csvPanel">
+				<s:VGroup height="100%" width="100%" horizontalAlign="center" paddingTop="10">
+				<s:HGroup height="10%" width="100%" id="hgrp" horizontalAlign="center" verticalAlign="middle">
+					<s:Label id="path_label" fontSize="14" paddingLeft="10" text="Filepath : "/>
+					<s:TextInput id="filePath" width="300" prompt="Enter the file directory" editable="false"  />
+					<s:Button id="browsefButton" label="Browse" click="browsefButtonClickHandler(event)" />
+				</s:HGroup>
+				<s:Label text="No File Selected" height="100%" verticalAlign="middle" fontSize="20" fontWeight="bold" includeIn="state1" />
+				<mx:DataGrid id="csv_data" width="75%" height="70%" chromeColor="#C5C299"
+							 contentBackgroundColor="#C0BB6F" horizontalScrollPolicy="auto" excludeFrom="state1"/>
+					<s:Button label="Proceed" styleName="customButton" click="currentState='state2'" includeIn="showCsvState"/>
+				</s:VGroup>
+			</s:Panel>
+			
+			<s:Spacer height="5%"/>
+			
+			<s:Panel width="100%" height="35%" includeIn="state2" id="hypothesisPanel">
+				
+			</s:Panel>
+		</s:VGroup>
+		
+		<s:VGroup width="30%" height="100%" minWidth="{this.width*.3}" >
+			
+		</s:VGroup>
+	</mx:HDividedBox>
+</s:Group>

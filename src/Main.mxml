@@ -12,13 +12,50 @@
 					   >
 	<fx:Script>
 		<![CDATA[
-			import ParametricTests.PairedTTest;
-			protected function button1_clickHandler(event:MouseEvent):void
+			import ParametricTests.*;
+			import NonParametricTests.*
+			protected function pairedTTestClickHandler(event:MouseEvent):void
 			{
 				currentState='subTestSelected';
 				var p:PairedTTest = new PairedTTest();
 				testScreen.addElement(p);
+				mainTitle.text = "Paired t-Test (Parametric Test)";
 			}
+			protected function oneTTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:PairedTTest = new PairedTTest();
+				testScreen.addElement(p);
+				mainTitle.text = "One Sample t-Test (Parametric Test)";
+			}
+			protected function twoTTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:PairedTTest = new PairedTTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Two Sample t-Test (Parametric Test)";
+			}
+			protected function independenceCTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:IndependenceCTest = new IndependenceCTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Chi-Squared Test for Independence (Non-Parametric Test)";
+			}
+			protected function goodFitCTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:PairedTTest = new PairedTTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Chi-Squared Test for Goodness of Fit (Non-Parametric Test)";
+			}
+			
+			protected function backButton_clickHandler(event:MouseEvent):void
+			{
+				testScreen.removeAllElements();
+				currentState='landingPage';
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -31,16 +68,19 @@
 	</s:states>
 	
 	<s:transitions>
+		<s:Transition fromState="*" toState="landingPage">
+			<s:RemoveAction target="{[testScreen]}"/>
+		</s:Transition>
 		<s:Transition fromState="*" toState="subTestSelected">
 			<s:Sequence>
 				<s:Parallel targets="{[panelData,testSelectionGuidance]}">
-					<s:Fade duration="600"/>
-					<s:Move xTo="-300" duration="1000"/>
+					<s:Fade/>
+					<s:Move xTo="125"/>
 				</s:Parallel>
 				<s:AddAction target="{testScreen}"/>
 				<s:Parallel target="{testScreen}">
 					<s:Fade duration="600"/>
-					<s:Move xFrom="-300" duration="1000"/>
+					<s:Move xFrom="0" duration="600"/>
 				</s:Parallel>
 			</s:Sequence>
 		</s:Transition>
@@ -79,7 +119,7 @@
 		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml"/>
 	</fx:Declarations>
 	
-	<fx:Style source="headerStyle.css"/>
+	<fx:Style source="assets/headerStyle.css"/>
 	
 	
 	<s:Group width="100%" height="100%" id="mainGroup">
@@ -87,6 +127,7 @@
 		<s:layout>
 			<s:BasicLayout/>
 		</s:layout>
+		
 		<s:Label id="mainTitle"
 				 text="Hypothesis Testing"
 				 styleName="titleHeader"
@@ -94,6 +135,12 @@
 				 height="8%"
 				 x="{mainGroup.width*0.02}"
 				 y="{mainGroup.height*0.02}"/>
+		<s:Button id="backButton"
+				  label="Back"
+				  click="backButton_clickHandler(event)"
+				  excludeFrom="landingPage"
+				  x="{mainGroup.width*0.88}"
+				  y="{mainGroup.height*0.04}"/>
 		<s:TextArea id="testSelectionGuidance"
 					text="{stringCollection.mainScreenText.text}"
 					borderVisible="false"
@@ -105,8 +152,8 @@
 					includeIn="landingPage"/>
 		
 		<s:Panel id="panelData"
-				 width="{mainGroup.width*0.4}"
-				 x="{mainGroup.width*0.3}"
+				 width="{mainGroup.width*0.35}"
+				 x="{mainGroup.width*0.35}"
 				 y="{mainGroup.height*0.35}"
 				 excludeFrom = "subTestSelected"
 				 title="Select a test:">	
@@ -121,15 +168,18 @@
 				<s:VGroup id="parTestList" paddingLeft="30" width="100%" includeIn="parTestSelected">
 					<s:Button id="oneTTest" 
 							  label="One Sample t-Test" 
-							  width="75%" height="40"  
+							  width="75%" height="40" 
+							  click="oneTTestClickHandler(event)"
 							  styleName="customButton"/>
 					<s:Button id="twoTTest" 
 							  label="Two Sample t-Test" 
-							  width="75%" height="40"  
+							  width="75%" height="40"
+							  click="twoTTestClickHandler(event)"
 							  styleName="customButton"/>
 					<s:Button id="pairedTTest" 
 							  label="Paired Sample t-Test" 
 							  width="75%" height="40" 
+							  click="pairedTTestClickHandler(event)"
 							  styleName="customButton"/>
 				</s:VGroup>
 				
@@ -143,16 +193,18 @@
 				<s:VGroup id="nparTestList" includeIn="nparTestSelected" width="100%" paddingLeft="20" >
 					<s:Button id="independenceCTest" 
 							  label="Chi-squared Test for Independence" 
-							  width="75%" height="40" 						  
+							  width="75%" height="40" 
+							  click="independenceCTestClickHandler(event)"
 							  styleName="customButton"/>
-					<s:Button id="GoodFitCTest" 
+					<s:Button id="goodFitCTest" 
 							  label="Chi-squared Test for Goodness Of Fit" 
-							  width="75%" height="40" 						  
+							  width="75%" height="40"
+							  click="goodFitCTestClickHandler(event)"
 							  styleName="customButton"/>					
 				</s:VGroup>
 			</s:VGroup>	
 		</s:Panel>
-		<s:Button label="trans" click="button1_clickHandler(event)"/>
+		<s:Button label="trans" click="pairedTTestClickHandler(event)"/>
 		<s:Button x = "80" label="back" click="currentState='landingPage';"/>
 		
 		
@@ -162,6 +214,7 @@
 						   x="{mainGroup.width*0.02}"
 						   y="{mainGroup.height*0.11}" 
 						   includeIn="subTestSelected"
+						   borderVisible="false"
 						   >
 		</s:BorderContainer>
 		
