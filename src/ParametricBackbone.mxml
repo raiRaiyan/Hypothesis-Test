@@ -284,8 +284,8 @@
 									<s:dataProvider>
 										<s:ArrayList>
 											<fx:Object text="equals"/>
-											<fx:Object text="greater than"/>
-											<fx:Object text="less than"/>
+											<fx:Object text="greater/equals"/>
+											<fx:Object text="less/equals"/>
 										</s:ArrayList>
 									</s:dataProvider>
 								</s:ComboBox>
