@@ -2,7 +2,6 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
-		 xmlns:events="air.update.events.*"
 		 currentState="state1"
 		 creationComplete="backboneCreationCompleteHandler(event)">
 	
@@ -67,13 +66,13 @@
 		<fx:XML source="strings/StringCollection.xml" id="stringCollection"/>
 	</fx:Declarations>
 	
-	<fx:Style source="assets/headerStyle.css"/>
-	
 	<mx:HDividedBox width="100%" height="100%">
+		
 		<s:VGroup height="100%"
 				  width="100%" 
 				  paddingRight="5"
-				  minWidth="{this.width*.5}">
+				  minWidth="{this.width*.6}">
+			
 			<s:Panel height="70%"
 					 height.showCsvState="100%"
 					 width="100%"
@@ -127,21 +126,28 @@
 			</s:Panel>
 			
 		</s:VGroup>
+		
 		<s:VGroup width="30%"
 				  height="100%"
 				  minWidth="{this.width*.3}" 
 				  paddingLeft="5"
 				  paddingRight="5">
+			
 			<s:Panel height="48%" width="100%" title="Process flow:">
 				<s:TextArea id="processFlowText"
 							text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 							borderVisible="false"
 							width="100%"/>
 			</s:Panel>
+			
 			<s:Spacer height="4%"/>
+			
 			<s:Panel height="48%" width="100%">
 				
 			</s:Panel>
+		
 		</s:VGroup>
+	
 	</mx:HDividedBox>
+
 </s:Group>
