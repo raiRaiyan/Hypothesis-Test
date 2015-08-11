@@ -32,12 +32,22 @@
 			//Variables needed for the native process
 			private var tails:int; //0 - 2 tailed, 1 - lower tail, 2 - upper tail
 			
+			//variables for the native process startup info
+			public var proc:NativeProcess = null;
+			public var procInfo:NativeProcessStartupInfo = null;
+			
+			public var exe:File = new File("C:/Program Files/R/R-3.2.1/bin/Rscript.exe");
+			public var workingDir:File = new File("./working/");
+			public var args:Vector.<String> = null;
+			public var rFile:String = null;
+			
+			//Inherit this method to add elements to the backbone
 			protected function backboneCreationCompleteHandler(event:FlexEvent):void
 			{
 				// This will be called in Inherited class to add the test specific components
 			}
 			
-			protected function browseButton_clickHandler(event:MouseEvent):void
+			private function browseButton_clickHandler(event:MouseEvent):void
 			{
 				file = new File();
 				var filter:FileFilter = new FileFilter("Data File","*.csv");
@@ -53,14 +63,42 @@
 				csvData.visible=true;
 			}
 			
-			protected function calc_clickHandler(event:MouseEvent):void
+			protected function compute_clickHandler(event:MouseEvent):void
 			{
 				if(hypoFlag==true)
 				{
 					currentState='result';
 				}
 				
-				//call native process
+				proc=new NativeProcess();
+				procInfo = new NativeProcessStartupInfo();
+				
+				procInfo.executable = exe;
+				procInfo.arguments = args;
+				procInfo.workingDirectory = workingDir;
+				
+				//Event Handlers
+				proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
+				proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
+				proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
+				
+				proc.start(procInfo);
+				
+			}
+			
+			public function onOutputData(event:ProgressEvent):void
+			{
+
+			}
+			
+			public function onErrorData(event:ProgressEvent):void
+			{
+
+			}
+			
+			public function onProcessExit(event:NativeProcessExitEvent):void
+			{
+				
 			}
 			
 			protected function panel1NextButton_clickHandler(event:MouseEvent):void
@@ -184,6 +222,7 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml"/>
 	</fx:Declarations>
 	
 	<mx:HDividedBox id="divider" width="100%" height="100%">
@@ -314,8 +353,8 @@
 
 				</s:Panel>
 				<s:Spacer width="15%"/>
-				<s:Button width="100" height="50" label="Compute" id="calc" includeIn="state3,result"
-						  click="calc_clickHandler(event)"/>
+				<s:Button width="100" height="50" label="Compute" id="compute" includeIn="state3,result"
+						  click="compute_clickHandler(event)"/>
 			</s:HGroup>
 			
 		</s:Group>
@@ -333,7 +372,8 @@
 			</s:Panel>
 			
 			<s:Panel id="help2" width="85%" height="57%" excludeFrom="result"
-					 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}">
+					 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}"
+					 title="General Help">
 				
 			</s:Panel>
 			
