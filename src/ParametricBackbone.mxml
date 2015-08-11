@@ -12,11 +12,25 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.binding.utils.BindingUtils;
 			import mx.events.FlexEvent;
 			
-			//File Variable for the browse
-			private var f:File;
+			import spark.events.IndexChangeEvent;
 			
+			//File Variable for the browse
+			private var file:File;
+			
+			//Public flags to indicate completion of input in a panel
+			public var panel1Flag:Boolean = false;
+			public var panel2Flag:Boolean = false;
+			public var hypoFlag:Boolean = false;
+			
+			//Public variables needed for the UI
+			public var popnMeanValue:Number;
+			public var varName:String = null;
+			
+			//Variables needed for the native process
+			private var tails:int; //0 - 2 tailed, 1 - lower tail, 2 - upper tail
 			
 			protected function backboneCreationCompleteHandler(event:FlexEvent):void
 			{
@@ -25,15 +39,15 @@
 			
 			protected function browseButton_clickHandler(event:MouseEvent):void
 			{
-				f = new File();
-				var ff:FileFilter = new FileFilter("Data File","*.csv");
-				f.browseForOpen("Select a CSV file",[ff]);
-				f.addEventListener(Event.SELECT,fileSelected);
+				file = new File();
+				var filter:FileFilter = new FileFilter("Data File","*.csv");
+				file.browseForOpen("Select a CSV file",[filter]);
+				file.addEventListener(Event.SELECT,fileSelected);
 			}
 			
 			private function fileSelected(evt:Event):void
 			{
-				csvPath.text = f.name+" { "+f.nativePath+" }";
+				csvPath.text = file.name+" { "+file.nativePath+" }";
 				//Read CSV here
 				
 				csvData.visible=true;
@@ -41,9 +55,85 @@
 			
 			protected function calc_clickHandler(event:MouseEvent):void
 			{
-				currentState='result';
+				if(hypoFlag==true)
+				{
+					currentState='result';
+				}
 				
 				//call native process
+			}
+			
+			protected function panel1NextButton_clickHandler(event:MouseEvent):void
+			{
+				//set the variable varName if its null
+				//set it as X or X-Y depending on the test
+				
+				//dummy for now - set the value from inherited class
+				if(varName==null)
+				{
+					varName="X-Y";
+				}
+				
+				//Inherited class must set the flag to true after it gets all the values
+				//Currently set to false for testing 
+				if(panel1Flag==false)
+				{
+					currentState='state2';
+				}
+			}
+			
+			protected function panel2NextButton_clickHandler(event:MouseEvent):void
+			{
+				
+				if(popnMeanInput.text!="")
+				{
+					popnMeanValue=Number(popnMeanInput.text);
+					panel2Flag=true;
+				}
+				//Inherited class must set the flag to true after it gets all the values
+				if(panel2Flag==true)
+				{
+					currentState='state3';
+				}
+			}
+			
+			protected function csvPaneDoneButton_clickHandler(event:MouseEvent):void
+			{
+				//Set the variable varName to be shown in Hypothesis Panel
+				//If its one column then directly set the string to column name
+				//If its difference bw means, set string as difference bw two variables
+				
+				//dummy for now - set the value from inherited class
+				varName="X-Y";
+				currentState='state1Final';
+			}
+			
+			protected function hypoExpression_changeHandler(event:IndexChangeEvent):void
+			{
+				if(hypoExpression.selectedIndex==-3)
+				{
+					hypoExpression.selectedIndex=-1;
+				}
+				else
+				{
+					switch(hypoExpression.selectedIndex)
+					{
+						case 0:
+							alternateExpr.text = "Not Equals";
+							tails=0;
+							break;
+						case 1:
+							alternateExpr.text = "Less than";
+							tails=1;
+							break;
+						case 2:
+							alternateExpr.text = "Greater than";
+							tails=2;
+							break;
+					}
+					altHypo.visible=true;
+					hypoFlag=true;
+				}
 			}
 			
 		]]>
@@ -133,10 +223,12 @@
 							
 							<s:VGroup width="100%" height="85%" id="columnSelectionPane"
 									  horizontalAlign="center" verticalAlign="middle">
-								<!--Child components from inherited class goes here-->
+								
+								<!--Child components for column selection inherited class goes here-->
+								
 							</s:VGroup>
 							
-							<s:Button click="currentState='state1Final';" label="Done"
+							<s:Button click="csvPaneDoneButton_clickHandler(event)" label="Done" id="csvPaneDoneButton"
 									  width="100" height="30" fontSize="14"/>
 							
 						</s:VGroup>
@@ -147,9 +239,11 @@
 						  width="100%" height="100%" includeIn="state1Final,state2,state3,result">
 					<s:VGroup id="SampleParams" horizontalAlign="center" verticalAlign="middle"
 							  width="95%" height="85%">
+						
 						<!-- Placeholder for Sample Data elements-->
+						
 					</s:VGroup>
-					<s:Button label="Go to next" click="currentState='state2';"/>
+					<s:Button id="panel1NextButton" label="Go to next" click="panel1NextButton_clickHandler(event)"/>
 				</s:VGroup>
 				
 			</s:Panel>
@@ -158,11 +252,16 @@
 					 x="{inputPane.width*0.53}" y="{inputPane.height*0.06}"
 					 title="Population Data">
 				<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-					<s:VGroup id="PopnParams" horizontalAlign="center" verticalAlign="middle"
-							  width="95%" height="85%">
+					<s:VGroup id="PopnParams" horizontalAlign="left" verticalAlign="middle"
+							  width="80%" height="85%">
+						
+						<s:Label id="popnMeanLabel" text="Population mean"/>
+						<s:TextInput id="popnMeanInput" width="60%" prompt="Enter a numeric value"
+									 restrict="0-9."/>
 						<!-- Placeholder for Population Data elements-->
+						
 					</s:VGroup>
-					<s:Button label="Go to Next" click="currentState='state3';"/>
+					<s:Button id="panel2NextButton" label="Go to Next" click="panel2NextButton_clickHandler(event)"/>
 				</s:VGroup>
 			</s:Panel>
 			
@@ -170,7 +269,49 @@
 					  x="{inputPane.width*0.07}" y="{inputPane.height*0.7}">
 				<s:Panel id="panel3" includeIn="state3,result" width="60%" height="90%"
 						 title="Hypotheses">
-					<!--Alternate and null hypothesis-->
+					<s:HGroup width="100%" height="100%" horizontalAlign="center"
+							  verticalAlign="middle">
+						
+						<s:VGroup width="40%" height="80%" horizontalAlign="left" verticalAlign="middle">
+							<s:Label text="Null Hypothesis" fontSize="18" fontWeight="bold"/>
+							<s:Spacer height="10%"/>
+							
+							<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
+								<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
+								<s:ComboBox id="hypoExpression" prompt="Expression" 
+											change="hypoExpression_changeHandler(event)"
+											labelField="text">
+									<s:dataProvider>
+										<s:ArrayList>
+											<fx:Object text="equals"/>
+											<fx:Object text="greater than"/>
+											<fx:Object text="less than"/>
+										</s:ArrayList>
+									</s:dataProvider>
+								</s:ComboBox>
+								<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
+							</s:HGroup>
+						
+						</s:VGroup>
+						
+						<s:Spacer width="5%"/>
+						
+						<s:VGroup id="altHypo" width="40%" height="80%" 
+								  horizontalAlign="left" verticalAlign="middle"
+								  visible="false">
+							<s:Label text="Alternative Hypothesis" fontSize="18" fontWeight="bold"/>
+							<s:Spacer height="10%"/>
+							
+							<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
+								<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
+								<s:Label id="alternateExpr" text=""/>
+								<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
+							</s:HGroup>
+						
+						</s:VGroup>
+						
+					</s:HGroup>
+
 				</s:Panel>
 				<s:Spacer width="15%"/>
 				<s:Button width="100" height="50" label="Compute" id="calc" includeIn="state3,result"
