@@ -3,19 +3,25 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
 		 currentState="state1"
-		 creationComplete="backboneCreationCompleteHandler(event)">
+		 creationComplete="backboneCreationCompleteHandler(event)"
+		 stateChangeComplete="backbone_stateChangeCompleteHandler(event)">
 	
 	<s:layout>
 		<s:BasicLayout />
 	</s:layout>
 	
+	<fx:Metadata>
+		[Event(name="colNamesAvailable", type="flash.events.Event")]
+	</fx:Metadata>
 	
 	<fx:Script>
 		<![CDATA[
-			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.events.FlexEvent;
 			
+			import spark.components.gridClasses.GridColumn;
 			import spark.events.IndexChangeEvent;
 			
 			//File Variable for the browse
@@ -27,11 +33,16 @@
 			public var hypoFlag:Boolean = false;
 			
 			//Public variables needed for the UI
+			[Bindable]
 			public var popnMeanValue:Number;
+			[Bindable]
 			public var varName:String = null;
 			
 			//Variables needed for the native process
 			private var tails:int; //0 - 2 tailed, 1 - lower tail, 2 - upper tail
+			private var pValue:Number;
+			public var sigLevel:Number;
+			
 			
 			//variables for the native process startup info
 			public var proc:NativeProcess = null;
@@ -42,11 +53,17 @@
 			public var args:Vector.<String> = null; //set from inherited class
 			public var rFile:String = null; //set from inherited class
 			
-			//Important variables
-			private var pValue:Number;
-			public var sigLevel:Number;
+			//Variables for the datagrid control
+			[Bindable(event="colNamesAvailable")]
+			public var colnames:ArrayCollection; //use this to populate the column selection combobox
 			
 			//Inherit this method to add elements to the backbone
+			protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
 			protected function backboneCreationCompleteHandler(event:FlexEvent):void
 			{
 				// This will be called in Inherited class to add the test specific components
@@ -64,6 +81,46 @@
 			{
 				csvPath.text = file.name+" { "+file.nativePath+" }";
 				//Read CSV here
+				
+				//Using old reading file now for testing
+				var readStream:FileStream = new FileStream();
+				readStream.open(file,FileMode.READ);
+				
+				var data:String = readStream.readUTFBytes(file.size);
+				
+				var quote:RegExp = /"/gm;
+				data = data.replace(quote,"");
+				
+				var rowData:Array = data.split("\r\n");
+				
+				var colname:Array = rowData[0].split(",");//Array has all the names of the columns
+				
+				colnames = new ArrayCollection(colname);
+				dispatchEvent(new Event("colNamesAvailable"));
+				
+				var colnameForDatagrid:ArrayList = new ArrayList();
+				
+				
+				for(var i:int=0;i<colname.length;i++)
+				{
+					var cn:GridColumn = new GridColumn();
+					cn.dataField = colname[i];
+					colnameForDatagrid.addItem(cn);
+				}
+				
+				csvData.columns = colnameForDatagrid;
+				
+				var contents:ArrayCollection = new ArrayCollection();
+				for(i=1;i<rowData.length;i++)
+				{
+					var obj:Object = new Object();
+					for(var j:int=0;j<colname.length;j++)
+					{
+						obj[colname[j]]=rowData[i].split(",")[j];
+					}
+					contents.addItem(obj);
+				}
+				csvData.dataProvider = contents;
 				
 				csvData.visible=true;
 			}
@@ -120,7 +177,10 @@
 			
 			public function onProcessExit(event:NativeProcessExitEvent):void
 			{
-				currentState='result';
+				if(event.exitCode==0)
+				{
+					currentState='result';
+				}
 			}
 			
 			protected function panel1NextButton_clickHandler(event:MouseEvent):void
@@ -136,7 +196,7 @@
 				
 				//Inherited class must set the flag to true after it gets all the values
 				//Currently set to false for testing 
-				if(panel1Flag==false)
+				if(panel1Flag==true)
 				{
 					currentState='state2';
 				}
@@ -144,12 +204,40 @@
 			
 			protected function panel2NextButton_clickHandler(event:MouseEvent):void
 			{
+				if(popnMeanInput.text=="")
+				{
+					//Add a icon to the left of input text
+				}
 				
-				if(popnMeanInput.text!="")
+				else
 				{
 					popnMeanValue=Number(popnMeanInput.text);
+					var check1:Boolean = true;
+				}
+				
+				if(sigLevelInput.text=="")
+				{
+					//Add a icon to the left of input text
+				}
+				
+				else
+				{
+					sigLevel = Number(sigLevelInput.text);
+					if(sigLevel>=1 || sigLevel<=0)
+					{
+						sigLevelInput.text=null;
+					}
+					else
+					{
+						var check2:Boolean = true;
+					}
+				}
+				
+				if(check1&&check2)
+				{
 					panel2Flag=true;
 				}
+				
 				//Inherited class must set the flag to true after it gets all the values
 				if(panel2Flag==true)
 				{
@@ -195,9 +283,13 @@
 					hypoFlag=true;
 				}
 			}
-			
 		]]>
 	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml"/>
+	</fx:Declarations>
 	
 	<s:states>
 		<s:State name="state1"/>
@@ -242,10 +334,6 @@
 		
 	</s:transitions>
 	
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml"/>
-	</fx:Declarations>
 	
 	<s:Group id="inputPane" width="70%" height="100%">
 		<s:layout>
@@ -313,10 +401,14 @@
 				 title="Population Data">
 			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
 				<s:VGroup id="PopnParams" horizontalAlign="left" verticalAlign="middle"
-						  width="80%" height="85%">
+						  width="70%" height="85%">
 					
 					<s:Label id="popnMeanLabel" text="Population mean"/>
 					<s:TextInput id="popnMeanInput" width="60%" prompt="Enter a numeric value"
+								 restrict="0-9."/>
+					<s:Spacer height="5%"/>
+					<s:Label text="Significance Value"/>
+					<s:TextInput id="sigLevelInput" width="60%" prompt="Enter a value between 0-1"
 								 restrict="0-9."/>
 					<!-- Placeholder for Population Data elements-->
 					

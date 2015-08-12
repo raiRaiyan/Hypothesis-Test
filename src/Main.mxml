@@ -12,8 +12,9 @@
 					   >
 	<fx:Script>
 		<![CDATA[
+			import NonParametricTests.*;
+			
 			import ParametricTests.*;
-			import NonParametricTests.*
 				protected function pairedTTestClickHandler(event:MouseEvent):void
 				{
 					currentState='subTestSelected';
@@ -24,14 +25,14 @@
 				protected function oneTTestClickHandler(event:MouseEvent):void
 				{
 					currentState='subTestSelected';
-					var p:PairedTTest = new PairedTTest();
+					var p:OneTTest = new OneTTest();
 					testScreen.addElement(p);
 					mainTitle.text = "One Sample t-Test (Parametric Test)";
 				}
 				protected function twoTTestClickHandler(event:MouseEvent):void
 				{
 					currentState='subTestSelected';
-					var p:PairedTTest = new PairedTTest();
+					var p:TwoTTest = new TwoTTest();
 					testScreen.addElement(p);
 					mainTitle.text = "Two Sample t-Test (Parametric Test)";
 				}
@@ -45,7 +46,7 @@
 				protected function goodFitCTestClickHandler(event:MouseEvent):void
 				{
 					currentState='subTestSelected';
-					var p:PairedTTest = new PairedTTest();
+					var p:GoodFitCTest = new GoodFitCTest();
 					testScreen.addElement(p);
 					mainTitle.text = "Chi-Squared Test for Goodness of Fit (Non-Parametric Test)";
 				}
