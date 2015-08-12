@@ -32,6 +32,18 @@ This test requires the sample means, sample standard deviations and the sample s
 			
 			</parametricbuttontext>
 	
+			<parflowHelp>
+			In the first step, you'll be asked to enter the Sample Data. 
+			Next, you will be asked to enter the Population Data. 
+			Then, you are required to select and confirm the Null and Alternate Hypotheses, and press 'Compute', which will display the results.
+			</parflowHelp>
+			
+			<nparflowHelp>In the first step, you'll be asked to enter the Observed Data. 
+			Next, you will be asked to enter or confirm the Expected Data. 
+			Then, you are required to confirm the Null and Alternate Hypotheses, and press 'Compute', which will display the results.
+			</nparflowHelp>
+	
+	
 			<nonparametricbuttontext> 
 			Please select which non-parametric test you want to conduct.
 
