@@ -13,6 +13,7 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.binding.utils.BindingUtils;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			
 			import spark.events.IndexChangeEvent;
@@ -37,9 +38,13 @@
 			public var procInfo:NativeProcessStartupInfo = null;
 			
 			public var exe:File = new File("C:/Program Files/R/R-3.2.1/bin/Rscript.exe");
-			public var workingDir:File = new File("./working/");
-			public var args:Vector.<String> = null;
-			public var rFile:String = null;
+			public var workingDir:File = File.applicationDirectory.resolvePath("working");
+			public var args:Vector.<String> = null; //set from inherited class
+			public var rFile:String = null; //set from inherited class
+			
+			//Important variables
+			private var pValue:Number;
+			public var sigLevel:Number;
 			
 			//Inherit this method to add elements to the backbone
 			protected function backboneCreationCompleteHandler(event:FlexEvent):void
@@ -67,38 +72,55 @@
 			{
 				if(hypoFlag==true)
 				{
-					currentState='result';
+					proc=new NativeProcess();
+					procInfo = new NativeProcessStartupInfo();
+					
+					procInfo.executable = exe;
+					procInfo.arguments = args;
+					procInfo.workingDirectory = workingDir;
+					
+					//Event Handlers
+					proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
+					proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
+					proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
+					
+					proc.start(procInfo);
+					
 				}
-				
-				proc=new NativeProcess();
-				procInfo = new NativeProcessStartupInfo();
-				
-				procInfo.executable = exe;
-				procInfo.arguments = args;
-				procInfo.workingDirectory = workingDir;
-				
-				//Event Handlers
-				proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
-				proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
-				proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
-				
-				proc.start(procInfo);
 				
 			}
 			
 			public function onOutputData(event:ProgressEvent):void
 			{
-
+				//Read the P-Value
+				pValue = Number(proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable));
+				
+				//Set the text to the TextArea
+				output.text ="P-Value is : "+String(pValue)+"\n";
+				if(pValue<sigLevel)
+				{
+					output.text+= "Null Hypothesis cannot be rejected\n";
+				}
+				else
+				{
+					output.text+= "Null Hypothesis is rejected\n";
+				}
+				
+				//Set image source to the image viewer
+				imgViewer.source = "/working/outputImg.png";
+				imgViewer.validateNow(); //sometimes source change takes time to register
 			}
 			
 			public function onErrorData(event:ProgressEvent):void
 			{
-
+				//Capture the error message
+				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
+				Alert.show(err,"Oops.!!");
 			}
 			
 			public function onProcessExit(event:NativeProcessExitEvent):void
 			{
-				
+				currentState='result';
 			}
 			
 			protected function panel1NextButton_clickHandler(event:MouseEvent):void
@@ -225,167 +247,164 @@
 		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml"/>
 	</fx:Declarations>
 	
-	<mx:HDividedBox id="divider" width="100%" height="100%">
+	<s:Group id="inputPane" width="70%" height="100%">
+		<s:layout>
+			<s:BasicLayout/>
+		</s:layout>
 		
-		<s:Group id="inputPane" width="70%" height="100%" minWidth="{this.width*0.6}">
-			<s:layout>
-				<s:BasicLayout/>
-			</s:layout>
+		<s:Panel id="panel1" width="40%" height="60%" 
+				 width.loadCSV="80%"
+				 height.loadCSV="80%"
+				 x="{inputPane.width*0.07}" y="{inputPane.height*0.06}"
+				 title="Sample Data">
 			
-			<s:Panel id="panel1" width="40%" height="60%" 
-					 width.loadCSV="80%"
-					 height.loadCSV="80%"
-					 x="{inputPane.width*0.07}" y="{inputPane.height*0.06}"
-					 title="Sample Data">
-				
-				<s:VGroup id="OptionsPane" horizontalAlign="center" verticalAlign="middle"
-						  width="100%" height="100%" includeIn="state1">
-					<s:Button label="I have CSV" click="currentState='loadCSV';"/>
-					<s:Button label="I have data" click="currentState='state1Final';"/>
-				</s:VGroup>
-				
-				<s:VGroup id="csvPane" horizontalAlign="center" verticalAlign="middle"
-						  width="100%" height="100%" includeIn="loadCSV">
-					<s:HGroup width="95%" height="15%" horizontalAlign="left" verticalAlign="middle">
-						<s:TextInput width="70%" height="30" id="csvPath" prompt="Browse for the file"
-									 fontSize="14"/>
-						<s:Spacer width="5%"/>
-						<s:Button width="100" height="30" id="browseButton" 
-								  label="Browse" click="browseButton_clickHandler(event)"
-								  fontSize="14"/>
-					</s:HGroup>
-					<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
-						<s:Spacer width="1%"/>
-						<s:DataGrid width="68%" height="95%" id="csvData" visible="false"/>
-						<s:Spacer width="1%"/>
-						<s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="middle">
+			<s:VGroup id="OptionsPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="state1">
+				<s:Button label="I have CSV" click="currentState='loadCSV';"/>
+				<s:Button label="I have data" click="currentState='state1Final';"/>
+			</s:VGroup>
+			
+			<s:VGroup id="csvPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="loadCSV">
+				<s:HGroup width="95%" height="15%" horizontalAlign="left" verticalAlign="middle">
+					<s:TextInput width="70%" height="30" id="csvPath" prompt="Browse for the file"
+								 fontSize="14"/>
+					<s:Spacer width="5%"/>
+					<s:Button width="100" height="30" id="browseButton" 
+							  label="Browse" click="browseButton_clickHandler(event)"
+							  fontSize="14"/>
+				</s:HGroup>
+				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
+					<s:Spacer width="1%"/>
+					<s:DataGrid width="68%" height="95%" id="csvData" visible="false"
+								horizontalScrollPolicy="auto"/>
+					<s:Spacer width="1%"/>
+					<s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="middle">
+						
+						<s:VGroup width="100%" height="85%" id="columnSelectionPane"
+								  horizontalAlign="center" verticalAlign="middle">
 							
-							<s:VGroup width="100%" height="85%" id="columnSelectionPane"
-									  horizontalAlign="center" verticalAlign="middle">
-								
-								<!--Child components for column selection inherited class goes here-->
-								
-							</s:VGroup>
-							
-							<s:Button click="csvPaneDoneButton_clickHandler(event)" label="Done" id="csvPaneDoneButton"
-									  width="100" height="30" fontSize="14"/>
+							<!--Child components for column selection inherited class goes here-->
 							
 						</s:VGroup>
-					</s:HGroup>
-				</s:VGroup>
-				
-				<s:VGroup id="finalPanel1" horizontalAlign="center" verticalAlign="middle"
-						  width="100%" height="100%" includeIn="state1Final,state2,state3,result">
-					<s:VGroup id="SampleParams" horizontalAlign="center" verticalAlign="middle"
-							  width="95%" height="85%">
 						
-						<!-- Placeholder for Sample Data elements-->
+						<s:Button click="csvPaneDoneButton_clickHandler(event)" label="Done" id="csvPaneDoneButton"
+								  width="100" height="30" fontSize="14"/>
 						
 					</s:VGroup>
-					<s:Button id="panel1NextButton" label="Go to next" click="panel1NextButton_clickHandler(event)"/>
-				</s:VGroup>
-				
-			</s:Panel>
+				</s:HGroup>
+			</s:VGroup>
 			
-			<s:Panel id="panel2" includeIn="state2,state3,result" width="40%" height="60%" 
-					 x="{inputPane.width*0.53}" y="{inputPane.height*0.06}"
-					 title="Population Data">
-				<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-					<s:VGroup id="PopnParams" horizontalAlign="left" verticalAlign="middle"
-							  width="80%" height="85%">
+			<s:VGroup id="finalPanel1" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="state1Final,state2,state3,result">
+				<s:VGroup id="SampleParams" horizontalAlign="center" verticalAlign="middle"
+						  width="95%" height="85%">
+					
+					<!-- Placeholder for Sample Data elements-->
+					
+				</s:VGroup>
+				<s:Button id="panel1NextButton" label="Go to next" click="panel1NextButton_clickHandler(event)"/>
+			</s:VGroup>
+			
+		</s:Panel>
+		
+		<s:Panel id="panel2" includeIn="state2,state3,result" width="40%" height="60%" 
+				 x="{inputPane.width*0.53}" y="{inputPane.height*0.06}"
+				 title="Population Data">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+				<s:VGroup id="PopnParams" horizontalAlign="left" verticalAlign="middle"
+						  width="80%" height="85%">
+					
+					<s:Label id="popnMeanLabel" text="Population mean"/>
+					<s:TextInput id="popnMeanInput" width="60%" prompt="Enter a numeric value"
+								 restrict="0-9."/>
+					<!-- Placeholder for Population Data elements-->
+					
+				</s:VGroup>
+				<s:Button id="panel2NextButton" label="Go to Next" click="panel2NextButton_clickHandler(event)"/>
+			</s:VGroup>
+		</s:Panel>
+		
+		<s:HGroup width="95%" height="30%" horizontalAlign="left" verticalAlign="middle"
+				  x="{inputPane.width*0.07}" y="{inputPane.height*0.7}">
+			<s:Panel id="panel3" includeIn="state3,result" width="60%" height="90%"
+					 title="Hypotheses">
+				<s:HGroup width="100%" height="100%" horizontalAlign="center"
+						  verticalAlign="middle">
+					
+					<s:VGroup width="40%" height="80%" horizontalAlign="left" verticalAlign="middle">
+						<s:Label text="Null Hypothesis" fontSize="18" fontWeight="bold"/>
+						<s:Spacer height="10%"/>
 						
-						<s:Label id="popnMeanLabel" text="Population mean"/>
-						<s:TextInput id="popnMeanInput" width="60%" prompt="Enter a numeric value"
-									 restrict="0-9."/>
-						<!-- Placeholder for Population Data elements-->
+						<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
+							<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
+							<s:ComboBox id="hypoExpression" prompt="Expression" 
+										change="hypoExpression_changeHandler(event)"
+										labelField="text">
+								<s:dataProvider>
+									<s:ArrayList>
+										<fx:Object text="equals"/>
+										<fx:Object text="greater/equals"/>
+										<fx:Object text="less/equals"/>
+									</s:ArrayList>
+								</s:dataProvider>
+							</s:ComboBox>
+							<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
+						</s:HGroup>
 						
 					</s:VGroup>
-					<s:Button id="panel2NextButton" label="Go to Next" click="panel2NextButton_clickHandler(event)"/>
-				</s:VGroup>
-			</s:Panel>
-			
-			<s:HGroup width="95%" height="30%" horizontalAlign="left" verticalAlign="middle"
-					  x="{inputPane.width*0.07}" y="{inputPane.height*0.7}">
-				<s:Panel id="panel3" includeIn="state3,result" width="60%" height="90%"
-						 title="Hypotheses">
-					<s:HGroup width="100%" height="100%" horizontalAlign="center"
-							  verticalAlign="middle">
+					
+					<s:Spacer width="5%"/>
+					
+					<s:VGroup id="altHypo" width="40%" height="80%" 
+							  horizontalAlign="left" verticalAlign="middle"
+							  visible="false">
+						<s:Label text="Alternative Hypothesis" fontSize="18" fontWeight="bold"/>
+						<s:Spacer height="10%"/>
 						
-						<s:VGroup width="40%" height="80%" horizontalAlign="left" verticalAlign="middle">
-							<s:Label text="Null Hypothesis" fontSize="18" fontWeight="bold"/>
-							<s:Spacer height="10%"/>
-							
-							<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
-								<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
-								<s:ComboBox id="hypoExpression" prompt="Expression" 
-											change="hypoExpression_changeHandler(event)"
-											labelField="text">
-									<s:dataProvider>
-										<s:ArrayList>
-											<fx:Object text="equals"/>
-											<fx:Object text="greater/equals"/>
-											<fx:Object text="less/equals"/>
-										</s:ArrayList>
-									</s:dataProvider>
-								</s:ComboBox>
-								<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
-							</s:HGroup>
+						<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
+							<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
+							<s:Label id="alternateExpr" text=""/>
+							<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
+						</s:HGroup>
 						
-						</s:VGroup>
-						
-						<s:Spacer width="5%"/>
-						
-						<s:VGroup id="altHypo" width="40%" height="80%" 
-								  horizontalAlign="left" verticalAlign="middle"
-								  visible="false">
-							<s:Label text="Alternative Hypothesis" fontSize="18" fontWeight="bold"/>
-							<s:Spacer height="10%"/>
-							
-							<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
-								<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
-								<s:Label id="alternateExpr" text=""/>
-								<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
-							</s:HGroup>
-						
-						</s:VGroup>
-						
-					</s:HGroup>
-
-				</s:Panel>
-				<s:Spacer width="15%"/>
-				<s:Button width="100" height="50" label="Compute" id="compute" includeIn="state3,result"
-						  click="compute_clickHandler(event)"/>
-			</s:HGroup>
-			
-		</s:Group>
-		
-		<s:Group id="helpResultPane" width="30%" height="100%" minWidth="{this.width*0.30}"
-				 x="{this.width*0.7}" y="0">
-			<s:layout>
-				<s:BasicLayout/>
-			</s:layout>
-			
-			<s:Panel id="help1" width="85%" height="30%" 
-					 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.05}"
-					 title="Flow of Execution" excludeFrom="result">
+					</s:VGroup>
+					
+				</s:HGroup>
 				
 			</s:Panel>
-			
-			<s:Panel id="help2" width="85%" height="57%" excludeFrom="result"
-					 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}"
-					 title="General Help">
-				
-			</s:Panel>
-			
-			<s:BorderContainer width="85%" height="38%" x="{helpResultPane.width*0.07}"
-							   id="output" y="{helpResultPane.height*0.05}"
-							   includeIn="result"/>
-			<s:Image width="96%" height="48%" includeIn="result"
-					 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
-					 id="imgViewer" source="@Embed('assets/tdist.png')"/>
-			
-		</s:Group>
+			<s:Spacer width="15%"/>
+			<s:Button width="100" height="50" label="Compute" id="compute" includeIn="state3,result"
+					  click="compute_clickHandler(event)"/>
+		</s:HGroup>
 		
-	</mx:HDividedBox>
+	</s:Group>
+	
+	<s:Group id="helpResultPane" width="30%" height="100%"
+			 x="{this.width*0.7}" y="0">
+		<s:layout>
+			<s:BasicLayout/>
+		</s:layout>
+		
+		<s:Panel id="help1" width="85%" height="30%" 
+				 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.05}"
+				 title="Flow of Execution" excludeFrom="result">
+			
+		</s:Panel>
+		
+		<s:Panel id="help2" width="85%" height="57%" excludeFrom="result"
+				 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}"
+				 title="General Help">
+			
+		</s:Panel>
+		
+		<s:TextArea width="85%" height="38%" x="{helpResultPane.width*0.07}"
+					id="output" y="{helpResultPane.height*0.05}"
+					includeIn="result"/>
+		<s:Image width="96%" height="48%" includeIn="result"
+				 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
+				 id="imgViewer"/>
+		
+	</s:Group>
 	
 </s:Group>
