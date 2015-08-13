@@ -63,7 +63,7 @@ package ParametricTests
 			columnSelectionPane.addElement(columnSelectLabel);
 			
 			spacer3 = new Spacer();
-			spacer3.percentHeight = 3;
+			spacer3.percentHeight = 1;
 			columnSelectionPane.addElement(spacer3);
 			
 			colCB = new ComboBox();
@@ -102,13 +102,14 @@ package ParametricTests
 		
 		override protected function csvPaneDoneButton_clickHandler(event:MouseEvent):void
 		{
-			rFile = File.applicationDirectory.resolvePath("working/compute.R").nativePath;
+			rFile = File.applicationDirectory.resolvePath("working/getStats.R").nativePath;
 			testFlag = "0";
 			args = new Vector.<String>;
 			args.push(rFile);
 			args.push(testFlag);
 			args.push(csvFile.nativePath);
 			args.push(colnames[colCB.selectedIndex]);
+			args.push("0");//Add Another input to get replace value for missing data
 			
 			super.csvPaneDoneButton_clickHandler(event);
 		}
