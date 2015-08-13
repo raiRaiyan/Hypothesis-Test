@@ -1,6 +1,8 @@
 package ParametricTests
 {
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.controls.Spacer;
@@ -21,6 +23,8 @@ package ParametricTests
 		//The elements to be added
 		
 		//CSV Pane
+		private var columnSelectLabel:Label;
+		private var spacer3:Spacer;
 		private var colCB:ComboBox;
 		
 		//Panel1Final
@@ -37,6 +41,10 @@ package ParametricTests
 		
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 		{
+			if(currentState == 'loadCSV')
+			{
+				addToCSVPane();
+			}
 			if(currentState == 'state1Final')
 			{
 				addToPanel1Final();
@@ -45,10 +53,64 @@ package ParametricTests
 			{
 				addToPanel2();
 			}
-			if(currentState == 'loadCSV')
+		}
+		
+		private function addToCSVPane():void
+		{
+			//Column selection combo box
+			columnSelectLabel = new Label();
+			columnSelectLabel.text = "Please select a column";
+			columnSelectionPane.addElement(columnSelectLabel);
+			
+			spacer3 = new Spacer();
+			spacer3.percentHeight = 3;
+			columnSelectionPane.addElement(spacer3);
+			
+			colCB = new ComboBox();
+			this.addEventListener("colNamesAvailable",setDataProvider);
+			colCB.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
+			columnSelectionPane.addElement(colCB);
+			
+			//Obselete 1
+			//this.addEventListener("valuesAvailable",switchState);
+		}
+		/* Obselete
+		protected function switchState(event:Event):void
+		{
+		currentState = 'state1Final';
+		
+		}
+		*/
+		protected function setDataProvider(event:Event):void
+		{
+			colCB.dataProvider = colnames;
+			
+		}
+		
+		protected function columnSelected(event:IndexChangeEvent):void
+		{
+			if(colCB.selectedIndex==-3)
 			{
-				addToCSVPane();
+				colCB.selectedIndex=-1;
 			}
+			else
+			{
+				varName = "Mean("+colnames[colCB.selectedIndex]+")";
+				columnSelectedFlag = true;
+			}
+		}
+		
+		override protected function csvPaneDoneButton_clickHandler(event:MouseEvent):void
+		{
+			rFile = File.applicationDirectory.resolvePath("working/compute.R").nativePath;
+			testFlag = "0";
+			args = new Vector.<String>;
+			args.push(rFile);
+			args.push(testFlag);
+			args.push(csvFile.nativePath);
+			args.push(colnames[colCB.selectedIndex]);
+			
+			super.csvPaneDoneButton_clickHandler(event);
 		}
 		
 		private function addToPanel1Final():void
@@ -62,6 +124,10 @@ package ParametricTests
 			sampleMeanInput.prompt="Enter a Numeric Value";
 			sampleMeanInput.restrict="0-9.";
 			sampleMeanInput.percentWidth=70;
+			if(columnSelectedFlag)
+			{
+				sampleMeanInput.text = values[0];
+			}
 			SampleParams.addElement(sampleMeanInput);
 			
 			spacer1 = new Spacer();
@@ -77,6 +143,10 @@ package ParametricTests
 			sampleSdInput.prompt="Enter a numeric value";
 			sampleSdInput.restrict="0-9.";
 			sampleSdInput.percentWidth=70;
+			if(columnSelectedFlag)
+			{
+				sampleSdInput.text = values[1];
+			}
 			SampleParams.addElement(sampleSdInput);
 			
 			spacer2 = new Spacer();
@@ -92,6 +162,10 @@ package ParametricTests
 			sampleSizeInput.prompt="Enter a integer value";
 			sampleSizeInput.restrict="0-9";
 			sampleSizeInput.percentWidth=70;
+			if(columnSelectedFlag)
+			{
+				sampleSizeInput.text = values[2];
+			}
 			SampleParams.addElement(sampleSizeInput);
 		}
 		
@@ -100,37 +174,6 @@ package ParametricTests
 			
 		}
 		
-		private function addToCSVPane():void
-		{
-			//Column selection combo box
-			colCB = new ComboBox();
-			
-			//Data binding not working
-			//colCB.dataProvider = colnames;
-			
-			this.addEventListener("colNamesAvailable",setDataProvider);
-			
-			colCB.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
-			
-			columnSelectionPane.addElement(colCB);
-		}
-		
-		protected function setDataProvider(event:Event):void
-		{
-			colCB.dataProvider = colnames;
-		}
-		
-		protected function columnSelected(event:IndexChangeEvent):void
-		{
-			if(colCB.selectedIndex==-3)
-			{
-				colCB.selectedIndex=-1;
-			}
-			else
-			{
-				varName = colnames[colCB.selectedIndex];
-			}
-		}
 		
 	}
 }
