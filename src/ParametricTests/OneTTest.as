@@ -27,6 +27,11 @@ package ParametricTests
 		private var spacer3:Spacer;
 		private var colCB:ComboBox;
 		
+		private var replace1:Label;
+		private var replaceInput:TextInput;
+		
+		private var columnSelectedFlag:Boolean = false;
+		
 		//Panel1Final
 		private var sampleMeanLabel:Label;
 		private var sampleMeanInput:TextInput;
@@ -53,6 +58,7 @@ package ParametricTests
 			{
 				addToPanel2();
 			}
+			super.backbone_stateChangeCompleteHandler(event);
 		}
 		
 		private function addToCSVPane():void
@@ -61,15 +67,25 @@ package ParametricTests
 			columnSelectLabel = new Label();
 			columnSelectLabel.text = "Please select a column";
 			columnSelectionPane.addElement(columnSelectLabel);
+
+			colCB = new ComboBox();
+			this.addEventListener("colNamesAvailable",setDataProvider);
+			colCB.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
+			columnSelectionPane.addElement(colCB);
 			
 			spacer3 = new Spacer();
 			spacer3.percentHeight = 1;
 			columnSelectionPane.addElement(spacer3);
 			
-			colCB = new ComboBox();
-			this.addEventListener("colNamesAvailable",setDataProvider);
-			colCB.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
-			columnSelectionPane.addElement(colCB);
+			replace1 = new Label();
+			replace1.text = "replace missing values by:";
+			columnSelectionPane.addElement(replace1);
+			
+			replaceInput = new TextInput();
+			replaceInput.prompt="Enter a Numeric Value";
+			replaceInput.restrict="0-9.";
+			replaceInput.percentWidth=70;
+			columnSelectionPane.addElement(replaceInput);
 			
 			//Obselete 1
 			//this.addEventListener("valuesAvailable",switchState);
@@ -102,16 +118,32 @@ package ParametricTests
 		
 		override protected function csvPaneDoneButton_clickHandler(event:MouseEvent):void
 		{
-			rFile = File.applicationDirectory.resolvePath("working/getStats.R").nativePath;
-			testFlag = "0";
-			args = new Vector.<String>;
-			args.push(rFile);
-			args.push(testFlag);
-			args.push(csvFile.nativePath);
-			args.push(colnames[colCB.selectedIndex]);
-			args.push("0");//Add Another input to get replace value for missing data
+			if(columnSelectedFlag)
+			{
+				if(replaceInput.text!="")
+				{
+					csvDoneFlag = true;
+				}
+				else
+				{
+					//Show an error icon
+				}
+			}
 			
-			super.csvPaneDoneButton_clickHandler(event);
+			if(csvDoneFlag)
+			{
+				rFile = File.applicationDirectory.resolvePath("working/getStats.R").nativePath;
+				testFlag = "0";
+				args = new Vector.<String>;
+				args.push(rFile);
+				args.push(testFlag);
+				args.push(csvFile.nativePath);
+				args.push(colnames[colCB.selectedIndex]);
+				args.push(replaceInput.text);
+				
+				super.csvPaneDoneButton_clickHandler(event);
+			}
+			
 		}
 		
 		private function addToPanel1Final():void
@@ -168,6 +200,46 @@ package ParametricTests
 				sampleSizeInput.text = values[2];
 			}
 			SampleParams.addElement(sampleSizeInput);
+		}
+		
+		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
+		{
+			if(sampleMeanInput.text!="")
+			{
+				var check1:Boolean = true;
+			}
+			else
+			{
+				check1 = false;
+				//Show an error icon
+			}
+			
+			if(sampleSdInput.text!="")
+			{
+				var check2:Boolean = true;
+			}
+			else
+			{
+				check2 = false;
+				//Show an error icon
+			}
+			
+			if(sampleSizeInput.text!="")
+			{
+				var check3:Boolean = true;
+			}
+			else
+			{
+				check3 = false;
+				//Show an error icon
+			}
+			
+			if(check1&&check2&&check3)
+			{
+				panel1Flag = true;
+				super.panel1NextButton_clickHandler(event);
+			}
+			
 		}
 		
 		private function addToPanel2():void

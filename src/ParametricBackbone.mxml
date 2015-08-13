@@ -25,7 +25,7 @@
 			import spark.events.IndexChangeEvent;
 			
 			//Public flags to indicate completion of input in a panel
-			public var columnSelectedFlag:Boolean = false;
+			public var csvDoneFlag:Boolean = false;
 			public var panel1Flag:Boolean = false;
 			public var panel2Flag:Boolean = false;
 			public var hypoFlag:Boolean = false;
@@ -69,18 +69,45 @@
 			//Inherit this method to add elements to the backbone
 			protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 			{
-				// TODO Auto-generated method stub
-				
+				if(currentState == 'result')
+				{
+					//Set the text to the TextArea
+					output.text ="P-Value is : "+String(pValue)+"\n";
+					if(pValue<sigLevel)
+					{
+						output.text+= "Null Hypothesis cannot be rejected\n";
+					}
+					else
+					{
+						output.text+= "Null Hypothesis is rejected\n";
+					}
+					
+					//Set image source to the image viewer
+					imgViewer.source = "/working/outputImg.png";
+					imgViewer.validateNow(); //sometimes source change takes time to register
+					
+					output.visible = true;
+					imgViewer.visible = true;
+				}
 			}
 			
 			//Do not disturb this function
 			private function browseButton_clickHandler(event:MouseEvent):void
 			{
+				browseButton.enabled = false;
 				csvFile = new File();
 				var filter:FileFilter = new FileFilter("Data File","*.csv");
 				csvFile.browseForOpen("Select a CSV file",[filter]);
 				csvFile.addEventListener(Event.SELECT,fileSelected);
+				csvFile.addEventListener(Event.CANCEL,fileNotSelected);
+				
 			}
+			
+			private function fileNotSelected(event:Event):void
+			{
+				browseButton.enabled = true;
+			}
+			
 			
 			//Do not disturb this function
 			private function fileSelected(evt:Event):void
@@ -136,7 +163,7 @@
 			protected function csvPaneDoneButton_clickHandler(event:MouseEvent):void
 			{
 				//add the variables to the "args" and rFile
-				if(columnSelectedFlag)
+				if(csvDoneFlag)
 				{
 					proc=new NativeProcess();
 					procInfo = new NativeProcessStartupInfo();
@@ -163,6 +190,7 @@
 				if(panel1Flag==true)
 				{
 					currentState='state2';
+					csvDoneFlag = false;
 				}
 			}
 			
@@ -221,15 +249,15 @@
 					switch(hypoExpression.selectedIndex)
 					{
 						case 0:
-							alternateExpr.text = "Not Equals";
+							alternateExpr.text = "!=";
 							tails="0";
 							break;
 						case 1:
-							alternateExpr.text = "Less than";
+							alternateExpr.text = "<";
 							tails="1";
 							break;
 						case 2:
-							alternateExpr.text = "Greater than";
+							alternateExpr.text = ">";
 							tails="2";
 							break;
 					}
@@ -242,7 +270,6 @@
 			private function compute_clickHandler(event:MouseEvent):void
 			{
 				//Inherit this function and initialize and populate the args n rFile
-				
 				if(hypoFlag==true)
 				{
 					proc=new NativeProcess();
@@ -270,21 +297,6 @@
 					//Read the P-Value
 					dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
 					pValue = Number(dataIn);
-					
-					//Set the text to the TextArea
-					output.text ="P-Value is : "+String(pValue)+"\n";
-					if(pValue<sigLevel)
-					{
-						output.text+= "Null Hypothesis cannot be rejected\n";
-					}
-					else
-					{
-						output.text+= "Null Hypothesis is rejected\n";
-					}
-					
-					//Set image source to the image viewer
-					imgViewer.source = "/working/outputImg.png";
-					imgViewer.validateNow(); //sometimes source change takes time to register
 				}
 				else
 				{
@@ -306,13 +318,12 @@
 				{
 					currentState='result';
 				}
-				if(event.exitCode==0 && columnSelectedFlag)
+				if(event.exitCode==0 && csvDoneFlag)
 				{
 					values = dataIn.split(",");
 					currentState = 'state1Final';
 				}
 			}
-			
 			
 		]]>
 	</fx:Script>
@@ -463,12 +474,12 @@
 							<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
 							<s:ComboBox id="hypoExpression" prompt="Expression" 
 										change="hypoExpression_changeHandler(event)"
-										labelField="text">
+										labelField="text" width="40">
 								<s:dataProvider>
 									<s:ArrayList>
-										<fx:Object text="equals"/>
-										<fx:Object text="greater/equals"/>
-										<fx:Object text="less/equals"/>
+										<fx:Object text="="/>
+										<fx:Object text="&gt;="/>
+										<fx:Object text="&lt;="/>
 									</s:ArrayList>
 								</s:dataProvider>
 							</s:ComboBox>
@@ -523,10 +534,10 @@
 		
 		<s:TextArea width="85%" height="38%" x="{helpResultPane.width*0.07}"
 					id="output" y="{helpResultPane.height*0.05}"
-					includeIn="result"/>
+					includeIn="result" visible="false"/>
 		<s:Image width="96%" height="48%" includeIn="result"
 				 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
-				 id="imgViewer"/>
+				 id="imgViewer" visible="false"/>
 		
 	</s:Group>
 	
