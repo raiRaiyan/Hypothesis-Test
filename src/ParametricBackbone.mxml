@@ -498,7 +498,7 @@
 						
 						<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
 							<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
-							<s:Label id="alternateExpr" text=""/>
+							<s:Label id="alternateExpr" text="" fontSize="13"/>
 							<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
 						</s:HGroup>
 						

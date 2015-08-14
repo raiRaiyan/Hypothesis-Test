@@ -11,8 +11,6 @@ if(test!=0)
   repl2 = as.numeric(vars[6])
 }
 
-rm(vars)
-
 data = read.csv(path,stringsAsFactors = F,na.strings = c(NULL,'null',''))
 
 if(test==0)
@@ -56,3 +54,4 @@ if(test==2)
   
   cat(mean1,',',SD1,',',size1)
 }
+rm(list = ls())

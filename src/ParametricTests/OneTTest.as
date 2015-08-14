@@ -236,6 +236,10 @@ package ParametricTests
 			
 			if(check1&&check2&&check3)
 			{
+				if(varName == null)
+				{
+					varName = "Mean(X)";
+				}
 				panel1Flag = true;
 				super.panel1NextButton_clickHandler(event);
 			}
