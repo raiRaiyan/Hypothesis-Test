@@ -192,6 +192,7 @@
 				{
 					currentState='state2';
 					csvDoneFlag = false;
+					panel1NextButton.enabled=false;
 				}
 			}
 			
@@ -229,12 +230,15 @@
 				if(check1&&check2)
 				{
 					panel2Flag=true;
+					popnMeanInput.editable = false;
+					sigLevelInput.editable = false;
 				}
 				
 				//Inherited class must set the flag to true after it gets all the values
 				if(panel2Flag==true)
 				{
 					currentState='state3';
+					panel2NextButton.enabled = false;
 				}
 			}
 			
@@ -286,7 +290,6 @@
 					proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
 					
 					proc.start(procInfo);
-					
 				}
 				
 			}

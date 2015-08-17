@@ -242,6 +242,9 @@ package ParametricTests
 					varName = "Mean(X)";
 				}
 				panel1Flag = true;
+				sampleMeanInput.editable = false;
+				sampleSdInput.editable = false;
+				sampleSizeInput.editable = false;
 				super.panel1NextButton_clickHandler(event);
 			}
 			
