@@ -100,7 +100,6 @@ package ParametricTests
 		protected function setDataProvider(event:Event):void
 		{
 			colCB.dataProvider = colnames;
-			
 		}
 		
 		protected function columnSelected(event:IndexChangeEvent):void

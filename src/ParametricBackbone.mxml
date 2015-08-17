@@ -16,6 +16,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import assets.LoadCsvFiles;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.controls.dataGridClasses.DataGridColumn;
@@ -36,6 +38,10 @@
 			public var popnMeanValue:Number;
 			[Bindable]
 			public var varName:String = null;
+			
+			//CSV Loading variables
+			private var csvLoader:LoadCsvFiles;
+			private var numRowsDisplayed:int = 1000;
 			
 			//Variables needed for the native process
 			//Inputs
@@ -113,9 +119,9 @@
 			//Do not disturb this function
 			private function fileSelected(evt:Event):void
 			{
+				/*
 				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
 				//Read CSV here
-				
 				//Using old reading file now for testing
 				var readStream:FileStream = new FileStream();
 				readStream.open(csvFile,FileMode.READ);
@@ -155,9 +161,58 @@
 					contents.addItem(obj);
 				}
 				csvData.dataProvider = contents;
+				*/
+				
+				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
+
+				csvLoader = new LoadCsvFiles(csvFile);
+				csvData.columns= csvLoader.loadColumnName();
+				colnames = new ArrayCollection(csvLoader.columnNames);
+				dispatchEvent(new Event("colNamesAvailable"));
+				csvData.dataProvider = csvLoader.readLines(numRowsDisplayed);
+				if(csvLoader.hasData())
+				{
+					gridNextButton.visible = true;
+				}
+				rowCountLabel.text = (csvLoader.numRows-csvData.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
 				
 				csvData.visible=true;
 				columnSelectionPane.visible = true;
+			}
+			
+			protected function gridNextButton_clickHandler(event:MouseEvent):void
+			{
+				if(!csvLoader.isBeginning())
+				{
+					gridPrevButton.visible=true;
+					gridPrevButton.enabled=true;
+				}
+				csvLoader.pushPosition();
+				csvData.dataProvider=csvLoader.readLines(numRowsDisplayed);
+				
+				if(!csvLoader.hasData())
+				{
+					gridNextButton.enabled = false;
+				}
+				else
+				{
+					gridNextButton.visible = true;
+					gridNextButton.enabled = true;
+				}
+				
+				rowCountLabel.text = (csvLoader.numRows-csvData.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
+			}
+			
+			protected function gridPrevButton_clickHandler(event:MouseEvent):void
+			{
+				csvLoader.setPreviousPosition();
+				gridNextButton.enabled=true;
+				gridPrevButton.enabled = true;
+				if(csvLoader.isBeginning()){
+					gridPrevButton.enabled= false;
+				}
+				csvData.dataProvider = csvLoader.readLines(numRowsDisplayed);
+				rowCountLabel.text = (csvLoader.numRows-csvData.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
 			}
 			
 			//Inherit this function and override
@@ -416,8 +471,18 @@
 				</s:HGroup>
 				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
 					<s:Spacer width="1%"/>
-					<s:DataGrid width="68%" height="95%" id="csvData" visible="false"
-								horizontalScrollPolicy="auto"/>
+					<s:VGroup width="68%" height="95%" horizontalAlign="center" verticalAlign="middle">
+						<s:DataGrid width="100%" height="90%" id="csvData" visible="false"
+									horizontalScrollPolicy="auto"/>
+						<s:HGroup width="100%" height="10%" horizontalAlign="center" verticalAlign="middle">
+							<s:Button id="gridNextButton" label="Next" click="gridNextButton_clickHandler(event)"
+									  visible="false"/>
+							<s:Label text="Rows Displayed :"/>
+							<s:Label id="rowCountLabel" />
+							<s:Button id="gridPrevButton" label="Prev" click="gridPrevButton_clickHandler(event)"
+									  visible="false"/>
+						</s:HGroup>
+					</s:VGroup>
 					<s:Spacer width="1%"/>
 					<s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="middle">
 						
