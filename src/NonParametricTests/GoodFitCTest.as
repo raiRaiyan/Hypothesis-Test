@@ -74,8 +74,6 @@ package NonParametricTests
 				comboBox.visible = true;
 				missingValueInput.visible = true;
 				
-				
-				
 			}
 			if(currentState == 'editCsvState'){
 				
