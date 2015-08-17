@@ -251,6 +251,24 @@ package ParametricTests
 			
 		}
 		
+		override protected function compute_clickHandler(event:MouseEvent):void
+		{
+			if(panel1Flag&&panel2Flag&&hypoFlag)
+			{
+				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;
+				testFlag = "0";
+				args = new Vector.<String>;
+				args.push(rFile);
+				args.push(testFlag);
+				args.push(tails);
+				args.push(popnMeanInput.text);
+				args.push(sampleMeanInput.text);
+				args.push(sampleSdInput.text);
+				args.push(sampleSizeInput.text);
+				
+				super.compute_clickHandler(event);
+			}
+		}
 		
 	}
 }
