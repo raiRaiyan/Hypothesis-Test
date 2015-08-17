@@ -20,6 +20,7 @@
 			import mx.controls.Alert;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.events.FlexEvent;
+			import mx.utils.object_proxy;
 			
 			import spark.components.gridClasses.GridColumn;
 			import spark.events.IndexChangeEvent;
@@ -158,7 +159,7 @@
 				csvData.visible=true;
 				columnSelectionPane.visible = true;
 			}
-
+			
 			//Inherit this function and override
 			protected function csvPaneDoneButton_clickHandler(event:MouseEvent):void
 			{
@@ -200,7 +201,7 @@
 				{
 					//Add a icon to the left of input text
 				}
-				
+					
 				else
 				{
 					popnMeanValue=Number(popnMeanInput.text);
@@ -211,7 +212,7 @@
 				{
 					//Add a icon to the left of input text
 				}
-				
+					
 				else
 				{
 					sigLevel = Number(sigLevelInput.text);
@@ -289,7 +290,7 @@
 				}
 				
 			}
-
+			
 			public function onOutputData(event:ProgressEvent):void
 			{
 				if(hypoFlag)
@@ -325,12 +326,19 @@
 				}
 			}
 			
+			protected function imgViewer_clickHandler(event:MouseEvent):void
+			{
+				var img:File = File.applicationDirectory.resolvePath("working/outputImg.png");
+				img.openWithDefaultApplication();
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<fx:XML xmlns="" id="stringCollection" source="strings/StringCollection.xml"/>
+		
 	</fx:Declarations>
 	
 	<s:states>
@@ -375,7 +383,6 @@
 		</s:Transition>
 		
 	</s:transitions>
-	
 	
 	<s:Group id="inputPane" width="70%" height="100%">
 		<s:layout>
@@ -451,7 +458,7 @@
 					<s:Spacer height="5%"/>
 					<s:Label text="Significance Value"/>
 					<s:TextInput id="sigLevelInput" width="60%" prompt="Enter a value between 0-1"
-								 restrict="0-9."/>
+								 restrict="0-9." text="0.05"/>
 					<!-- Placeholder for Population Data elements-->
 					
 				</s:VGroup>
@@ -537,8 +544,7 @@
 					includeIn="result" visible="false"/>
 		<s:Image width="96%" height="48%" includeIn="result"
 				 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
-				 id="imgViewer" visible="false"/>
+				 id="imgViewer" visible="false" click="imgViewer_clickHandler(event)"/>
 		
 	</s:Group>
-	
 </s:Group>

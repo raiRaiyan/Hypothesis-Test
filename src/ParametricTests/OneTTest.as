@@ -111,6 +111,7 @@ package ParametricTests
 			}
 			else
 			{
+				replaceInput.text = "0";
 				varName = "Mean("+colnames[colCB.selectedIndex]+")";
 				columnSelectedFlag = true;
 			}
