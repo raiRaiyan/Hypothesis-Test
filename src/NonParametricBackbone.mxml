@@ -3,37 +3,244 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
 		 currentState="state1"
-		 creationComplete="backboneCreationCompleteHandler(event)">
+		 stateChangeComplete="backboneStateChangeCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
+			import assets.*;
+			
+			import mx.collections.ArrayList;
+			import mx.collections.IViewCursor;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
-			protected var f:File = new File;
-			protected var dir:String;
+			
+			import spark.components.gridClasses.GridColumn;
+			
+			private var file:File = new File;
+			private var csvLoader:LoadCsvFiles;
+			private var numRowsDisplayed:uint=1000;
+			
+			protected var enterDataFlag:Boolean;
+			
+			protected var nativeProcessInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo;
+			protected var workingDirectory:File = File.applicationDirectory.resolvePath("working");
+			protected var executableFile:File = new File("C:/Program Files/R/R-3.2.1/bin/Rscript.exe");
+			protected var nativeProcess:NativeProcess = new NativeProcess;
+			protected var args:Vector.<String>;
+			private var hypothesisResultFlag:Boolean;
+			
+			protected var contingencyTableResult:Array;
+			
+			protected function backboneStateChangeCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(currentState == 'state2'){
+				var fileWriteStream:FileStream = new FileStream;
+				var tmpString:String =  File.applicationStorageDirectory.nativePath;
+				file = new File(tmpString+"\\contingency.csv");
+				fileWriteStream.open(file,FileMode.WRITE);
+				fileWriteStream.writeUTFBytes(exportCSV(editCsvGrid,","));
+				fileWriteStream.close();
+				}
+				
+			}
+			
+			protected function exportCSV(dg:DataGrid, csvSeparator:String="\t", lineSeparator:String="\n"):String
+			{
+				var data:String = "";
+				var columns:Array = dg.columns.toArray();
+				var columnCount:int = columns.length;
+				var column:GridColumn;
+				var header:String = "";
+				var headerGenerated:Boolean = false;
+				var dataProvider:Object = dg.dataProvider;
+				var rowCount:int = dataProvider.length;
+				var dp:Object = null;
+				var cursor:IViewCursor = dataProvider.createCursor ();
+				var j:int = 0;
+				//loop through rows
+				while (!cursor.afterLast)
+				{
+					var obj:Object = null;
+					obj = cursor.current;
+					//loop through all columns for the row
+					for(var k:int = 0; k < columnCount; k++)
+					{
+						column = columns[k];
+						//Exclude column data which is invisible (hidden)
+						if(!column.visible)
+						{
+							continue;
+						}
+						data +=  column.itemToLabel(obj);
+						if(k < (columnCount -1))
+						{
+							data += csvSeparator;
+						}
+						//generate header of CSV, only if it's not genereted yet
+						if (!headerGenerated)
+						{
+							header += column.headerText ;
+							if (k < columnCount - 1)
+							{
+								header += csvSeparator;
+							}
+						}
+					}
+					headerGenerated = true;
+					if (j < (rowCount))
+					{
+						data += lineSeparator;
+					}
+					j++;
+					cursor.moveNext ();
+				}
+				//set references to null:
+				dataProvider = null;
+				columns = null;
+				column = null;
+				return (header + "\r\n" + data);
+			}
+				
+
+			
+		
 			
 			protected function browsefButtonClickHandler(event:MouseEvent):void
-			{
-				var ff:FileFilter = new FileFilter("*.csv","*.csv");
-				f.addEventListener(Event.SELECT,onSelect);
-				f.browseForOpen("Selecte a CSV file", [ff]);
+			{	
+				var fileFilter:FileFilter = new FileFilter("*.csv","*.csv");
+				file.addEventListener(Event.SELECT,onSelect);
+				file.browseForOpen("Selecte a CSV file", [fileFilter]);
 			}			
 			
 			
 			protected function onSelect(event:Event):void
 			{
+				filePath.text = file.nativePath;
+				csvLoader = new LoadCsvFiles(file);
 				currentState = 'showCsvState';
-				filePath.text = f.nativePath;
-				loadCsv();
+				csvGrid.columns= csvLoader.loadColumnName();
+				columnNames.source = csvLoader.columnNames;
+				csvGrid.dataProvider = csvLoader.readLines(numRowsDisplayed);
+				if(csvLoader.hasData()){
+					nextButton.visible = true;
+				}
+				rowCountLabel.text = (csvLoader.numRows-csvGrid.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
+				
+			}			
+			
+			
+			
+			protected function nextButton_clickHandler(event:MouseEvent):void
+			{
+				
+				
+				if(!csvLoader.isBeginning()){
+					prevButton.visible=true;
+					prevButton.enabled=true;
+				}
+				csvLoader.pushPosition();
+				csvGrid.dataProvider=csvLoader.readLines(numRowsDisplayed);
+				
+				if(!csvLoader.hasData()){
+					nextButton.enabled = false;
+				}
+				else{
+					nextButton.visible = true;
+					nextButton.enabled = true;
+				}
+				
+				rowCountLabel.text = (csvLoader.numRows-csvGrid.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
+				
 			}
 			
-			protected function loadCsv():void
+			protected function prevButton_clickHandler(event:MouseEvent):void
 			{
+				// TODO Auto-generated method stub
+				csvLoader.setPreviousPosition();
+				nextButton.enabled=true;
+				prevButton.enabled = true;
+				if(csvLoader.isBeginning()){
+					prevButton.enabled= false;
+				}
+				csvGrid.dataProvider = csvLoader.readLines(numRowsDisplayed);
+				rowCountLabel.text = (csvLoader.numRows-csvGrid.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
+			}
+			
+			
+			
+			protected function dataButtonClickHandler(event:MouseEvent):void
+			{
+				currentState = 'editCsvState';	
+				enterDataFlag = true;
+			}
+			
+			protected function proceedButtonClickHandler(event:MouseEvent):void
+			{
+				nativeProcessInfo.executable = executableFile;
+				nativeProcessInfo.arguments = args;
+				
+				nativeProcess.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
+				nativeProcess.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
+				nativeProcess.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
+				nativeProcess.start(nativeProcessInfo);
 				
 				
 			}
 			
-			protected function backboneCreationCompleteHandler(event:FlexEvent):void
+			protected function onOutputData(event:ProgressEvent):void
 			{
+				// TODO Auto-generated method stub
+				//				while(nativeProcess.standardOutput.bytesAvailable!=0)
+				
+			}
+			
+			protected function onErrorData(event:ProgressEvent):void
+			{
+				// TODO Auto-generated method stub
+				var tmpString:String = nativeProcess.standardError.readUTFBytes(nativeProcess.standardError.bytesAvailable);
+				Alert.show(tmpString,"Error!");
+			}
+			
+			protected function onProcessExit(event:NativeProcessExitEvent):void
+			{
+				// TODO Auto-generated method stub
+				var tmpString:String = "";
+				if(hypothesisResultFlag){
+					tmpString= nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
+					
+					outputText.text = "P value for the given contingency table is " + tmpString;
+					
+				}
+				else{
+					tmpString = nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
+					contingencyTableResult = tmpString.split("\n");
+					currentState = 'editCsvState';
+				}
+				
+			}
+			
+			protected function proceedButton2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+					currentState =  'state2';
+					
+			
+				
+			}
+			
+			protected function computeButtonClickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				nativeProcessInfo.executable = executableFile;
+				nativeProcessInfo.arguments = args;
+				hypothesisResultFlag = true;
+				currentState = 'resultState';
+				
+				nativeProcess.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
+				nativeProcess.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
+				nativeProcess.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
+				nativeProcess.start(nativeProcessInfo);
 				
 				
 			}
@@ -45,25 +252,47 @@
 	<s:states>
 		<s:State name="state1"/>
 		<s:State name="showCsvState"/>
+		<s:State name="editCsvState"/>
 		<s:State name="state2"/>
+		<s:State name="resultState"/>
 	</s:states>
 	
 	<s:transitions>
 		<s:Transition fromState="state1" toState="showCsvState">
 			<s:Resize target="{csvPanel}"/>
 		</s:Transition>
-		<s:Transition fromState="showCsvState" toState="state2">
+		
+		<s:Transition fromState="state1" toState="editCsvState">
+			<s:Sequence>
+				<s:Resize target="{csvPanel}"/>
+				<s:AddAction target="{editCsvLabel}"/>
+				<s:Fade target="{editCsvLabel}" />
+				<s:AddAction target="{editCsvGrid}"/>
+			</s:Sequence>
+		</s:Transition>
+		
+		<s:Transition fromState="showCsvState" toState="editCsvState">
+			<s:Fade targets="{[csvContainerGroup,csvOptionsGroup]}"/>
+		</s:Transition>
+		
+		<s:Transition fromState="*" toState="state2">
 			<s:Sequence>
 				<s:Resize target="{csvPanel}"/>
 				<s:AddAction target="{hypothesisPanel}"/>
 				<s:Fade target="{hypothesisPanel}"/>
 			</s:Sequence>
-			
+		</s:Transition>
+		
+		<s:Transition fromState="state2" toState="resultState">
+			<s:Fade targets="{[]}"/>
 		</s:Transition>
 	</s:transitions>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<fx:XML source="strings/StringCollection.xml" id="stringCollection"/>
+		<s:ArrayList id="columnNames"/>
+		<fx:Object id="typicalItemForCsv"/>
+		
 	</fx:Declarations>
 	
 	<s:VGroup height="100%"
@@ -72,17 +301,18 @@
 		
 		<s:Panel height="70%"
 				 height.showCsvState="100%"
+				 height.editCsvState="100%"
 				 width="100%"
 				 id="csvPanel">
 			<s:VGroup height="100%" 
 					  width="100%"
-					  horizontalAlign="center"
 					  paddingTop="10">
 				<s:HGroup height="10%"
 						  width="100%"
 						  id="hgrp"
 						  horizontalAlign="center"
-						  verticalAlign="middle">
+						  verticalAlign="middle"
+						  excludeFrom="editCsvState">
 					<s:Label id="path_label" 
 							 fontSize="14" 
 							 paddingLeft="10" 
@@ -95,31 +325,100 @@
 							  label="Browse"
 							  click="browsefButtonClickHandler(event)" />
 				</s:HGroup>
-				<s:Label text="No File Selected"
-						 height="100%"
-						 verticalAlign="middle" 
-						 fontSize="20" 
-						 fontWeight="bold" 
-						 includeIn="state1" />
-				<mx:DataGrid id="csvData"
-							 width="75%" 
-							 height="70%"
-							 chromeColor="#C5C299"
-							 contentBackgroundColor="#C0BB6F"
-							 horizontalScrollPolicy="auto" excludeFrom="state1"/>
-				<s:Button label="Proceed" 
-						  styleName="customButton"
-						  click="currentState='state2'" 
-						  includeIn="showCsvState"/>
+				<s:VGroup horizontalAlign="center" height="100%" width="100%" includeIn="state1">
+					<s:Spacer height="20%"/>
+					<s:Label text="--------- (Or) ---------" />
+					<s:Spacer height="20%" includeIn="state1"/>
+					<s:Button label="Enter the data"
+							  styleName="customButton" 
+							  id="dataButton"
+							  click="dataButtonClickHandler(event)"
+							  />
+				</s:VGroup>
+				
+				<s:HGroup width="95%" height="100%"  excludeFrom="[state1,editCsvState,state2,resultState]">
+					<s:VGroup width="100%" height="100%" id="csvContainerGroup" horizontalAlign="center" paddingLeft="5">
+						<s:DataGrid id="csvGrid"
+									width="80%"
+									maxWidth="{csvContainerGroup.width}" 
+									height="80%"
+									horizontalScrollPolicy="auto"
+									/>
+						<s:Spacer width="2"/>
+						<s:HGroup width="100%" verticalAlign="middle">
+							<s:Button id="prevButton" label="Previous" visible="false" click="prevButton_clickHandler(event)" styleName="customButton" />
+							<s:Spacer width="70%"/>
+							<s:Button id="nextButton" label="Next" visible="false" click="nextButton_clickHandler(event)" styleName="customButton"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="middle">
+							<s:Label text="Rows Displayed: "/>
+							<s:Label id="rowCountLabel"/>
+						</s:HGroup>
+					</s:VGroup>
+					<s:VGroup height="100%" width="30%" verticalAlign="middle">
+						<s:VGroup id="csvOptionsGroup" width="100%" height="95%" paddingLeft="5" gap="5">
+							
+							<!--Add Childrem form the class that inherits this backbone-->
+							
+						</s:VGroup>
+						<s:HGroup width="100%">
+							<s:Spacer width="100%"/>
+							<s:Button label="Proceed" 
+									  id="proceedButton"
+									  enabled="false"
+									  styleName="customButton"
+									  click="proceedButtonClickHandler(event)" 
+									  includeIn="showCsvState"/>
+						</s:HGroup>
+						
+					</s:VGroup>
+					
+				</s:HGroup>
+				<s:VGroup verticalAlign="middle" paddingLeft="20" width="100%" height="100%" includeIn="[editCsvState,state2,resultState]">
+					<s:Label text="Contingency Table: " id="editCsvLabel" fontWeight="bold"/>
+					<s:Spacer height="4%"/>
+					<s:HGroup width="75%" height="100%" verticalAlign="middle" horizontalAlign="center" >
+						<s:DataGrid id="editCsvGrid" height="80%" visible="false"/>
+					</s:HGroup>
+					<s:HGroup width="100%">
+						<s:Spacer width="90%"/>
+						<s:Button label="Proceed" 
+								  id="proceedButton2"
+								  enabled="true"
+								  styleName="customButton"
+								  click="proceedButton2_clickHandler(event)" 
+								  includeIn="editCsvState"/>
+					</s:HGroup>
+				</s:VGroup>
+				
 			</s:VGroup>
 		</s:Panel>
 		
-		<s:Spacer height="5%"/>
+		<s:Spacer height="2%"/>
+		
+		
 		
 		<s:Panel width="100%"
 				 height="35%"
-				 includeIn="state2"
-				 id="hypothesisPanel">
+				 includeIn="[state2,resultState]"
+				 id="hypothesisPanel"
+				 title="The Hypothesis: ">
+			<s:VGroup id="hypothesisPanelGroup" height="100%" width="100%" verticalAlign="middle" paddingLeft="7" gap="7">
+				
+				<s:HGroup width="80%" verticalAlign="middle">
+					<s:Label text="Set a significance level: "/>
+					<s:TextInput id="significanceTextInput" />
+				</s:HGroup>			
+				<s:HGroup width="100%">
+					<s:Spacer width="100%"/>
+					<s:Button id="computeButton"
+							  click="computeButtonClickHandler(event)"
+							  label="Compute"
+							  styleName="customButton"
+							  />
+				</s:HGroup>
+				
+			</s:VGroup>
 		</s:Panel>
 		
 	</s:VGroup>
@@ -130,18 +429,31 @@
 			  paddingLeft="5"
 			  paddingRight="5">
 		
-		<s:Panel height="48%" width="100%" title="Process flow:">
+		<s:Panel height="48%" width="100%" title="Process flow:" excludeFrom="resultState">
 			<s:TextArea id="processFlowText"
 						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
 						width="100%"/>
 		</s:Panel>
 		
+		<s:TextArea width="100%" height="48%"
+					id="outputText" 
+					includeIn="resultState"/>
+		
 		<s:Spacer height="4%"/>
 		
-		<s:Panel height="48%" width="100%">
+		<s:Panel height="48%" width="100%" title="Panel Help" excludeFrom="resultState">
+			<s:TextArea id="panelHelpText"
+						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
+						borderVisible="false"
+						width="100%"/>
 			
 		</s:Panel>
+							   
+		<s:Image width="100%" height="48%"
+				 includeIn="resultState"
+				  id="imgViewer"/>
+		
 		
 	</s:VGroup>
 	

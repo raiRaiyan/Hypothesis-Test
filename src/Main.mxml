@@ -15,48 +15,55 @@
 			import NonParametricTests.*;
 			
 			import ParametricTests.*;
-				protected function pairedTTestClickHandler(event:MouseEvent):void
-				{
-					currentState='subTestSelected';
-					var p:PairedTTest = new PairedTTest();
-					testScreen.addElement(p);
-					mainTitle.text = "Paired t-Test (Parametric Test)";
-				}
-				protected function oneTTestClickHandler(event:MouseEvent):void
-				{
-					currentState='subTestSelected';
-					var p:OneTTest = new OneTTest();
-					testScreen.addElement(p);
-					mainTitle.text = "One Sample t-Test (Parametric Test)";
-				}
-				protected function twoTTestClickHandler(event:MouseEvent):void
-				{
-					currentState='subTestSelected';
-					var p:TwoTTest = new TwoTTest();
-					testScreen.addElement(p);
-					mainTitle.text = "Two Sample t-Test (Parametric Test)";
-				}
-				protected function independenceCTestClickHandler(event:MouseEvent):void
-				{
-					currentState='subTestSelected';
-					var p:IndependenceCTest = new IndependenceCTest();
-					testScreen.addElement(p);
-					mainTitle.text = "Chi-Squared Test for Independence (Non-Parametric Test)";
-				}
-				protected function goodFitCTestClickHandler(event:MouseEvent):void
-				{
-					currentState='subTestSelected';
-					var p:GoodFitCTest = new GoodFitCTest();
-					testScreen.addElement(p);
-					mainTitle.text = "Chi-Squared Test for Goodness of Fit (Non-Parametric Test)";
-				}
-				
-				protected function backButton_clickHandler(event:MouseEvent):void
-				{
-					testScreen.removeAllElements();
-					currentState='landingPage';
-				}
-				
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			
+			import spark.components.gridClasses.GridColumn;
+			
+			protected function pairedTTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:PairedTTest = new PairedTTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Paired t-Test (Parametric Test)";
+			}
+			protected function oneTTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:OneTTest = new OneTTest();
+				testScreen.addElement(p);
+				mainTitle.text = "One Sample t-Test (Parametric Test)";
+			}
+			protected function twoTTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:TwoTTest = new TwoTTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Two Sample t-Test (Parametric Test)";
+			}
+			protected function independenceCTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:IndependenceCTest = new IndependenceCTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Chi-Squared Test for Independence (Non-Parametric Test)";
+			}
+			protected function goodFitCTestClickHandler(event:MouseEvent):void
+			{
+				currentState='subTestSelected';
+				var p:GoodFitCTest = new GoodFitCTest();
+				testScreen.addElement(p);
+				mainTitle.text = "Chi-Squared Test for Goodness of Fit (Non-Parametric Test)";
+			}
+			
+			protected function backButton_clickHandler(event:MouseEvent):void
+			{
+				testScreen.removeAllElements();
+				currentState='landingPage';
+			}
+			
+			
 		]]>
 	</fx:Script>
 	

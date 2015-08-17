@@ -8,7 +8,7 @@ package NonParametricTests
 		{
 			super();
 		}
-		override protected function backboneCreationCompleteHandler(event:FlexEvent):void
+		override protected function backboneStateChangeCompleteHandler(event:FlexEvent):void
 		{
 			//Add the help text for the processflow
 			
