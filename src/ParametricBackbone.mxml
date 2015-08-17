@@ -267,7 +267,7 @@
 			}
 			
 			//Inherit this and override
-			private function compute_clickHandler(event:MouseEvent):void
+			protected function compute_clickHandler(event:MouseEvent):void
 			{
 				//Inherit this function and initialize and populate the args n rFile
 				if(hypoFlag==true)
