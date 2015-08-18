@@ -1,6 +1,7 @@
 package ParametricTests
 {
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	
@@ -12,6 +13,7 @@ package ParametricTests
 	import spark.components.Label;
 	import spark.components.TextInput;
 	import spark.events.IndexChangeEvent;
+	import spark.events.TextOperationEvent;
 
 	public class OneTTest extends ParametricBackbone
 	{
@@ -85,18 +87,10 @@ package ParametricTests
 			replaceInput.prompt="Enter a Numeric Value";
 			replaceInput.restrict="0-9.";
 			replaceInput.percentWidth=70;
+			replaceInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replaceInput);
-			
-			//Obselete 1
-			//this.addEventListener("valuesAvailable",switchState);
 		}
-		/* Obselete
-		protected function switchState(event:Event):void
-		{
-		currentState = 'state1Final';
-		
-		}
-		*/
+
 		protected function setDataProvider(event:Event):void
 		{
 			colCB.dataProvider = colnames;
@@ -127,6 +121,7 @@ package ParametricTests
 				else
 				{
 					//Show an error icon
+					replaceInput.errorString = "Enter a value";
 				}
 			}
 			
@@ -157,6 +152,7 @@ package ParametricTests
 			sampleMeanInput.prompt="Enter a Numeric Value";
 			sampleMeanInput.restrict="0-9.";
 			sampleMeanInput.percentWidth=70;
+			sampleMeanInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			if(columnSelectedFlag)
 			{
 				sampleMeanInput.text = values[0];
@@ -176,6 +172,7 @@ package ParametricTests
 			sampleSdInput.prompt="Enter a numeric value";
 			sampleSdInput.restrict="0-9.";
 			sampleSdInput.percentWidth=70;
+			sampleSdInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			if(columnSelectedFlag)
 			{
 				sampleSdInput.text = values[1];
@@ -195,12 +192,14 @@ package ParametricTests
 			sampleSizeInput.prompt="Enter a integer value";
 			sampleSizeInput.restrict="0-9";
 			sampleSizeInput.percentWidth=70;
+			sampleSizeInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			if(columnSelectedFlag)
 			{
 				sampleSizeInput.text = values[2];
 			}
 			SampleParams.addElement(sampleSizeInput);
 		}
+		
 		
 		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
 		{
@@ -212,8 +211,8 @@ package ParametricTests
 			{
 				check1 = false;
 				//Show an error icon
+				sampleMeanInput.errorString = "Enter a value";
 			}
-			
 			if(sampleSdInput.text!="")
 			{
 				var check2:Boolean = true;
@@ -222,6 +221,7 @@ package ParametricTests
 			{
 				check2 = false;
 				//Show an error icon
+				sampleSdInput.errorString = "Enter a value";
 			}
 			
 			if(sampleSizeInput.text!="")
@@ -232,6 +232,7 @@ package ParametricTests
 			{
 				check3 = false;
 				//Show an error icon
+				sampleSizeInput.errorString = "Enter a value";
 			}
 			
 			if(check1&&check2&&check3)
