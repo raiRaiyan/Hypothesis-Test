@@ -5,9 +5,12 @@ package NonParametricTests
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	
+	import flashx.textLayout.formats.Float;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.collections.ListCollectionView;
 	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.controls.Text;
@@ -22,7 +25,7 @@ package NonParametricTests
 	import spark.components.gridClasses.DefaultGridItemEditor;
 	import spark.components.gridClasses.GridColumn;
 	import spark.events.IndexChangeEvent;
-
+	
 	public class GoodFitCTest extends NonParametricBackbone
 	{
 		protected var selectColumnLabel:Label;
@@ -40,7 +43,7 @@ package NonParametricTests
 		
 		override protected function backbonecreationCompleteHandler(event:FlexEvent):void
 		{
-		
+			
 			dataButton.visible = true;
 			orLabel.visible = true;
 		}
@@ -75,6 +78,7 @@ package NonParametricTests
 				
 				missingValueInput = new TextInput;
 				missingValueInput.prompt = "Replace missing Values by...";
+				missingValueInput.percentWidth = 85;
 				csvOptionsGroup.addElement(missingValueInput);
 				
 				selectColumnLabel.visible = true;
@@ -194,17 +198,37 @@ package NonParametricTests
 		
 		override protected function proceedButtonClickHandler(event:MouseEvent):void
 		{
-			var rFile:String = File.applicationDirectory.resolvePath("working/tabulate.R").nativePath;
-			args = new Vector.<String>;
-			args.push(rFile);
-			args.push("goodfittest");
-			args.push(filePath.text);
-			
-			args.push(comboBox.selectedItem);
-			args.push(missingValueInput.text);
-			
-			super.proceedButtonClickHandler(event);
-			
+			if(missingValueInput.text ==""){
+				missingValueInput.errorString = "Enter a value"
+			}
+			else{
+				missingValueInput.errorString = "";
+				var rFile:String = File.applicationDirectory.resolvePath("working/tabulate.R").nativePath;
+				args = new Vector.<String>;
+				args.push(rFile);
+				args.push("goodfittest");
+				args.push(filePath.text);
+				
+				args.push(comboBox.selectedItem);
+				args.push(missingValueInput.text);
+				
+				super.proceedButtonClickHandler(event);
+			}
+		}
+		
+		override protected function proceedButton2_clickHandler(event:MouseEvent):void
+		{
+			var expectedProb:Number = 0;
+			var tmpdataprovider:ListCollectionView = ListCollectionView(editCsvGrid.dataProvider)
+			for(var i:int=0;i<editCsvGrid.dataProvider.length;i++){
+				expectedProb = expectedProb + Number(tmpdataprovider.getItemAt(i)["Expected Probability"]);
+			}
+			if(expectedProb != 1){
+				Alert.show("Expected Probabilities must sum to 1","Error");
+			}
+			else{
+				super.proceedButton2_clickHandler(event);
+			}
 		}
 		
 		override protected function computeButtonClickHandler(event:MouseEvent):void
