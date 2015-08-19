@@ -255,7 +255,8 @@
 			{
 				if(popnMeanInput.text=="")
 				{
-					//Add a icon to the left of input text
+					//Error handling
+					popnMeanInput.errorString = "Enter a value";
 				}
 					
 				else
@@ -266,7 +267,8 @@
 				
 				if(sigLevelInput.text=="")
 				{
-					//Add a icon to the left of input text
+					//Error handling
+					sigLevelInput.errorString = "Enter a value";
 				}
 					
 				else
@@ -359,7 +361,6 @@
 				}
 				else
 				{
-					//Potential bug, the event may be dispatched when 1st byte is put into stream
 					dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
 				}
 			}
@@ -388,6 +389,19 @@
 			{
 				var img:File = File.applicationDirectory.resolvePath("working/outputImg.png");
 				img.openWithDefaultApplication();
+			}
+			
+			//Common function to check whether the entered value is a number or not
+			//Attach listeners from all the text inputs
+			protected function checkNumber(event:FocusEvent):void
+			{
+				event.currentTarget.errorString = null;
+				var num:Number = new Number(event.currentTarget.text);
+				if(isNaN(num))
+				{
+					event.currentTarget.text = "";
+					event.currentTarget.errorString = "That was an invalid number";
+				}
 			}
 			
 		]]>
@@ -522,11 +536,11 @@
 					
 					<s:Label id="popnMeanLabel" text="Population mean"/>
 					<s:TextInput id="popnMeanInput" width="60%" prompt="Enter a numeric value"
-								 restrict="0-9."/>
+								 restrict="0-9." focusOut="checkNumber(event)"/>
 					<s:Spacer height="5%"/>
 					<s:Label text="Significance Value"/>
 					<s:TextInput id="sigLevelInput" width="60%" prompt="Enter a value between 0-1"
-								 restrict="0-9." text="0.05"/>
+								 restrict="0-9." text="0.05" focusOut="checkNumber(event)"/>
 					<!-- Placeholder for Population Data elements-->
 					
 				</s:VGroup>
