@@ -6,6 +6,7 @@ package ParametricTests
 	import flash.filesystem.File;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
 	
@@ -13,7 +14,6 @@ package ParametricTests
 	import spark.components.Label;
 	import spark.components.TextInput;
 	import spark.events.IndexChangeEvent;
-	import spark.events.TextOperationEvent;
 
 	public class OneTTest extends ParametricBackbone
 	{
@@ -50,11 +50,17 @@ package ParametricTests
 		{
 			if(currentState == 'loadCSV')
 			{
-				addToCSVPane();
+				if(!backToCSVFlag)
+				{
+					addToCSVPane();
+				}
 			}
 			if(currentState == 'state1Final')
 			{
-				addToPanel1Final();
+				if(!backToCSVFlag)
+				{
+					addToPanel1Final();
+				}
 			}
 			if(currentState == 'state2')
 			{
@@ -201,41 +207,34 @@ package ParametricTests
 		}
 		
 		
-		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
+		private function checksOnPanel1():Boolean
 		{
-			if(sampleMeanInput.text!="")
+			var result:Boolean = true;
+			if(sampleMeanInput.text =="")
 			{
-				var check1:Boolean = true;
-			}
-			else
-			{
-				check1 = false;
 				//Show an error icon
 				sampleMeanInput.errorString = "Enter a value";
+				result = false;
 			}
-			if(sampleSdInput.text!="")
+			if(sampleSdInput.text=="")
 			{
-				var check2:Boolean = true;
-			}
-			else
-			{
-				check2 = false;
 				//Show an error icon
 				sampleSdInput.errorString = "Enter a value";
+				result = false;
 			}
-			
-			if(sampleSizeInput.text!="")
+			if(sampleSizeInput.text=="")
 			{
-				var check3:Boolean = true;
-			}
-			else
-			{
-				check3 = false;
 				//Show an error icon
 				sampleSizeInput.errorString = "Enter a value";
+				result = false;
 			}
+			return result;
+		}
+		
+		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
+		{
 			
-			if(check1&&check2&&check3)
+			if(checksOnPanel1())
 			{
 				if(varName == null)
 				{
@@ -250,6 +249,31 @@ package ParametricTests
 			
 		}
 		
+		override protected function panel1EditButton_clickHandler(event:MouseEvent):void
+		{
+			panel1Flag = false;
+			sampleMeanInput.editable = true;
+			sampleSdInput.editable = true;
+			sampleSizeInput.editable = true;
+			
+			panel1EditButton.enabled = false;
+			panel1DoneButton.enabled = true;
+		}
+		
+		override protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+		{
+			if(checksOnPanel1())
+			{
+				panel1Flag = true;
+				sampleMeanInput.editable = false;
+				sampleSdInput.editable = false;
+				sampleSizeInput.editable = false;
+				
+				panel1EditButton.enabled = true;
+				panel1DoneButton.enabled = false;
+			}
+		}
+		
 		private function addToPanel2():void
 		{
 			
@@ -257,6 +281,21 @@ package ParametricTests
 		
 		override protected function compute_clickHandler(event:MouseEvent):void
 		{
+			if(!panel1Flag)
+			{
+				Alert.show("Please complete the editing in the Panel1\nAnd try again","Editing in progress!!");
+			}
+			
+			if(!panel2Flag)
+			{
+				Alert.show("Please complete the editing in the Panel2\nAnd try again","Editing in progress!!");
+			}
+			
+			if(!hypoFlag)
+			{
+				Alert.show("Please select the hypotheses from the given list","Hypotheses not selected!!");
+			}
+			
 			if(panel1Flag&&panel2Flag&&hypoFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;

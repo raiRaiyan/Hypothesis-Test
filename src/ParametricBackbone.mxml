@@ -28,10 +28,19 @@
 			import spark.events.IndexChangeEvent;
 			
 			//Public flags to indicate completion of input in a panel
+			[Bindable] //needed to show back to csv button
 			public var csvDoneFlag:Boolean = false;
+			[Bindable] //needed to vanish the go to next button
 			public var panel1Flag:Boolean = false;
+			[Bindable] //needed to vanish the go the next button
 			public var panel2Flag:Boolean = false;
 			public var hypoFlag:Boolean = false;
+			
+			//needed to stop the output being shown in case there is error
+			//For the csv calculation part
+			public var errorFlag:Boolean = false;
+			
+			public var backToCSVFlag:Boolean = false;
 			
 			//Public variables needed for the UI
 			[Bindable]
@@ -78,23 +87,9 @@
 			{
 				if(currentState == 'result')
 				{
-					//Set the text to the TextArea
-					output.text ="P-Value is : "+String(pValue)+"\n";
-					if(pValue<sigLevel)
-					{
-						output.text+= "Null Hypothesis cannot be rejected\n";
-					}
-					else
-					{
-						output.text+= "Null Hypothesis is rejected\n";
-					}
-					
-					//Set image source to the image viewer
-					imgViewer.source = "/working/outputImg.png";
-					imgViewer.validateNow(); //sometimes source change takes time to register
-					
-					output.visible = true;
-					imgViewer.visible = true;
+					//Need to enable this since on state change the default value is disabled
+					//output.visible = true;
+					//imgViewer.visible = true;
 				}
 			}
 			
@@ -119,52 +114,8 @@
 			//Do not disturb this function
 			private function fileSelected(evt:Event):void
 			{
-				/*
 				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
-				//Read CSV here
-				//Using old reading file now for testing
-				var readStream:FileStream = new FileStream();
-				readStream.open(csvFile,FileMode.READ);
 				
-				var data:String = readStream.readUTFBytes(csvFile.size);
-				
-				var quote:RegExp = /"/gm;
-				data = data.replace(quote,"");
-				
-				var rowData:Array = data.split("\r\n");
-				
-				var colname:Array = rowData[0].split(",");//Array has all the names of the columns
-				
-				colnames = new ArrayCollection(colname);
-				dispatchEvent(new Event("colNamesAvailable"));
-				
-				var colnameForDatagrid:ArrayList = new ArrayList();
-				
-				
-				for(var i:int=0;i<colname.length;i++)
-				{
-					var cn:GridColumn = new GridColumn();
-					cn.dataField = colname[i];
-					colnameForDatagrid.addItem(cn);
-				}
-				
-				csvData.columns = colnameForDatagrid;
-				
-				var contents:ArrayCollection = new ArrayCollection();
-				for(i=1;i<rowData.length;i++)
-				{
-					var obj:Object = new Object();
-					for(var j:int=0;j<colname.length;j++)
-					{
-						obj[colname[j]]=rowData[i].split(",")[j];
-					}
-					contents.addItem(obj);
-				}
-				csvData.dataProvider = contents;
-				*/
-				
-				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
-
 				csvLoader = new LoadCsvFiles(csvFile);
 				csvData.columns= csvLoader.loadColumnName();
 				colnames = new ArrayCollection(csvLoader.columnNames);
@@ -233,9 +184,18 @@
 					proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
 					proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
 					
+					errorFlag = false;
+					
 					proc.start(procInfo);
+					csvPaneDoneButton.enabled = false;
 				}
 			}	
+			
+			protected function backToCSVButton_clickHandler(event:MouseEvent):void
+			{
+				backToCSVFlag = true;
+				currentState = 'loadCSV';
+			}
 			
 			protected function panel1NextButton_clickHandler(event:MouseEvent):void
 			{
@@ -247,28 +207,44 @@
 				{
 					currentState='state2';
 					csvDoneFlag = false;
-					panel1NextButton.enabled=false;
+					
+					//remove the goto next button
+					panel1NextButton.visible = false;
+					panel1NextButton.includeInLayout = false;
+					
+					//Edit panel
+					panel1DoneButton.visible = true;
+					panel1EditButton.visible = true;
+					panel1EditButton.includeInLayout = true;
+					panel1DoneButton.includeInLayout = true;
 				}
 			}
 			
-			protected function panel2NextButton_clickHandler(event:MouseEvent):void
+			protected function panel1EditButton_clickHandler(event:MouseEvent):void
 			{
+				//Implement this in the individual tests
+			}
+			
+			protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+			{
+				//Implement this in the individual tests
+			}
+			
+			private function checksOnPanel2():Boolean
+			{
+				var result:Boolean = true;
 				if(popnMeanInput.text=="")
 				{
 					//Error handling
 					popnMeanInput.errorString = "Enter a value";
-				}
-					
-				else
-				{
-					popnMeanValue=Number(popnMeanInput.text);
-					var check1:Boolean = true;
+					result = false;
 				}
 				
 				if(sigLevelInput.text=="")
 				{
 					//Error handling
 					sigLevelInput.errorString = "Enter a value";
+					result = false;
 				}
 					
 				else
@@ -277,18 +253,33 @@
 					if(sigLevel>=1 || sigLevel<=0)
 					{
 						sigLevelInput.text=null;
-					}
-					else
-					{
-						var check2:Boolean = true;
+						sigLevelInput.errorString = "Value should be between 0 and 1";
+						result = false;
 					}
 				}
-				
-				if(check1&&check2)
+				return result;
+			}
+			
+			protected function panel2NextButton_clickHandler(event:MouseEvent):void
+			{
+				if(checksOnPanel2())
 				{
+					//read the value
+					popnMeanValue=Number(popnMeanInput.text);
+					
 					panel2Flag=true;
 					popnMeanInput.editable = false;
 					sigLevelInput.editable = false;
+					
+					//Vanish the next button
+					panel2NextButton.visible = false;
+					panel2NextButton.includeInLayout = false;
+					
+					//Edit pane enabling
+					panel2EditButton.visible = true;
+					panel2EditButton.includeInLayout = true;
+					panel2DoneButton.includeInLayout = true;
+					panel2DoneButton.visible = true;
 				}
 				
 				//Inherited class must set the flag to true after it gets all the values
@@ -299,6 +290,32 @@
 				}
 			}
 			
+			protected function panel2EditButton_clickHandler(event:MouseEvent):void
+			{
+				panel2Flag = false;
+				popnMeanInput.editable = true;
+				sigLevelInput.editable = true;
+				
+				panel2EditButton.enabled = false;
+				panel2DoneButton.enabled = true;
+			}
+			
+			protected function panel2DoneButton_clickHandler(event:MouseEvent):void
+			{
+				if(checksOnPanel2())
+				{
+					//update the popn mean value
+					popnMeanValue=Number(popnMeanInput.text);
+					
+					panel2Flag=true;
+					popnMeanInput.editable = false;
+					sigLevelInput.editable = false;
+					
+					panel2EditButton.enabled = true;
+					panel2DoneButton.enabled = false;
+				}
+				
+			}
 			
 			protected function hypoExpression_changeHandler(event:IndexChangeEvent):void
 			{
@@ -332,6 +349,7 @@
 			protected function compute_clickHandler(event:MouseEvent):void
 			{
 				//Inherit this function and initialize and populate the args n rFile
+				
 				if(hypoFlag==true)
 				{
 					proc=new NativeProcess();
@@ -347,6 +365,7 @@
 					proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
 					
 					proc.start(procInfo);
+					compute.enabled = false;
 				}
 				
 			}
@@ -369,7 +388,12 @@
 			{
 				//Capture the error message
 				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
-				Alert.show(err,"Oops.!!");
+				var naError:int = err.search("NA");
+				if(naError!=-1)
+				{
+					errorFlag = true;
+					Alert.show("Please select a numeric column","Oops.!!");
+				}
 			}
 			
 			public function onProcessExit(event:NativeProcessExitEvent):void
@@ -377,11 +401,34 @@
 				if(event.exitCode==0 && hypoFlag)
 				{
 					currentState='result';
+					
+					//Set the text to the TextArea
+					output.visible = false;
+					output.text ="P-Value is : "+String(pValue)+"\n";
+					if(pValue<sigLevel)
+					{
+						output.text+= "Null Hypothesis is rejected\n";
+					}
+					else
+					{
+						output.text+= "Null Hypothesis cannot be rejected\n";
+					}
+					output.visible = true;
+					
+					//Set image source to the image viewer
+					imgViewer.visible = false;
+					imgViewer.source = null;
+					imgViewer.source = "/working/outputImg.png";
+					imgViewer.validateNow(); //sometimes source change takes time to register
+					imgViewer.visible = true;
+					
+					compute.enabled = true;
 				}
-				if(event.exitCode==0 && csvDoneFlag)
+				if(event.exitCode==0 && csvDoneFlag && !errorFlag)
 				{
 					values = dataIn.split(",");
 					currentState = 'state1Final';
+					csvPaneDoneButton.enabled = true;
 				}
 			}
 			
@@ -489,11 +536,11 @@
 						<s:DataGrid width="100%" height="90%" id="csvData" visible="false"
 									horizontalScrollPolicy="auto"/>
 						<s:HGroup width="100%" height="10%" horizontalAlign="center" verticalAlign="middle">
-							<s:Button id="gridNextButton" label="Next" click="gridNextButton_clickHandler(event)"
+							<s:Button id="gridPrevButton" label="Prev" click="gridPrevButton_clickHandler(event)"
 									  visible="false"/>
 							<s:Label text="Rows Displayed :"/>
 							<s:Label id="rowCountLabel" />
-							<s:Button id="gridPrevButton" label="Prev" click="gridPrevButton_clickHandler(event)"
+							<s:Button id="gridNextButton" label="Next" click="gridNextButton_clickHandler(event)"
 									  visible="false"/>
 						</s:HGroup>
 					</s:VGroup>
@@ -522,7 +569,16 @@
 					<!-- Placeholder for Sample Data elements-->
 					
 				</s:VGroup>
-				<s:Button id="panel1NextButton" label="Go to next" click="panel1NextButton_clickHandler(event)"/>
+				<s:HGroup width="100%" height="15%" horizontalAlign="center" verticalAlign="middle">
+					<s:Button id="backToCSVButton" label="Go back to CSV" click="backToCSVButton_clickHandler(event)"
+							  visible="{csvDoneFlag}" includeInLayout="{csvDoneFlag}"/>
+					<s:Button id="panel1NextButton" label="Go to next" click="panel1NextButton_clickHandler(event)"
+							  visible="true" includeInLayout="true"/>
+					<s:Button id="panel1EditButton" label="Edit" click="panel1EditButton_clickHandler(event)"
+							  visible="false" includeInLayout="false"/>
+					<s:Button id="panel1DoneButton" label="Done" click="panel1DoneButton_clickHandler(event)"
+							  visible="false" enabled="false" includeInLayout="false"/>
+				</s:HGroup>
 			</s:VGroup>
 			
 		</s:Panel>
@@ -544,7 +600,14 @@
 					<!-- Placeholder for Population Data elements-->
 					
 				</s:VGroup>
-				<s:Button id="panel2NextButton" label="Go to Next" click="panel2NextButton_clickHandler(event)"/>
+				<s:HGroup width="100%" height="15%" horizontalAlign="center" verticalAlign="middle">
+					<s:Button id="panel2NextButton" label="Go to Next" click="panel2NextButton_clickHandler(event)"
+							  visible = "true" includeInLayout="true"/>
+					<s:Button id="panel2EditButton" label="Edit" click="panel2EditButton_clickHandler(event)"
+							  visible = "false" includeInLayout="false"/>
+					<s:Button id="panel2DoneButton" label="Done" click="panel2DoneButton_clickHandler(event)"
+							  visible = "false" includeInLayout="false" enabled="false"/>
+				</s:HGroup>
 			</s:VGroup>
 		</s:Panel>
 		
@@ -623,10 +686,10 @@
 		
 		<s:TextArea width="85%" height="38%" x="{helpResultPane.width*0.07}"
 					id="output" y="{helpResultPane.height*0.05}"
-					includeIn="result" visible="false"/>
+					includeIn="result"/>
 		<s:Image width="96%" height="48%" includeIn="result"
 				 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
-				 id="imgViewer" visible="false" click="imgViewer_clickHandler(event)"/>
+				 id="imgViewer" click="imgViewer_clickHandler(event)"/>
 		
 	</s:Group>
 </s:Group>
