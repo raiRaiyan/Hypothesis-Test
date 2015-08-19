@@ -7,6 +7,7 @@ package NonParametricTests
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
 	
@@ -63,8 +64,9 @@ package NonParametricTests
 				
 				missingValueInput1 = new TextInput;
 				missingValueInput1.prompt = "Replace missing Values by...";
+				missingValueInput1.percentWidth = 80;
 				csvOptionsGroup.addElement(missingValueInput1);
-								
+												
 				var spacer:Spacer = new Spacer;
 				spacer.percentHeight = 5;
 				csvOptionsGroup.addElement(spacer);
@@ -73,6 +75,7 @@ package NonParametricTests
 				selectColumnLabel2.text = "Select the second Column: ";
 				csvOptionsGroup.addElement(selectColumnLabel2);
 				
+				
 				comboBox2 = new ComboBox;
 				comboBox2.dataProvider = columnNames;
 				csvOptionsGroup.addElement(comboBox2);
@@ -80,8 +83,10 @@ package NonParametricTests
 				
 				missingValueInput2 = new TextInput;
 				missingValueInput2.prompt = "Replace missing Values by...";
+				missingValueInput2.percentWidth = 80;
 				csvOptionsGroup.addElement(missingValueInput2);
-							
+				
+			
 				selectColumnLabel1.visible = true;
 				comboBox1.visible = true;
 				selectColumnLabel2.visible = true;
@@ -160,7 +165,7 @@ package NonParametricTests
 				comboBox1.selectedIndex=-1;
 				comboBox2.selectedIndex=-1;
 			}
-			else{
+			else if(comboBox1.selectedIndex != -1 && comboBox2.selectedIndex != -1){
 				proceedButton.enabled = true;
 			}
 		}		
@@ -200,15 +205,31 @@ package NonParametricTests
 			args.push("independence");
 			args.push(filePath.text);
 			
-			args.push(comboBox1.selectedItem);
-			args.push(comboBox2.selectedItem);
-			
-			args.push(missingValueInput1.text);
-			args.push(missingValueInput2.text);
-			
-			super.proceedButtonClickHandler(event);
-			
+			if(comboBox1.selectedIndex == comboBox2.selectedIndex){
+				Alert.show("Please Select different Columns");
+			}
+			else{
+				if(missingValueInput1.text == ""){
+					missingValueInput1.errorString = "Enter a value";
+				}
+				else if(missingValueInput2.text == ""){
+					missingValueInput2.errorString = "Enter a value";
+				}
+				else{
+					missingValueInput1.errorString = "";
+					missingValueInput2.errorString = "";
+					args.push(comboBox1.selectedItem);
+					args.push(comboBox2.selectedItem);
+					
+					args.push(missingValueInput1.text);
+					args.push(missingValueInput2.text);
+					
+					super.proceedButtonClickHandler(event);
+				}
+			}
 		}
+		
+		
 		
 		override protected function computeButtonClickHandler(event:MouseEvent):void
 		{
@@ -218,9 +239,7 @@ package NonParametricTests
 			args.push("independence");
 			args.push(File.applicationStorageDirectory.nativePath+"\\contingency.csv");
 			
-			
 			super.computeButtonClickHandler(event);
-			
 		}
 	}
 }
