@@ -57,6 +57,10 @@ package assets
 			rowCount = value;
 		}
 		
+		public function closeStream():void{
+			fileStream.close();
+		}
+		
 		public function setPreviousPosition():void{
 			numRows = rowCount-2*numRowsDisplayed;
 			previousPositionArray.pop();

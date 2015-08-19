@@ -3,7 +3,8 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
 		 currentState="state1"
-		 stateChangeComplete="backboneStateChangeCompleteHandler(event)">
+		 stateChangeComplete="backboneStateChangeCompleteHandler(event)"
+		 creationComplete="backbonecreationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -19,7 +20,7 @@
 			private var file:File = new File;
 			private var csvLoader:LoadCsvFiles;
 			private var numRowsDisplayed:uint=1000;
-			
+			private var tmpString:String = "";
 			protected var enterDataFlag:Boolean;
 			
 			protected var nativeProcessInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo;
@@ -35,6 +36,7 @@
 			{
 				// TODO Auto-generated method stub
 				if(currentState == 'state2'){
+				
 				var fileWriteStream:FileStream = new FileStream;
 				var tmpString:String =  File.applicationStorageDirectory.nativePath;
 				file = new File(tmpString+"\\contingency.csv");
@@ -134,7 +136,6 @@
 			protected function nextButton_clickHandler(event:MouseEvent):void
 			{
 				
-				
 				if(!csvLoader.isBeginning()){
 					prevButton.visible=true;
 					prevButton.enabled=true;
@@ -179,6 +180,7 @@
 			{
 				nativeProcessInfo.executable = executableFile;
 				nativeProcessInfo.arguments = args;
+				nativeProcessInfo.workingDirectory = workingDirectory;
 				
 				nativeProcess.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
 				nativeProcess.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
@@ -190,9 +192,7 @@
 			
 			protected function onOutputData(event:ProgressEvent):void
 			{
-				// TODO Auto-generated method stub
-				//				while(nativeProcess.standardOutput.bytesAvailable!=0)
-				
+				tmpString= nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
 			}
 			
 			protected function onErrorData(event:ProgressEvent):void
@@ -205,16 +205,25 @@
 			protected function onProcessExit(event:NativeProcessExitEvent):void
 			{
 				// TODO Auto-generated method stub
-				var tmpString:String = "";
+				//var tmpString:String = "";
 				if(hypothesisResultFlag){
-					tmpString= nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
+					//tmpString= nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
 					
 					outputText.text = "P value for the given contingency table is " + tmpString;
 					imgViewer.source = "/working/chiSquare.png"
+					outputText.text += "\n\n"
+						
+					if(significanceTextInput.text>tmpString){
+						outputText.text += "The null hypothesis is rejected!!";
+					}
+					else{
+						outputText.text += "The null hypothesis canot be rejected. The altenate hypothesis failed to reject the null hypothesis.";
+					}
 				}
 				else{
-					tmpString = nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
-					contingencyTableResult = tmpString.split("\n");
+					//tmpString = nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
+					
+					contingencyTableResult = loadCTablefromfile().split("\n");
 					currentState = 'editCsvState';
 				}
 				
@@ -224,14 +233,12 @@
 			{
 				// TODO Auto-generated method stub
 					currentState =  'state2';
-					
-			
-				
 			}
 			
 			protected function computeButtonClickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				csvLoader.closeStream();
 				nativeProcessInfo.executable = executableFile;
 				nativeProcessInfo.arguments = args;
 				nativeProcessInfo.workingDirectory = workingDirectory;
@@ -244,6 +251,21 @@
 				nativeProcess.start(nativeProcessInfo);
 				
 				
+			}
+			
+			protected function backbonecreationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			private function loadCTablefromfile():String
+			{
+				// TODO Auto Generated method stub
+				var fileStream:FileStream = new FileStream;
+				var file:File = File.applicationDirectory.resolvePath("working/tabulatedDataFile");
+				fileStream.open(file,FileMode.READ);
+				return fileStream.readUTFBytes(file.size);
 			}
 			
 		]]>
@@ -328,11 +350,15 @@
 				</s:HGroup>
 				<s:VGroup horizontalAlign="center" height="100%" width="100%" includeIn="state1">
 					<s:Spacer height="20%"/>
-					<s:Label text="--------- (Or) ---------" />
+					<s:Label text="--------- (Or) ---------" 
+							 id="orLabel"
+							 visible="false"/>
 					<s:Spacer height="20%" includeIn="state1"/>
+					<s:Label text="No File Selected" id="displayString" visible="false"/>
 					<s:Button label="Enter the data"
 							  styleName="customButton" 
 							  id="dataButton"
+							  visible="false"
 							  click="dataButtonClickHandler(event)"
 							  />
 				</s:VGroup>

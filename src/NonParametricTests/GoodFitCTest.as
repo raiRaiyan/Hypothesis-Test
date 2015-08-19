@@ -29,7 +29,6 @@ package NonParametricTests
 		protected var comboBox:ComboBox;
 		protected var missingValueInput:TextInput;
 		protected var spacer:Spacer;
-		protected var editedCsvData:ArrayCollection;
 		protected var contingencyTableCheck:CheckBox;
 		protected var columnNamesforCTable:Array = new Array("Level","Observed Frequency","Expected Probability")		
 		private var significanceValue:String;
@@ -38,6 +37,14 @@ package NonParametricTests
 		{
 			super();
 		}
+		
+		override protected function backbonecreationCompleteHandler(event:FlexEvent):void
+		{
+		
+			dataButton.visible = true;
+			orLabel.visible = true;
+		}
+		
 		
 		override protected function backboneStateChangeCompleteHandler(event:FlexEvent):void{
 			if(currentState == 'showCsvState'){
@@ -75,13 +82,13 @@ package NonParametricTests
 				missingValueInput.visible = true;
 				
 			}
-			if(currentState == 'editCsvState'){
+			else if(currentState == 'editCsvState'){
 				
 				editCsvGrid.columns = loadColumnName();
 				if(enterDataFlag){
-					createDataProvider();
+					
 					editCsvGrid.editable = true;
-					editCsvGrid.dataProvider = editedCsvData;
+					editCsvGrid.dataProvider = createDataProvider();
 				}
 				else{
 					editCsvGrid.editable = true;
@@ -90,14 +97,13 @@ package NonParametricTests
 				editCsvGrid.visible = true;	
 				
 			}
-			if(currentState == 'state2'){
+			else if(currentState == 'state2'){
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
-				significanceValue = significanceTextInput.text;
 				super.backboneStateChangeCompleteHandler(event);
 			}
-			if(currentState == 'resultState'){
+			else{
 				
 			}
 			
@@ -126,10 +132,21 @@ package NonParametricTests
 			}
 		}
 		
+		
+		protected function columnSelected(event:IndexChangeEvent):void
+		{
+			if(comboBox.selectedIndex==-3){
+				comboBox.selectedIndex=-1;
+			}
+			else{
+				proceedButton.enabled = true;
+			}
+		}
+		
 		private function loadDataProviderFormR():ArrayCollection
 		{
 			// TODO Auto Generated method stub
-			editedCsvData = new ArrayCollection;
+			var editedCsvData:ArrayCollection = new ArrayCollection;
 			var levels:Array = contingencyTableResult[0].split(" ");
 			for(var i:int=0;i<levels.length-1;i++){
 				var obj:Object = new Object;
@@ -142,20 +159,10 @@ package NonParametricTests
 			return editedCsvData;
 		}
 		
-		protected function columnSelected(event:IndexChangeEvent):void
-		{
-			if(comboBox.selectedIndex==-3){
-				comboBox.selectedIndex=-1;
-			}
-			else{
-				proceedButton.enabled = true;
-			}
-		}
-		
-		private function createDataProvider():void
+		private function createDataProvider():ArrayCollection
 		{
 			// TODO Auto Generated method stub
-			editedCsvData = new ArrayCollection;
+			var editedCsvData:ArrayCollection = new ArrayCollection;
 			for(var i:int=0;i<10;i++){
 				var obj:Object = new Object;
 				for(var j:int=0;j<3;j++){
@@ -163,6 +170,7 @@ package NonParametricTests
 				}
 				editedCsvData.addItem(obj);
 			}
+			return editedCsvData;
 		}
 		
 		protected function loadColumnName():ArrayList{
@@ -193,6 +201,7 @@ package NonParametricTests
 			args.push(filePath.text);
 			
 			args.push(comboBox.selectedItem);
+			args.push(missingValueInput.text);
 			
 			super.proceedButtonClickHandler(event);
 			
@@ -200,12 +209,13 @@ package NonParametricTests
 		
 		override protected function computeButtonClickHandler(event:MouseEvent):void
 		{
+			
 			var rFile:String = File.applicationDirectory.resolvePath("working/chisquared.r").nativePath;
 			args = new Vector.<String>;
 			args.push(rFile);
 			args.push("goodfittest");
 			args.push(File.applicationStorageDirectory.nativePath+"\\contingency.csv");
-		
+			
 			
 			super.computeButtonClickHandler(event);
 			

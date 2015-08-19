@@ -1,19 +1,30 @@
 args = commandArgs(TRUE)
 
+contingencyTable = read.csv(args[2])
+
 if(args[1]=="goodfittest"){
-  contingencyTable = read.csv(args[2])
    
   obs = as.vector(contingencyTable[[2]])
-  obs = obs[!is.na(obs)]
   prob = as.vector(as.numeric(contingencyTable[[3]]))
-  prob = prob[!is.na(prob)]
   
+  range =c(0,20)
   
   result = chisq.test(x=obs,p=prob,correct=F)
   cat(result$p.value)
   
+}else{
+  #remove the row names and pass the table to chisq.tests
+  contingencyTable[[1]] = NULL;
+  tab = as.matrix.data.frame(contingencyTable)
+  
+  range = c(0,20)
+  result = chisq.test(x=tab,correct = F)
+  cat(result$p.value)
 }
 df1 = result$parameter
+if(df1>4){
+  range = c(0,60)
+}
 
 library(ggplot2,quietly = T)
 
@@ -29,7 +40,7 @@ CDist <- function(x)
   dchisq(x,df = df1)
 }
 
-p <- ggplot(data.frame(x=c(0,20)),aes(x=x)) + 
+p <- ggplot(data.frame(x=range),aes(x=x)) + 
   stat_function(fun=CDist, geom="area", fill="white", colour="black") 
 
 p <- p + stat_function(fun =upperTail, geom="area", fill='#b14025')

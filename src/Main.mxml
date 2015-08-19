@@ -60,6 +60,7 @@
 			protected function backButton_clickHandler(event:MouseEvent):void
 			{
 				testScreen.removeAllElements();
+				mainTitle.text = "Hypothesis Testing"
 				currentState='landingPage';
 			}
 			
@@ -146,7 +147,7 @@
 		<s:Button id="backButton"
 				  label="Back"
 				  click="backButton_clickHandler(event)"
-				  excludeFrom="landingPage"
+				  includeIn="subTestSelected"
 				  x="{mainGroup.width*0.88}"
 				  y="{mainGroup.height*0.04}"/>
 		<s:HGroup width="{mainGroup.width*0.9}"
