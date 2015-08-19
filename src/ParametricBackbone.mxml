@@ -506,6 +506,7 @@
 	</s:transitions>
 	
 	<s:Group id="inputPane" width="70%" height="100%">
+		
 		<s:layout>
 			<s:BasicLayout/>
 		</s:layout>
@@ -669,7 +670,8 @@
 	</s:Group>
 	
 	<s:Group id="helpResultPane" width="30%" height="100%"
-			 x="{this.width*0.7}" y="0">
+			 x="{this.width*0.7}" y="0"
+			 contentBackgroundColor="0xeeecec">
 		<s:layout>
 			<s:BasicLayout/>
 		</s:layout>

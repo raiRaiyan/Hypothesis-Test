@@ -330,7 +330,8 @@
 		
 	<s:VGroup height="100%"
 			  width="65%" 
-			  paddingRight="5">
+			  paddingRight="5"
+			  >
 		
 		<s:Panel height="70%"
 				 height.showCsvState="100%"
