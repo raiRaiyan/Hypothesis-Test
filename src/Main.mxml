@@ -8,7 +8,7 @@
 					   minWidth="800"
 					   currentState="landingPage"
 					   showStatusBar="false"
-					   backgroundColor="0xeeecec"
+					   backgroundColor="0xF6F4F5"
 					   applicationComplete="nativeWindow.maximize()"
 					   >
 	<fx:Script>
@@ -142,7 +142,7 @@
 				 text="Hypothesis Testing"
 				 styleName="titleHeader"
 				 width="{mainGroup.width*0.96}"
-				 height="80"
+				 height="8%"
 				 x="{mainGroup.width*0.02}"
 				 y="{mainGroup.height*0.02}"/>
 		<s:Button id="backButton"
@@ -228,7 +228,7 @@
 						   y="{mainGroup.height*0.11}" 
 						   includeIn="subTestSelected"
 						   borderVisible="false"
-						   backgroundColor="0xeeecec"
+						   backgroundColor="0xF6F4F5"
 						  
 						   >
 		</s:BorderContainer>

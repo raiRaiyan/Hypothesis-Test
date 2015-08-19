@@ -23,7 +23,7 @@
 <s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
              xmlns:s="library://ns.adobe.com/flex/spark" 
              xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
-             minWidth="49" minHeight="29" 
+             minWidth="79" minHeight="29" 
              >
      
     <fx:Metadata>
@@ -73,7 +73,7 @@
 	<s:Rect id="border" left="0" right="0" top="0" bottom="0" width="69" height="20">
 		<s:stroke>
 			<s:SolidColorStroke weight="1"
-								color="0xeeecec" 
+								color="0xFFFFFF" 
 								color.over="0xb94827" 
 								color.down="0x85181b"
 								color.disabled="0xeeecec" 
