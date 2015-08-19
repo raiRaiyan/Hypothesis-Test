@@ -159,10 +159,6 @@ package ParametricTests
 			sampleMeanInput.restrict="0-9.";
 			sampleMeanInput.percentWidth=70;
 			sampleMeanInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
-			if(columnSelectedFlag)
-			{
-				sampleMeanInput.text = values[0];
-			}
 			SampleParams.addElement(sampleMeanInput);
 			
 			spacer1 = new Spacer();
@@ -179,10 +175,6 @@ package ParametricTests
 			sampleSdInput.restrict="0-9.";
 			sampleSdInput.percentWidth=70;
 			sampleSdInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
-			if(columnSelectedFlag)
-			{
-				sampleSdInput.text = values[1];
-			}
 			SampleParams.addElement(sampleSdInput);
 			
 			spacer2 = new Spacer();
@@ -199,13 +191,30 @@ package ParametricTests
 			sampleSizeInput.restrict="0-9";
 			sampleSizeInput.percentWidth=70;
 			sampleSizeInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
+			SampleParams.addElement(sampleSizeInput);
+			
+			//For adding the values for the first time user transitions from loadCSV to state1Final
 			if(columnSelectedFlag)
 			{
+				sampleMeanInput.text = values[0];
+				sampleSdInput.text = values[1];
 				sampleSizeInput.text = values[2];
 			}
-			SampleParams.addElement(sampleSizeInput);
+			
+			//For changes during going back to CSV and back
+			this.addEventListener("valuesAvailable",updatePanel1);
 		}
 		
+		protected function updatePanel1(event:Event):void
+		{
+			if(columnSelectedFlag)
+			{
+				sampleMeanInput.text = values[0];
+				sampleSdInput.text = values[1];
+				sampleSizeInput.text = values[2];
+			}
+
+		}		
 		
 		private function checksOnPanel1():Boolean
 		{

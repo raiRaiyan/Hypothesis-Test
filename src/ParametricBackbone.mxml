@@ -11,7 +11,7 @@
 	
 	<fx:Metadata>
 		[Event(name="colNamesAvailable", type="flash.events.Event")]
-		//[Event(name="valuesAvailable", type="flash.events.Event")]
+		[Event(name="valuesAvailable", type="flash.events.Event")]
 	</fx:Metadata>
 	
 	<fx:Script>
@@ -78,7 +78,7 @@
 			public var colnames:ArrayCollection; //use this to populate the column selection combobox
 			
 			//Variable for reading the Mean,SD n size from the process
-			[Bindable]
+			[Bindable(event="valuesAvailable")]
 			public var values:Array;
 			
 			
@@ -427,6 +427,7 @@
 				if(event.exitCode==0 && csvDoneFlag && !errorFlag)
 				{
 					values = dataIn.split(",");
+					dispatchEvent(new Event("valuesAvailable"));
 					currentState = 'state1Final';
 					csvPaneDoneButton.enabled = true;
 				}
