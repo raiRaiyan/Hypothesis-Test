@@ -113,6 +113,7 @@ package ParametricTests
 				replaceInput.text = "0";
 				varName = "Mean("+colnames[colCB.selectedIndex]+")";
 				columnSelectedFlag = true;
+				csvPaneDoneButton.enabled = true;
 			}
 		}
 		
