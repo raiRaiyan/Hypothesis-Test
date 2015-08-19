@@ -7,6 +7,7 @@ package NonParametricTests
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.collections.ListCollectionView;
 	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
@@ -64,7 +65,7 @@ package NonParametricTests
 				
 				missingValueInput1 = new TextInput;
 				missingValueInput1.prompt = "Replace missing Values by...";
-				missingValueInput1.percentWidth = 80;
+				missingValueInput1.percentWidth = 90;
 				csvOptionsGroup.addElement(missingValueInput1);
 												
 				var spacer:Spacer = new Spacer;
@@ -83,7 +84,7 @@ package NonParametricTests
 				
 				missingValueInput2 = new TextInput;
 				missingValueInput2.prompt = "Replace missing Values by...";
-				missingValueInput2.percentWidth = 80;
+				missingValueInput2.percentWidth = 90;
 				csvOptionsGroup.addElement(missingValueInput2);
 				
 			
@@ -96,8 +97,15 @@ package NonParametricTests
 			}
 			
 			else if(currentState == 'editCsvState'){
-				editCsvGrid.columns = loadColumnName();
-				editCsvGrid.dataProvider = loadDataProviderFormR();
+				if(!contingencyTableCheck.selected){
+					editCsvGrid.columns = loadColumnName();
+					editCsvGrid.dataProvider = loadDataProviderFormR();
+				}
+				else{
+					editCsvGrid.columns = csvGrid.columns;
+					editCsvGrid.dataProvider = csvGrid.dataProvider;
+				}
+				
 				editCsvGrid.visible = true;	
 			}
 			
@@ -137,25 +145,40 @@ package NonParametricTests
 		{
 			// TODO Auto-generated method stub
 			if(contingencyTableCheck.selected){
+				if(isContingency()){
 				selectColumnLabel1.visible = false;
 				selectColumnLabel1.visible = false;
 				comboBox1.visible = false;
 				comboBox2.visible = false;
 				missingValueInput1.visible = false;
 				missingValueInput2.visible = false;
-				currentState = 'state2';
-				editCsvGrid.columns = csvGrid.columns;
-				editCsvGrid.dataProvider = csvGrid.dataProvider;
-				editCsvGrid.visible = true;
-//				else{
-//					Alert.show("The selected file is not in the recommended format.\nThe Column names should be \"Level\", \"Observed Frequency\" and \"Expected Probability\".\n" +
-//						"Please change the csv file to the correct format and upload again.","Unknown Format!");
-//					contingencyTableCheck.selected = false;
-//				}
+				currentState = 'editCsvState';
+				}
+				
+				else{
+					Alert.show("The selected file is not in the recommended format.The row values, except the first row, should be numerical " +
+						"\nPlease change the csv file to the correct format and upload again.","Unknown Format!");
+					contingencyTableCheck.selected = false;
+				}
 			}
 			else{
 				currentState = 'showCsvState';
 			}
+		}
+		
+		private function isContingency():Boolean
+		{
+			// TODO Auto Generated method stub
+			var tmpdataprovider:ListCollectionView = ListCollectionView(csvGrid.dataProvider)
+			var tmpColNames:Array = columnNames.source;
+			for(var i:int=0;i<csvGrid.dataProviderLength;i++){
+				for(var j:int = 1; j<csvGrid.columnsLength;j++){
+					if(isNaN(Number(tmpdataprovider.getItemAt(i)[tmpColNames[j]]))){
+						return false
+					}
+				}
+			}
+			return true;
 		}
 		
 		protected function columnSelected(event:IndexChangeEvent):void
@@ -228,7 +251,6 @@ package NonParametricTests
 				}
 			}
 		}
-		
 		
 		
 		override protected function computeButtonClickHandler(event:MouseEvent):void

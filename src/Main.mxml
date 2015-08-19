@@ -8,6 +8,7 @@
 					   minWidth="800"
 					   currentState="landingPage"
 					   showStatusBar="false"
+					   backgroundColor="0xeeecec"
 					   applicationComplete="nativeWindow.maximize()"
 					   >
 	<fx:Script>
@@ -163,7 +164,8 @@
 						text.nparTestSelected="{stringCollection.mainScreenText.nonparametricbuttontext}"
 						width="50%"
 						height="60%"
-						borderVisible="false"/>
+						borderVisible="false"
+						/>
 			<s:Spacer width="4%"/>
 			<s:Panel id="panelData"
 					 width="{mainGroup.width*0.35}"

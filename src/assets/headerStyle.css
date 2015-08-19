@@ -4,18 +4,26 @@
 
 .titleHeader
 {
-	backgroundColor: #F52F04;
+	backgroundColor: #b94827;
 	color: #FFFFFF;
-	fontSize: 24;
+	fontSize: 14;
 	fontWeight: bold;
 	paddingLeft: 20;
 	textAlign: left;
 	verticalAlign: middle;
-	fontFamily: Rockwell;
+	fontFamily: Arial;
 }
 
-s|Button.customButton{
+s|Button{
 	skinClass: ClassReference('assets.customButton');
-	color: #000000;
 	fontWeight: bold;
+}
+
+s|Panel{
+	backgroundColor: #eeecec;
+}
+
+s|TextArea{
+	borderVisible: false; 
+	contentBackgroundColor: #eeecec;
 }
