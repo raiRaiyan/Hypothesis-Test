@@ -9,6 +9,7 @@ package ParametricTests
 	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
+	import mx.utils.StringUtil;
 	
 	import spark.components.ComboBox;
 	import spark.components.Label;
@@ -56,30 +57,35 @@ package ParametricTests
 		private var sampleSizeInput:TextInput;
 		
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
-		{
+		{	
+			if(currentState =='landingPage')
+			{	help2.text=stringCollection.secondScreenText.pairedbuttontext.sampleText;
+			}
+			
 			if(currentState == 'loadCSV')
-			{ 	
+			{ 	help2.text=stringCollection.secondScreenText.commonText.filepathText;
 				if(!backToCSVFlag)
 				{
 					addToCSVPane();
 				}
 			}
 			if(currentState == 'sampleData')
-			{
+			{	
 				if(!backToCSVFlag)
 				{
 					addToSampleDataFinal();
 				}
 			}
 			if(currentState == 'popnData')
-			{
+			{	help2.text=stringCollection.secondScreenText.pairedbuttontext.populationText;
 				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
 		}
 		
 		private function addToCSVPane():void
-		{
+		{	
+			
 			//Column selection combo box
 			column1SelectLabel = new Label();
 			column1SelectLabel.text = "Please select a column";
@@ -134,16 +140,14 @@ package ParametricTests
 			
 			
 			
-			//Obselete 1
-			//this.addEventListener("valuesAvailable",switchState);
 		}
-		/* Obselete
+
 		protected function switchState(event:Event):void
 		{
 		currentState = 'state1Final';
 		
 		}
-		*/
+		
 		protected function setDataProvider(event:Event):void
 		{
 			col1CB.dataProvider = colnames;
@@ -158,9 +162,11 @@ package ParametricTests
 				col1CB.selectedIndex=-1;
 			}
 			else
-			{   replace1Input.text = "0";
+			{   help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
+				replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
+				csvPaneDoneButton.enabled = true;
 			}
 		}
 		
@@ -171,7 +177,8 @@ package ParametricTests
 				col2CB.selectedIndex=-1;
 			}
 			else
-			{	replace2Input.text = "0";
+			{	help2.text=stringCollection.secondScreenText.commonText.missingvalText;
+				replace2Input.text = "0";
 				varName = "Mean("+colnames[col2CB.selectedIndex]+"-"+colnames[col1CB.selectedIndex]+")";
 				column2SelectedFlag = true;
 				csvPaneDoneButton.enabled = true;
@@ -184,19 +191,19 @@ package ParametricTests
 		{
 			if(column1SelectedFlag&&column2SelectedFlag)
 			{
-				if(replace1Input.text!=""&&replace2Input.text!="")
+				if(StringUtil.trim(replace1Input.text)!=""&&StringUtil.trim(replace2Input.text)!="")
 				{
 					csvDoneFlag = true;
 				}
 				else
 				{
 					//Show an error icon
-					if(replace1Input.text=="")
+					if(StringUtil.trim(replace1Input.text)=="")
 					{
 						replace1Input.errorString="Enter a Value";
 					}
 					
-					if(replace2Input.text=="")
+					if(StringUtil.trim(replace2Input.text)=="")
 					{
 						replace2Input.errorString="Enter a Value";
 					}
@@ -223,7 +230,8 @@ package ParametricTests
 		}
 		
 		private function addToSampleDataFinal():void
-		{
+		{	help2.text="Please Enter/Edit the values. Please select Next to go to the next panel where Population data will be input.";
+			
 			//Mean value Input
 			sampleMeanLabel = new Label();
 			sampleMeanLabel.text = "Mean of Sample Differences:";
@@ -291,19 +299,19 @@ package ParametricTests
 		private function checksOnSampleData():Boolean
 		{
 			var result:Boolean = true;
-			if(sampleMeanInput.text =="")
+			if(StringUtil.trim(sampleMeanInput.text) =="")
 			{
 				//Show an error icon
 				sampleMeanInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sampleSdInput.text=="")
+			if(StringUtil.trim(sampleSdInput.text)=="")
 			{
 				//Show an error icon
 				sampleSdInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sampleSizeInput.text=="")
+			if(StringUtil.trim(sampleSizeInput.text)=="")
 			{
 				//Show an error icon
 				sampleSizeInput.errorString = "Enter a value";
