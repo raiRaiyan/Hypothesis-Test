@@ -1,10 +1,12 @@
 package ParametricTests
 {
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
 	
@@ -56,12 +58,18 @@ package ParametricTests
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 		{
 			if(currentState == 'loadCSV')
-			{
-				addToCSVPane();
+			{ 	
+				if(!backToCSVFlag)
+				{
+					addToCSVPane();
+				}
 			}
 			if(currentState == 'state1Final')
 			{
-				addToPanel1Final();
+				if(!backToCSVFlag)
+				{
+					addToPanel1Final();
+				}
 			}
 			if(currentState == 'state2')
 			{
@@ -96,6 +104,7 @@ package ParametricTests
 			replace1Input.prompt="Enter a Numeric Value";
 			replace1Input.restrict="0-9.";
 			replace1Input.percentWidth=70;
+			replace1Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace1Input);
 			
 			
@@ -109,7 +118,7 @@ package ParametricTests
 			col2CB.addEventListener(IndexChangeEvent.CHANGE,column2Selected);
 			columnSelectionPane.addElement(col2CB);
 			
-			//how to ensure that a selected column does not appear in the dropdown menu again?
+			
 			
 			replace2 = new Label();
 			replace2.text = "replace missing values by:";
@@ -119,6 +128,7 @@ package ParametricTests
 			replace2Input.prompt="Enter a Numeric Value";
 			replace2Input.restrict="0-9.";
 			replace2Input.percentWidth=70;
+			replace2Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace2Input);
 			
 			
@@ -148,7 +158,7 @@ package ParametricTests
 				col1CB.selectedIndex=-1;
 			}
 			else
-			{
+			{   replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
 			}
@@ -161,9 +171,10 @@ package ParametricTests
 				col2CB.selectedIndex=-1;
 			}
 			else
-			{
+			{	replace2Input.text = "0";
 				varName = "Mean("+colnames[col2CB.selectedIndex]+"-"+colnames[col1CB.selectedIndex]+")";
 				column2SelectedFlag = true;
+				csvPaneDoneButton.enabled = true;
 			}
 		}
 		
@@ -222,10 +233,7 @@ package ParametricTests
 			sampleMeanInput.prompt="Enter a Numeric Value";
 			sampleMeanInput.restrict="0-9.";
 			sampleMeanInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sampleMeanInput.text = values[0];
-			}
+			sampleMeanInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sampleMeanInput);
 			
 			spacer1 = new Spacer();
@@ -241,10 +249,7 @@ package ParametricTests
 			sampleSdInput.prompt="Enter a numeric value";
 			sampleSdInput.restrict="0-9.";
 			sampleSdInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sampleSdInput.text = values[1];
-			}
+			sampleSdInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sampleSdInput);
 			
 			spacer2 = new Spacer();
@@ -260,58 +265,92 @@ package ParametricTests
 			sampleSizeInput.prompt="Enter an integer value";
 			sampleSizeInput.restrict="0-9";
 			sampleSizeInput.percentWidth=70;
+			sampleSizeInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
+			SampleParams.addElement(sampleSizeInput);
 			if(column1SelectedFlag&&column2SelectedFlag)
 			{
+				sampleMeanInput.text = values[0];
+				sampleSdInput.text = values[1];
 				sampleSizeInput.text = values[2];
 			}
-			SampleParams.addElement(sampleSizeInput);
+			this.addEventListener("valuesAvailable",updatePanel1);
+			
+		}
+		
+		protected function updatePanel1(event:Event):void
+		{
+			if(column1SelectedFlag&&column2SelectedFlag)
+			{
+				sampleMeanInput.text = values[0];
+				sampleSdInput.text = values[1];
+				sampleSizeInput.text = values[2];
+			}
+			
+		}
+		
+		private function checksOnPanel1():Boolean
+		{
+			var result:Boolean = true;
+			if(sampleMeanInput.text =="")
+			{
+				//Show an error icon
+				sampleMeanInput.errorString = "Enter a value";
+				result = false;
+			}
+			if(sampleSdInput.text=="")
+			{
+				//Show an error icon
+				sampleSdInput.errorString = "Enter a value";
+				result = false;
+			}
+			if(sampleSizeInput.text=="")
+			{
+				//Show an error icon
+				sampleSizeInput.errorString = "Enter a value";
+				result = false;
+			}
+			return result;
 		}
 		
 		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
 		{
-			if(sampleMeanInput.text!="")
+			if(checksOnPanel1())
 			{
-				var check1:Boolean = true;
-			}
-			else
-			{
-				check1 = false;
-				
-				sampleMeanInput.errorString="Enter a value";//Show an error icon
-			}
-			
-			if(sampleSdInput.text!="")
-			{
-				var check2:Boolean = true;
-			}
-			else
-			{
-				check2 = false;
-				sampleSdInput.errorString="Enter a value";
-				//Show an error icon
-			}
-			
-			if(sampleSizeInput.text!="")
-			{
-				var check3:Boolean = true;
-			}
-			else
-			{
-				check3 = false;
-				sampleSizeInput.errorString="Enter a value";
-				//Show an error icon
-			}
-			
-			if(check1&&check2&&check3)
-			{	
-				if (varName == null)
+				if(varName == null)
 				{
-					varName = "Mean(X1-X2)"
+					varName = "Mean(X-Y)";
 				}
 				panel1Flag = true;
+				sampleMeanInput.editable = false;
+				sampleSdInput.editable = false;
+				sampleSizeInput.editable = false;
 				super.panel1NextButton_clickHandler(event);
-			}
+			}			
+		}
+		
+		override protected function panel1EditButton_clickHandler(event:MouseEvent):void
+		{
+			panel1Flag = false;
+			sampleMeanInput.editable = true;
+			sampleSdInput.editable = true;
+			sampleSizeInput.editable = true;
 			
+			panel1EditButton.enabled = false;
+			panel1DoneButton.enabled = true;
+		}
+		
+		override protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+		{
+			if(checksOnPanel1())
+			{
+				panel1Flag = true;
+				sampleMeanInput.editable = false;
+				sampleSdInput.editable = false;
+				sampleSizeInput.editable = false;
+				
+				panel1EditButton.enabled = true;
+				panel1DoneButton.enabled = false;
+			}
 		}
 		
 		private function addToPanel2():void
@@ -321,6 +360,20 @@ package ParametricTests
 		
 		override protected function compute_clickHandler(event:MouseEvent):void
 		{
+			if(!panel1Flag)
+			{
+				Alert.show("Please complete the editing in the Panel1\nAnd try again","Editing in progress!!");
+			}
+			
+			if(!panel2Flag)
+			{
+				Alert.show("Please complete the editing in the Panel2\nAnd try again","Editing in progress!!");
+			}
+			
+			if(!hypoFlag)
+			{
+				Alert.show("Please select the hypotheses from the given list","Hypotheses not selected!!");
+			}
 			if(panel1Flag&&panel2Flag&&hypoFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;
