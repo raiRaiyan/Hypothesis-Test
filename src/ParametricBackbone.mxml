@@ -479,7 +479,7 @@
 		</s:Transition>
 		
 		<s:Transition fromState="loadCSV" toState="state1Final">
-			<s:Resize target="{panel1}" widthTo="{inputPane.width*0.4}" heightTo="{inputPane.height*0.6}"/>
+			<s:Resize target="{panel1}" widthTo="{inputPane.width*0.4}" heightTo="{inputPane.height*0.62}"/>
 		</s:Transition>
 		
 		<s:Transition fromState="state1Final" toState="state2">
@@ -512,7 +512,7 @@
 			<s:BasicLayout/>
 		</s:layout>
 		
-		<s:Panel id="panel1" width="40%" height="60%" 
+		<s:Panel id="panel1" width="40%" height="62%" 
 				 width.loadCSV="80%"
 				 height.loadCSV="80%"
 				 x="{inputPane.width*0.07}" y="{inputPane.height*0.06}"
@@ -537,27 +537,24 @@
 				</s:HGroup>
 				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
 					<s:Spacer width="1%"/>
-					<s:VGroup width="100%" height="95%" horizontalAlign="center" verticalAlign="middle" id="csvGroup">
-						<s:DataGrid width="100%"
-									height="90%"
-									id="csvData" 
-									visible="false"
-									horizontalScrollPolicy="auto"
-									maxWidth="{csvGroup.width}"/>
-						<s:HGroup width="100%" height="10%" horizontalAlign="center" verticalAlign="middle">
-							<s:Button id="gridPrevButton" label="Prev" click="gridPrevButton_clickHandler(event)"
-									  visible="false"/>
+					<s:VGroup width="65%" height="95%" horizontalAlign="center" verticalAlign="middle" id="csvGroup">
+						<s:DataGrid width="100%" height="90%" id="csvData" visible="false"
+									horizontalScrollPolicy="auto" maxWidth="{csvGroup.width}"/>
+						<s:HGroup width="100%" height="10%" horizontalAlign="right" verticalAlign="middle">
 							<s:Label text="Rows Displayed :" visible="false" id="rowsLabel"/>
 							<s:Label id="rowCountLabel" />
+							<s:Spacer width="100%"/>
+							<s:Button id="gridPrevButton" label="Prev" click="gridPrevButton_clickHandler(event)"
+									  visible="false"/>
 							<s:Button id="gridNextButton" label="Next" click="gridNextButton_clickHandler(event)"
 									  visible="false"/>
 						</s:HGroup>
 					</s:VGroup>
-					<s:Spacer width="1%"/>
+					<s:Spacer width="2%"/>
 					<s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="middle">
 						
 						<s:VGroup width="100%" height="85%" id="columnSelectionPane"
-								  horizontalAlign="center" verticalAlign="middle" visible="false">
+								  horizontalAlign="left" verticalAlign="middle" visible="false">
 							
 							<!--Child components for column selection inherited class goes here-->
 							
@@ -571,8 +568,8 @@
 			
 			<s:VGroup id="finalPanel1" horizontalAlign="center" verticalAlign="middle"
 					  width="100%" height="100%" includeIn="state1Final,state2,state3,result">
-				<s:VGroup id="SampleParams" horizontalAlign="center" verticalAlign="middle"
-						  width="95%" height="85%">
+				<s:VGroup id="SampleParams" horizontalAlign="left" verticalAlign="middle"
+						  width="80%" height="85%">
 					
 					<!-- Placeholder for Sample Data elements-->
 					
@@ -591,7 +588,7 @@
 			
 		</s:Panel>
 		
-		<s:Panel id="panel2" includeIn="state2,state3,result" width="40%" height="60%" 
+		<s:Panel id="panel2" includeIn="state2,state3,result" width="40%" height="62%" 
 				 x="{inputPane.width*0.53}" y="{inputPane.height*0.06}"
 				 title="Population Data">
 			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">

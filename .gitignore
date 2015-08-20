@@ -46,3 +46,5 @@ Temporary Items
 *.swf
 .settings
 bin-debug
+*.RData
+src/working/.Rhistory
