@@ -41,9 +41,12 @@ This test requires the sample means, sample standard deviations and the sample s
 * Then, you are required to select and confirm the Null and Alternate Hypotheses, and press 'Compute', which will display the results.
 			</parflowHelp>
 			
-			<nparflowHelp>In the first step, you'll be asked to enter the Observed Data. 
-			Next, you will be asked to enter or confirm the Expected Data. 
-			Then, you are required to confirm the Null and Alternate Hypotheses, and press 'Compute', which will display the results.
+			<nparflowHelp>
+* In the first step, you'll be asked to enter the Observed Data. 
+
+* Next, you will be asked to enter or confirm the Expected Data. 
+
+* Then, you are required to confirm the Null and Alternate Hypotheses, and press 'Compute', which will display the results.
 			</nparflowHelp>
 	
 	
@@ -83,14 +86,27 @@ For this test, you need to provide the observed and expected values/distribution
 				</parcolumnloadText>
 				
 				<nparcolumnloadText>
-* Please select the column(s) you wish to conduct the test on. The column(s) must be categorical variable(s) with at least two levels. 
+* Select the column(s) you wish to conduct the test on. The column(s) must be categorical variable(s) with at least two levels. 
+
+* Enter string(s) to replace the missing values in the selected column(s). 
 				</nparcolumnloadText>
 				
+				<missingValueIndepenceText>
+* The default value is "Missing" which will create a new level for the missing values.
+
+* You cannot remove the missing values as it can make the selected columns unequal in length.
+				</missingValueIndepenceText>
+				
+				<missingValueGoodFitText>
+* The default value is 'r' or 'R' which removes the missing values. 
+				</missingValueGoodFitText>
+				
+				
 				<significanceText>
-* Please select the significance value. The value should be numeric. 
+* Enter the significance value. The value should be numeric. The commonly used significance values are 0.05, 0.1, 0.15. 
 				</significanceText>
 				<missingvalText>
-* Please Enter a value to replace the missing values in the file with. The value should be numeric. By default, the value is set to be zero.	
+* Enter a value to replace the missing values in the file with. The value should be numeric. By default, the value is set to be zero.	
 				</missingvalText>
 			
 			
@@ -172,11 +188,10 @@ For this test, you need to provide the observed and expected values/distribution
 			<independencebuttontext>
 				
 				<observedText>
-* Please select 'Upload Categorical Variables' if you want to upload 2 categorical variables, each with at least two levels. These can be input separately or can be chosen as two columns from a CSV.
+* You can upload a CSV file by clicking on the "Browse" button. 
 
-* Please select 'Upload distributions' if you want to upload the frequency distributions of 2 categorical variables, each with at least two levels. Note that the sum of the frequencies and the level names in both the distributions should be the same.
+* The CSV file could be a contingency table, or a table from which the contingency table of any two selected columns will be calculated. 
 
-* Please select 'Upload Contingency Table' if you want to upload the contingency table.
 				</observedText>
 			
 				
@@ -185,29 +200,29 @@ For this test, you need to provide the observed and expected values/distribution
 			
 			<goodnessbuttontext>
 			 <observedText>
-* Please select 'Upload categorical Variable' if you want to upload a categorical variable with at least 2 levels. The distribution will be calculated. 
+* You can either upload a CSV file, or enter the data directly. 
 			 
-* Please select 'Upload distribution' if you want to upload the distribution of the categorical variable.
+* The CSV file could be a frequency table, or a table from which the frequency table of any selected column will be calculated.   
 
-* Please select 'Select from CSV' if you want to upload a CSV and choose a column from it for the test.
+* The frequency table should have columns named as "Level", "Observed Frequency" and "Expected Probability".
+
+* To upload a CSV file, click on the "Browse" button.
+
+* If you have the data, you can enter it by pressing "Enter the data"
 			 </observedText>
 			 
-			 <expectedTest>
-* Please select 'Upload categorical Variable' if you want to upload a categorical variable with at least 2 levels. The distribution will be calculated. 
+			 <expectedText>
+* Enter the expected probabilities for the levels. The entered values must be non-negative and sum to 1. 
 			 
-* Note that the names of the levels and the number of values must match those of the Observed variable.
+* After entering the expected values, please click "Proceed" to continue.
 
-* Please select 'Upload frequency distribution' if you want to upload the distribution of the expected categorical variable. Note that the names of the levels and the number of values must match those of the Observed distribution. 
-
-* Please select 'Upload probability distribution' if you want to upload the expected probabibility distribution. Note that the names of the levels must match the names of the levels in the observed data. Also, the sum of all the values in the probability distribution should be 1.
-
-* Please select 'Enter Frequencies' if you want to enter the expected frequency for each level. You need not know the level names. This option is recommended if the number of levels is low.
-
-* Please select 'Enter Probabilities' if you want to enter the expected probability for each level. You need not know the level names. This option is recommended if the number of levels is low.
+			 </expectedText>
 			 
+			 <editDataExpectedText>
+* Please enter your data. The levels must be categorical variables. The expected probabilities must be non-negative and sum to 1.  			 
 			 
+			 </editDataExpectedText>
 			 
-			 </expectedTest>
 			</goodnessbuttontext>
 			
 		</secondScreenText>
