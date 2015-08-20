@@ -65,10 +65,15 @@ package ParametricTests
 		private var sample2SizeInput:TextInput;
 		
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
-		{
+		{	
+			if(currentState =='landingPage')
+			{	
+				help2.text=stringCollection.secondScreenText.twosamplebuttontext.sampleText;
+			}
 			
 			if(currentState == 'loadCSV')
 			{ 	
+				help2.text=stringCollection.secondScreenText.commonText.filepathText;
 				if(!backToCSVFlag)
 				{
 					addToCSVPane();
@@ -82,7 +87,8 @@ package ParametricTests
 				}
 			}
 			if(currentState == 'popnData')
-			{
+			{	
+				help2.text=stringCollection.secondScreenText.twosamplebuttontext.populationText;
 				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
@@ -149,7 +155,9 @@ package ParametricTests
 				col1CB.selectedIndex=-1;
 			}
 			else
-			{	replace1Input.text = "0";
+			{	
+				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
+				replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
 				csvPaneDoneButton.enabled = true;
@@ -163,7 +171,9 @@ package ParametricTests
 				col2CB.selectedIndex=-1;
 			}
 			else
-			{	replace2Input.text = "0";
+			{	
+				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
+				replace2Input.text = "0";
 				varName = "Mean("+colnames[col2CB.selectedIndex]+")-Mean("+colnames[col1CB.selectedIndex]+")";
 				column2SelectedFlag = true;
 				csvPaneDoneButton.enabled = true;
@@ -215,6 +225,8 @@ package ParametricTests
 		
 		private function addToSampleDataFinal():void
 		{
+			help2.text=stringCollection.secondScreenText.commonText.entervalueText;
+			
 			//Mean value Input
 			sample1MeanLabel = new Label();
 			sample1MeanLabel.text = "Mean of First Sample:";

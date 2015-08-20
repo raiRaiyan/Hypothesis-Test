@@ -49,8 +49,14 @@ package ParametricTests
 		
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 		{
+			if(currentState =='landingPage')
+			{	
+				help2.text=stringCollection.secondScreenText.onesamplebuttontext.sampleText;
+			}
+			
 			if(currentState == 'loadCSV')
 			{	
+				help2.text=stringCollection.secondScreenText.commonText.filepathText;
 				if(!backToCSVFlag)
 				{
 					addToCSVPane();
@@ -65,6 +71,7 @@ package ParametricTests
 			}
 			if(currentState == 'popnData')
 			{	
+				help2.text=stringCollection.secondScreenText.onesamplebuttontext.populationText;
 				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
@@ -111,7 +118,8 @@ package ParametricTests
 				colCB.selectedIndex=-1;
 			}
 			else
-			{
+			{	
+				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
 				replaceInput.text = "0";
 				varName = "Mean("+colnames[colCB.selectedIndex]+")";
 				columnSelectedFlag = true;
@@ -152,7 +160,9 @@ package ParametricTests
 		}
 		
 		private function addToSampleData():void
-		{
+		{	
+			help2.text=stringCollection.secondScreenText.commonText.entervalueText;
+			
 			//Mean value Input
 			sampleMeanLabel = new Label();
 			sampleMeanLabel.text = "Sample Mean:";

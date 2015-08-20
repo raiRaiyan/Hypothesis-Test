@@ -59,11 +59,13 @@ package ParametricTests
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 		{	
 			if(currentState =='landingPage')
-			{	help2.text=stringCollection.secondScreenText.pairedbuttontext.sampleText;
+			{	
+				help2.text=stringCollection.secondScreenText.pairedbuttontext.sampleText;
 			}
 			
 			if(currentState == 'loadCSV')
-			{ 	help2.text=stringCollection.secondScreenText.commonText.filepathText;
+			{ 	
+				help2.text=stringCollection.secondScreenText.commonText.filepathText;
 				if(!backToCSVFlag)
 				{
 					addToCSVPane();
@@ -77,7 +79,8 @@ package ParametricTests
 				}
 			}
 			if(currentState == 'popnData')
-			{	help2.text=stringCollection.secondScreenText.pairedbuttontext.populationText;
+			{	
+				help2.text=stringCollection.secondScreenText.pairedbuttontext.populationText;
 				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
@@ -162,7 +165,8 @@ package ParametricTests
 				col1CB.selectedIndex=-1;
 			}
 			else
-			{   help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
+			{   
+				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
 				replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
@@ -177,7 +181,8 @@ package ParametricTests
 				col2CB.selectedIndex=-1;
 			}
 			else
-			{	help2.text=stringCollection.secondScreenText.commonText.missingvalText;
+			{	
+				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
 				replace2Input.text = "0";
 				varName = "Mean("+colnames[col2CB.selectedIndex]+"-"+colnames[col1CB.selectedIndex]+")";
 				column2SelectedFlag = true;
@@ -230,7 +235,8 @@ package ParametricTests
 		}
 		
 		private function addToSampleDataFinal():void
-		{	help2.text=stringCollection.secondScreenText.commonText.entervalueText;
+		{	
+			help2.text=stringCollection.secondScreenText.commonText.entervalueText;
 			
 			//Mean value Input
 			sampleMeanLabel = new Label();

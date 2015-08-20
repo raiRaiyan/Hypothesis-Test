@@ -71,7 +71,7 @@ For this test, you need to provide the observed and expected values/distribution
 				<entervalueText>* Please enter/edit the Sample size(s), mean(s) and standard deviation(s). Mean(s) and standard deviation(s) must be numeric. Size must be a natural number(s). Click Next to  go to the next panel where Population data will be input.
 				</entervalueText>
 				
-				<filepathText>* Please enter the file path.
+				<filepathText>* Please click on the "Browse" button to enter/edit the file path.
 				</filepathText>
 				
 				<parcolumnloadText>
@@ -134,9 +134,9 @@ For this test, you need to provide the observed and expected values/distribution
 			<onesamplebuttontext>
 				
 				<sampleText>
-* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. 
+* Please select "Upload a CSV" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
 
-* Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+* Please select "Enter the data" if you wish to enter Sample mean, size and standard deviation. 
 				</sampleText>
 				
 				
@@ -151,9 +151,9 @@ For this test, you need to provide the observed and expected values/distribution
 			
 			<twosamplebuttontext>
 				<sampleText>
-* Please select "Enter Values" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
-				
-* Please select "Upload data" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
+* Please select "Upload a CSV" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
+
+* Please select "Enter the data" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
 				</sampleText>
 				
 				<populationText>
@@ -165,9 +165,9 @@ For this test, you need to provide the observed and expected values/distribution
 			<pairedbuttontext>
 			
 				<sampleText>
-* Please select "Enter the Data" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
-
 * Please select "Upload a CSV" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
+
+* Please select "Enter the data" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
 				</sampleText>
 				
 				<populationText>
