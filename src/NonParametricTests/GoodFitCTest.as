@@ -195,7 +195,7 @@ package NonParametricTests
 		protected function loadColumnName():ArrayList{
 			var dataGridColumn:GridColumn = new GridColumn;
 			var columns:ArrayList = new ArrayList;
-			dataGridColumn.width = 80;
+			dataGridColumn.width = 140;
 			dataGridColumn.dataField = columnNamesforCTable[0];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
