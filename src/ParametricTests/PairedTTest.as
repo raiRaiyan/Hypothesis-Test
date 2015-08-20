@@ -230,7 +230,7 @@ package ParametricTests
 		}
 		
 		private function addToSampleDataFinal():void
-		{	help2.text="Please Enter/Edit the values. Please select Next to go to the next panel where Population data will be input.";
+		{	help2.text=stringCollection.secondScreenText.commonText.entervalueText;
 			
 			//Mean value Input
 			sampleMeanLabel = new Label();

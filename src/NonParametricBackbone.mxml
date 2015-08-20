@@ -38,6 +38,7 @@
 			protected var contingencyTableResult:Array;
 			private var errorFlag:Boolean;
 			private var errorTmpString:String;
+			protected var tabulateDataFlag:Boolean;
 			
 			protected function backboneStateChangeCompleteHandler(event:FlexEvent):void
 			{
@@ -110,9 +111,6 @@
 				column = null;
 				return (header + "\r\n" + data);
 			}
-			
-			
-			
 			
 			
 			protected function browsefButtonClickHandler(event:MouseEvent):void
@@ -197,7 +195,6 @@
 				nativeProcess.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
 				nativeProcess.start(nativeProcessInfo);
 				
-				
 			}
 			
 			protected function onOutputData(event:ProgressEvent):void
@@ -237,18 +234,22 @@
 						outputText.text += "The null hypothesis canot be rejected. The altenate hypothesis failed to reject the null hypothesis.";
 					}
 				}
+				if(tabulateDataFlag){
+					contingencyTableResult = loadCTablefromfile().split("\n");
+					currentState = 'editCsvState';
+					tabulateDataFlag=false;
+				}
 				if(errorFlag){
-					if(errorTmpString.search("version")){
+					if(errorTmpString.search("version")!=-1){
+						errorFlag = false;
 					}
 					else{
 					Alert.show(errorTmpString,"Error!");
+					errorFlag = false;
 					computeButton.enabled = true;
 					}
 				}
-				else{
-					contingencyTableResult = loadCTablefromfile().split("\n");
-					currentState = 'editCsvState';
-				}
+				
 			}
 			
 			protected function proceedButton2_clickHandler(event:MouseEvent):void
@@ -296,12 +297,13 @@
 				var fileStream:FileStream = new FileStream;
 				var file:File = File.applicationDirectory.resolvePath("working/tabulatedDataFile");
 				fileStream.open(file,FileMode.READ);
-				return fileStream.readUTFBytes(file.size);
+				var toReturn:String = fileStream.readUTFBytes(file.size);
+				return toReturn;
 			}
 			
 			protected function imgViewerClickHandler(event:MouseEvent):void
 			{
-				var img:File = File.applicationDirectory.resolvePath("working/outputImg.png");
+				var img:File = File.applicationDirectory.resolvePath("working/chiSquare.png");
 				img.openWithDefaultApplication();
 			}
 		]]>
@@ -509,7 +511,7 @@
 		
 		<s:Panel height="48%" width="100%" title="The Process flow" title.resultState="The Output" >
 			<s:TextArea id="processFlowText"
-						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
+						text="{stringCollection.mainScreenText.nparflowHelp}"
 						borderVisible="false"
 						width="100%"
 						height="100%"
@@ -524,7 +526,6 @@
 		
 		<s:Panel height="48%" width="100%" title="The Help" excludeFrom="resultState">
 			<s:TextArea id="panelHelpText"
-						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
 						width="100%"
 						height="100%"/>

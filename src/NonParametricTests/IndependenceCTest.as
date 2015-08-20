@@ -42,10 +42,13 @@ package NonParametricTests
 			csvPanel.title = "The Data for the Hypothesis";
 			if(currentState == 'state1'){
 				displayString.visible = true;
-				
+				panelHelpText.text = stringCollection.secondScreenText.independencebuttontext.observedText;
+					
 			}
 			else if(currentState == 'showCsvState'){
 				
+				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
+				panelHelpText.text += stringCollection.secondScreenText.commonText.missingValueIndependenceText;
 				contingencyTableCheck = new CheckBox;
 				contingencyTableCheck.label = "This is a Contingency Table";
 				csvOptionsGroup.addElement(contingencyTableCheck);
@@ -115,6 +118,9 @@ package NonParametricTests
 			}
 			
 			else if(currentState == 'state2'){
+				
+				panelHelpText.text = stringCollection.secondScreenText.commmonText.significaneText;
+				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the variables are independent. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
@@ -130,7 +136,7 @@ package NonParametricTests
 		private function loadColumnName():ArrayList
 		{
 			// TODO Auto Generated method stub
-			var columnNames:Array = contingencyTableResult[0].split(" "); 
+			var columnNames:Array = contingencyTableResult[0].split(","); 
 			var columns:ArrayList = new ArrayList;
 			for(var i:int = 0; i<columnNames.length; i++){
 				var dataGridColumn:GridColumn = new GridColumn;
@@ -204,10 +210,10 @@ package NonParametricTests
 		
 		private function loadDataProviderFormR():ArrayCollection
 		{
-			var columnNames:Array = contingencyTableResult[0].split(" "); 
+			var columnNames:Array = contingencyTableResult[0].split(","); 
 			var Clength:int  = columnNames.length;
 			var editedCsvData:ArrayCollection = new ArrayCollection;
-			var levels:Array = contingencyTableResult[1].split(" ");
+			var levels:Array = contingencyTableResult[1].split(",");
 			var numElements:int = 0;
 			
 			//row iteration. each new i indicates a new row
@@ -219,7 +225,7 @@ package NonParametricTests
 						obj["Levels"] = levels[i];
 					}
 					else{
-						obj[columnNames[j-1]]= contingencyTableResult[2].split(" ")[numElements];
+						obj[columnNames[j-1]]= contingencyTableResult[2].split(",")[numElements];
 						numElements++;
 					}
 					
@@ -255,6 +261,8 @@ package NonParametricTests
 					
 					args.push(missingValueInput1.text);
 					args.push(missingValueInput2.text);
+					
+					tabulateDataFlag = true;
 					
 					super.proceedButtonClickHandler(event);
 				}

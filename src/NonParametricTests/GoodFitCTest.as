@@ -26,6 +26,7 @@ package NonParametricTests
 	import spark.components.gridClasses.GridColumn;
 	import spark.events.GridItemEditorEvent;
 	import spark.events.IndexChangeEvent;
+
 	
 	public class GoodFitCTest extends NonParametricBackbone
 	{
@@ -47,12 +48,14 @@ package NonParametricTests
 			
 			dataButton.visible = true;
 			orLabel.visible = true;
+			panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.observedText;
 		}
 		
 		
 		override protected function backboneStateChangeCompleteHandler(event:FlexEvent):void{
 			if(currentState == 'showCsvState'){
 				
+				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
 				if(columnNames.length == 3 && !contingencyTableCheck){
 					contingencyTableCheck = new CheckBox;
 					contingencyTableCheck.label = "This is a Contingency Table";
@@ -90,9 +93,12 @@ package NonParametricTests
 			}
 			else if(currentState == 'editCsvState'){
 				
+				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.expectedTest;
+				
 				editCsvGrid.columns = loadColumnName();
 				if(enterDataFlag){
 					
+					panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.editDataExpectedText;
 					editCsvGrid.editable = true;
 					editCsvGrid.dataProvider = new ArrayCollection;
 					editCsvGrid.dataProvider.addItem(createNewRow());
@@ -106,6 +112,8 @@ package NonParametricTests
 				
 			}
 			else if(currentState == 'state2'){
+				panelHelpText.text = stringCollection.secondScreenText.commmonText.significanceText;
+				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
@@ -164,11 +172,11 @@ package NonParametricTests
 		{
 			// TODO Auto Generated method stub
 			var editedCsvData:ArrayCollection = new ArrayCollection;
-			var levels:Array = contingencyTableResult[0].split(" ");
+			var levels:Array = contingencyTableResult[0].split(",");
 			for(var i:int=0;i<levels.length-1;i++){
 				var obj:Object = new Object;
 				for(var j:int =0;j<2;j++){
-					obj[columnNamesforCTable[j]]= contingencyTableResult[j].split(" ")[i];
+					obj[columnNamesforCTable[j]]= contingencyTableResult[j].split(",")[i];
 				}
 				obj[columnNamesforCTable[2]] = "";
 				editedCsvData.addItem(obj);
@@ -188,15 +196,15 @@ package NonParametricTests
 		protected function loadColumnName():ArrayList{
 			var dataGridColumn:GridColumn = new GridColumn;
 			var columns:ArrayList = new ArrayList;
-			dataGridColumn.width = 80;
+			dataGridColumn.width = 150;
 			dataGridColumn.dataField = columnNamesforCTable[0];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
-			dataGridColumn.width = 140;
+			dataGridColumn.width = 150;
 			dataGridColumn.dataField = columnNamesforCTable[1];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
-			dataGridColumn.width = 140;
+			dataGridColumn.width = 150;
 			dataGridColumn.dataField = columnNamesforCTable[2];
 			dataGridColumn.editable=true;
 			columns.addItem(dataGridColumn);
@@ -216,6 +224,7 @@ package NonParametricTests
 				args.push(rFile);
 				args.push("goodfittest");
 				args.push(filePath.text);
+				tabulateDataFlag = true;
 				
 				args.push(comboBox.selectedItem);
 				args.push(missingValueInput.text);
