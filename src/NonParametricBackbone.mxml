@@ -38,6 +38,7 @@
 			protected var contingencyTableResult:Array;
 			private var errorFlag:Boolean;
 			private var errorTmpString:String;
+			protected var tabulateDataFlag:Boolean;
 			
 			protected function backboneStateChangeCompleteHandler(event:FlexEvent):void
 			{
@@ -197,7 +198,6 @@
 				nativeProcess.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
 				nativeProcess.start(nativeProcessInfo);
 				
-				
 			}
 			
 			protected function onOutputData(event:ProgressEvent):void
@@ -237,18 +237,22 @@
 						outputText.text += "The null hypothesis canot be rejected. The altenate hypothesis failed to reject the null hypothesis.";
 					}
 				}
+				if(tabulateDataFlag){
+					contingencyTableResult = loadCTablefromfile().split("\n");
+					currentState = 'editCsvState';
+					tabulateDataFlag=false;
+				}
 				if(errorFlag){
-					if(errorTmpString.search("version")){
+					if(errorTmpString.search("version")!=-1){
+						errorFlag = false;
 					}
 					else{
 					Alert.show(errorTmpString,"Error!");
+					errorFlag = false;
 					computeButton.enabled = true;
 					}
 				}
-				else{
-					contingencyTableResult = loadCTablefromfile().split("\n");
-					currentState = 'editCsvState';
-				}
+				
 			}
 			
 			protected function proceedButton2_clickHandler(event:MouseEvent):void
@@ -301,7 +305,7 @@
 			
 			protected function imgViewerClickHandler(event:MouseEvent):void
 			{
-				var img:File = File.applicationDirectory.resolvePath("working/outputImg.png");
+				var img:File = File.applicationDirectory.resolvePath("working/chiSquare.png");
 				img.openWithDefaultApplication();
 			}
 		]]>

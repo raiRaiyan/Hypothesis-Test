@@ -164,11 +164,11 @@ package NonParametricTests
 		{
 			// TODO Auto Generated method stub
 			var editedCsvData:ArrayCollection = new ArrayCollection;
-			var levels:Array = contingencyTableResult[0].split(" ");
+			var levels:Array = contingencyTableResult[0].split(",");
 			for(var i:int=0;i<levels.length-1;i++){
 				var obj:Object = new Object;
 				for(var j:int =0;j<2;j++){
-					obj[columnNamesforCTable[j]]= contingencyTableResult[j].split(" ")[i];
+					obj[columnNamesforCTable[j]]= contingencyTableResult[j].split(",")[i];
 				}
 				obj[columnNamesforCTable[2]] = "";
 				editedCsvData.addItem(obj);
@@ -216,6 +216,7 @@ package NonParametricTests
 				args.push(rFile);
 				args.push("goodfittest");
 				args.push(filePath.text);
+				tabulateDataFlag = true;
 				
 				args.push(comboBox.selectedItem);
 				args.push(missingValueInput.text);

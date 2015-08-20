@@ -130,7 +130,7 @@ package NonParametricTests
 		private function loadColumnName():ArrayList
 		{
 			// TODO Auto Generated method stub
-			var columnNames:Array = contingencyTableResult[0].split(" "); 
+			var columnNames:Array = contingencyTableResult[0].split(","); 
 			var columns:ArrayList = new ArrayList;
 			for(var i:int = 0; i<columnNames.length; i++){
 				var dataGridColumn:GridColumn = new GridColumn;
@@ -204,10 +204,10 @@ package NonParametricTests
 		
 		private function loadDataProviderFormR():ArrayCollection
 		{
-			var columnNames:Array = contingencyTableResult[0].split(" "); 
+			var columnNames:Array = contingencyTableResult[0].split(","); 
 			var Clength:int  = columnNames.length;
 			var editedCsvData:ArrayCollection = new ArrayCollection;
-			var levels:Array = contingencyTableResult[1].split(" ");
+			var levels:Array = contingencyTableResult[1].split(",");
 			var numElements:int = 0;
 			
 			//row iteration. each new i indicates a new row
@@ -219,7 +219,7 @@ package NonParametricTests
 						obj["Levels"] = levels[i];
 					}
 					else{
-						obj[columnNames[j-1]]= contingencyTableResult[2].split(" ")[numElements];
+						obj[columnNames[j-1]]= contingencyTableResult[2].split(",")[numElements];
 						numElements++;
 					}
 					
@@ -255,6 +255,8 @@ package NonParametricTests
 					
 					args.push(missingValueInput1.text);
 					args.push(missingValueInput2.text);
+					
+					tabulateDataFlag = true;
 					
 					super.proceedButtonClickHandler(event);
 				}
