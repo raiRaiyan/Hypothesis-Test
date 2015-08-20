@@ -22,6 +22,7 @@
 			import mx.controls.Alert;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
 			import mx.utils.object_proxy;
 			
 			import spark.components.gridClasses.GridColumn;
@@ -224,14 +225,14 @@
 			private function checksOnpopnData():Boolean
 			{
 				var result:Boolean = true;
-				if(popnMeanInput.text=="")
+				if(StringUtil.trim(popnMeanInput.text)=="")
 				{
 					//Error handling
 					popnMeanInput.errorString = "Enter a value";
 					result = false;
 				}
 				
-				if(sigLevelInput.text=="")
+				if(StringUtil.trim(sigLevelInput.text)=="")
 				{
 					//Error handling
 					sigLevelInput.errorString = "Enter a value";
@@ -377,6 +378,7 @@
 			
 			public function onErrorData(event:ProgressEvent):void
 			{
+				/* obselete once column dataprovider contains all numeric
 				//Capture the error message
 				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
 				var naError:int = err.search("NA");
@@ -384,7 +386,9 @@
 				{
 					errorFlag = true;
 					Alert.show("Please select a numeric column","Oops.!!");
-				}
+				}*/
+				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
+				Alert.show(err,"Unknown Error");
 			}
 			
 			public function onProcessExit(event:NativeProcessExitEvent):void

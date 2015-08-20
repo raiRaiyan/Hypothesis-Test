@@ -9,6 +9,7 @@ package ParametricTests
 	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
+	import mx.utils.StringUtil;
 	
 	import spark.components.ComboBox;
 	import spark.components.Label;
@@ -121,7 +122,7 @@ package ParametricTests
 		{
 			if(columnSelectedFlag)
 			{
-				if(replaceInput.text!="")
+				if(StringUtil.trim(replaceInput.text)!="")
 				{
 					csvDoneFlag = true;
 				}
@@ -221,19 +222,19 @@ package ParametricTests
 		private function checksOnSampleData():Boolean
 		{
 			var result:Boolean = true;
-			if(sampleMeanInput.text =="")
+			if(StringUtil.trim(sampleMeanInput.text) =="")
 			{
 				//Show an error icon
 				sampleMeanInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sampleSdInput.text=="")
+			if(StringUtil.trim(sampleSdInput.text)=="")
 			{
 				//Show an error icon
 				sampleSdInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sampleSizeInput.text=="")
+			if(StringUtil.trim(sampleSizeInput.text)=="")
 			{
 				//Show an error icon
 				sampleSizeInput.errorString = "Enter a value";

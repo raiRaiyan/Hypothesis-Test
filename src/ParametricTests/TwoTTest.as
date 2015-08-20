@@ -1,14 +1,15 @@
 package ParametricTests
 {
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
-	import flash.events.FocusEvent;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
-	import mx.controls.Alert;
+	import mx.utils.StringUtil;
 	
 	import spark.components.ComboBox;
 	import spark.components.Label;
@@ -175,19 +176,19 @@ package ParametricTests
 		{
 			if(column1SelectedFlag&&column2SelectedFlag)
 			{
-				if(replace1Input.text!=""&&replace2Input.text!="")
+				if(StringUtil.trim(replace1Input.text)!=""&&StringUtil.trim(replace2Input.text)!="")
 				{
 					csvDoneFlag = true;
 				}
 				else
 				{
 					//Show an error icon
-					if(replace1Input.text=="")
+					if(StringUtil.trim(replace1Input.text)=="")
 					{
 						replace1Input.errorString="Enter a Value";
 					}
 					
-					if(replace2Input.text=="")
+					if(StringUtil.trim(replace2Input.text)=="")
 					{
 						replace2Input.errorString="Enter a Value";
 					}
@@ -319,38 +320,38 @@ package ParametricTests
 		private function checksOnSampleData():Boolean
 		{
 			var result:Boolean = true;
-			if(sample1MeanInput.text =="")
+			if(StringUtil.trim(sample1MeanInput.text)=="")
 			{
 				//Show an error icon
 				sample1MeanInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sample1SdInput.text=="")
+			if(StringUtil.trim(sample1SdInput.text)=="")
 			{
 				//Show an error icon
 				sample1SdInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sample1SizeInput.text=="")
+			if(StringUtil.trim(sample1SizeInput.text)=="")
 			{
 				//Show an error icon
 				sample1SizeInput.errorString = "Enter a value";
 				result = false;
 			}
 
-			if(sample2MeanInput.text =="")
+			if(StringUtil.trim(sample2MeanInput.text)=="")
 			{
 				//Show an error icon
 				sample2MeanInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sample2SdInput.text=="")
+			if(StringUtil.trim(sample2SdInput.text)=="")
 			{
 				//Show an error icon
 				sample2SdInput.errorString = "Enter a value";
 				result = false;
 			}
-			if(sample2SizeInput.text=="")
+			if(StringUtil.trim(sample2SizeInput.text)=="")
 			{
 				//Show an error icon
 				sample2SizeInput.errorString = "Enter a value";
