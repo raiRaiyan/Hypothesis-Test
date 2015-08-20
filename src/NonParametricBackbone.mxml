@@ -474,7 +474,8 @@
 			<s:TextArea id="processFlowText"
 						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
-						width="100%"/>
+						width="100%"
+						height="100%"/>
 		</s:Panel>
 		
 		<s:TextArea width="100%" height="48%"
@@ -487,7 +488,8 @@
 			<s:TextArea id="panelHelpText"
 						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
-						width="100%"/>
+						width="100%"
+						height="100%"/>
 			
 		</s:Panel>
 		

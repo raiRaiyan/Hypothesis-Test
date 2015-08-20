@@ -6,7 +6,7 @@
 {
 	backgroundColor: #b94827;
 	color: #FFFFFF;
-	fontSize: 14;
+	fontSize: 16;
 	fontWeight: bold;
 	paddingLeft: 20;
 	textAlign: left;
@@ -25,5 +25,10 @@ s|Panel{
 
 s|TextArea{
 	borderVisible: false; 
-	contentBackgroundColor: #eeecec;
+	contentBackgroundColor: #F6F4F5;
+}
+
+s|DataGrid{
+	contentBackgroundColor: #FFFFFF;
+	skinClass: ClassReference("assets.customDataGrid")
 }
