@@ -111,8 +111,30 @@
 				
 				csvLoader = new LoadCsvFiles(csvFile);
 				csvData.columns= csvLoader.loadColumnName(csvData.maxWidth);
-				colnames = new ArrayCollection(csvLoader.columnNames);
-				dispatchEvent(new Event("colNamesAvailable"));
+				
+				//R Script to get only the numeric column names
+				proc=new NativeProcess();
+				procInfo = new NativeProcessStartupInfo();
+				
+				rFile = File.applicationDirectory.resolvePath("working/getColnames.R").nativePath;
+				args = new Vector.<String>;
+				args.push(rFile);
+				args.push(csvFile.nativePath);
+				
+				procInfo.executable = exe;
+				procInfo.arguments = args;
+				
+				proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onGetColnamesOutputData);
+				proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onGetColnamesErrorData);
+				proc.addEventListener(NativeProcessExitEvent.EXIT,onGetColnamesProcessExit);
+				
+				proc.start(procInfo);
+				
+				//disable User Interactions
+				cursorManager.setBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = false;
+
+				//Load the grid data
 				csvData.dataProvider = csvLoader.readLines(numRowsDisplayed);
 				if(csvLoader.hasData())
 				{
@@ -124,6 +146,29 @@
 				rowsLabel.visible = true;
 				columnSelectionPane.visible = true;
 				browseButton.enabled = true;
+			}
+			
+			protected function onGetColnamesOutputData(event:ProgressEvent):void
+			{
+				dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
+			}
+			
+			protected function onGetColnamesErrorData(event:ProgressEvent):void
+			{
+				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
+				Alert.show(err,"Error in getting the Column Names\nPlease check the CSV you have selected");
+			}
+			
+			protected function onGetColnamesProcessExit(event:NativeProcessExitEvent):void
+			{
+				if(event.exitCode==0)
+				{
+					colnames = new ArrayCollection(dataIn.split(','));
+					dispatchEvent(new Event("colNamesAvailable"));
+					//enable User Interactions
+					cursorManager.removeBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = true;
+				}
 			}
 			
 			protected function gridNextButton_clickHandler(event:MouseEvent):void
@@ -470,8 +515,6 @@
 					event.currentTarget.errorString = "That was an invalid number";
 				}
 			}
-			
-			
 			
 		]]>
 	</fx:Script>
