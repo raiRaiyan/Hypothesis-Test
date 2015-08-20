@@ -2,7 +2,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
-		 currentState="state1"
+		 currentState="landingPage"
 		 stateChangeComplete="backbone_stateChangeCompleteHandler(event)">
 	
 	<s:layout>
@@ -30,10 +30,9 @@
 			//Public flags to indicate completion of input in a panel
 			[Bindable] //needed to show back to csv button
 			public var csvDoneFlag:Boolean = false;
-			[Bindable] //needed to vanish the go to next button
-			public var panel1Flag:Boolean = false;
-			[Bindable] //needed to vanish the go the next button
-			public var panel2Flag:Boolean = false;
+			
+			public var sampleDataFlag:Boolean = false;
+			public var popnDataFlag:Boolean = false;
 			public var hypoFlag:Boolean = false;
 			
 			//needed to stop the output being shown in case there is error
@@ -61,6 +60,8 @@
 			//Outputs
 			private var dataIn:String;
 			private var pValue:Number;
+			
+			
 			public var sigLevel:Number;
 			
 			
@@ -85,12 +86,7 @@
 			//Inherit this method to add elements to the backbone
 			protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 			{
-				if(currentState == 'result')
-				{
-					//Need to enable this since on state change the default value is disabled
-					//output.visible = true;
-					//imgViewer.visible = true;
-				}
+				//Inherit this function to add elements to each panels on State Change
 			}
 			
 			//Do not disturb this function
@@ -101,15 +97,8 @@
 				var filter:FileFilter = new FileFilter("Data File","*.csv");
 				csvFile.browseForOpen("Select a CSV file",[filter]);
 				csvFile.addEventListener(Event.SELECT,fileSelected);
-				csvFile.addEventListener(Event.CANCEL,fileNotSelected);
 				
 			}
-			
-			private function fileNotSelected(event:Event):void
-			{
-				browseButton.enabled = true;
-			}
-			
 			
 			//Do not disturb this function
 			private function fileSelected(evt:Event):void
@@ -199,40 +188,40 @@
 				currentState = 'loadCSV';
 			}
 			
-			protected function panel1NextButton_clickHandler(event:MouseEvent):void
+			protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 			{
 				//set the variable varName if its null
 				//set it as X or X-Y depending on the test
 				
 				//Inherited class must set the flag to true after it gets all the values
-				if(panel1Flag==true)
+				if(sampleDataFlag==true)
 				{
-					currentState='state2';
+					currentState='popnData';
 					csvDoneFlag = false;
 					
 					//remove the goto next button
-					panel1NextButton.visible = false;
-					panel1NextButton.includeInLayout = false;
+					sampleDataNextButton.visible = false;
+					sampleDataNextButton.includeInLayout = false;
 					
 					//Edit panel
-					panel1DoneButton.visible = true;
-					panel1EditButton.visible = true;
-					panel1EditButton.includeInLayout = true;
-					panel1DoneButton.includeInLayout = true;
+					sampleDataDoneButton.visible = true;
+					sampleDataEditButton.visible = true;
+					sampleDataEditButton.includeInLayout = true;
+					sampleDataDoneButton.includeInLayout = true;
 				}
 			}
 			
-			protected function panel1EditButton_clickHandler(event:MouseEvent):void
+			protected function sampleDataEditButton_clickHandler(event:MouseEvent):void
 			{
 				//Implement this in the individual tests
 			}
 			
-			protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+			protected function sampleDataDoneButton_clickHandler(event:MouseEvent):void
 			{
 				//Implement this in the individual tests
 			}
 			
-			private function checksOnPanel2():Boolean
+			private function checksOnpopnData():Boolean
 			{
 				var result:Boolean = true;
 				if(popnMeanInput.text=="")
@@ -262,59 +251,59 @@
 				return result;
 			}
 			
-			protected function panel2NextButton_clickHandler(event:MouseEvent):void
+			protected function popnDataNextButton_clickHandler(event:MouseEvent):void
 			{
-				if(checksOnPanel2())
+				if(checksOnpopnData())
 				{
 					//read the value
 					popnMeanValue=Number(popnMeanInput.text);
 					
-					panel2Flag=true;
+					popnDataFlag=true;
 					popnMeanInput.editable = false;
 					sigLevelInput.editable = false;
 					
 					//Vanish the next button
-					panel2NextButton.visible = false;
-					panel2NextButton.includeInLayout = false;
+					popnDataNextButton.visible = false;
+					popnDataNextButton.includeInLayout = false;
 					
 					//Edit pane enabling
-					panel2EditButton.visible = true;
-					panel2EditButton.includeInLayout = true;
-					panel2DoneButton.includeInLayout = true;
-					panel2DoneButton.visible = true;
+					popnDataEditButton.visible = true;
+					popnDataEditButton.includeInLayout = true;
+					popnDataDoneButton.includeInLayout = true;
+					popnDataDoneButton.visible = true;
 				}
 				
 				//Inherited class must set the flag to true after it gets all the values
-				if(panel2Flag==true)
+				if(popnDataFlag==true)
 				{
-					currentState='state3';
-					panel2NextButton.enabled = false;
+					currentState='hypotheses';
+					popnDataNextButton.enabled = false;
 				}
 			}
 			
-			protected function panel2EditButton_clickHandler(event:MouseEvent):void
+			protected function popnDataEditButton_clickHandler(event:MouseEvent):void
 			{
-				panel2Flag = false;
+				popnDataFlag = false;
 				popnMeanInput.editable = true;
 				sigLevelInput.editable = true;
 				
-				panel2EditButton.enabled = false;
-				panel2DoneButton.enabled = true;
+				popnDataEditButton.enabled = false;
+				popnDataDoneButton.enabled = true;
 			}
 			
-			protected function panel2DoneButton_clickHandler(event:MouseEvent):void
+			protected function popnDataDoneButton_clickHandler(event:MouseEvent):void
 			{
-				if(checksOnPanel2())
+				if(checksOnpopnData())
 				{
 					//update the popn mean value
 					popnMeanValue=Number(popnMeanInput.text);
 					
-					panel2Flag=true;
+					popnDataFlag=true;
 					popnMeanInput.editable = false;
 					sigLevelInput.editable = false;
 					
-					panel2EditButton.enabled = true;
-					panel2DoneButton.enabled = false;
+					popnDataEditButton.enabled = true;
+					popnDataDoneButton.enabled = false;
 				}
 				
 			}
@@ -430,7 +419,7 @@
 				{
 					values = dataIn.split(",");
 					dispatchEvent(new Event("valuesAvailable"));
-					currentState = 'state1Final';
+					currentState = 'sampleData';
 					csvPaneDoneButton.enabled = true;
 				}
 			}
@@ -464,39 +453,39 @@
 	</fx:Declarations>
 	
 	<s:states>
-		<s:State name="state1"/>
+		<s:State name="landingPage"/>
 		<s:State name="loadCSV"/>
-		<s:State name="state1Final"/>
-		<s:State name="state2"/>
-		<s:State name="state3"/>
+		<s:State name="sampleData"/>
+		<s:State name="popnData"/>
+		<s:State name="hypotheses"/>
 		<s:State name="result"/>
 	</s:states>
 	
 	<s:transitions>
 		
-		<s:Transition fromState="state1" toState="loadCSV">
-			<s:Resize target="{panel1}" widthTo="{inputPane.width*0.8}" heightTo="{inputPane.height*0.8}"/>
+		<s:Transition fromState="landingPage" toState="loadCSV">
+			<s:Resize target="{sampleDataPane}" widthTo="{inputPane.width*0.8}" heightTo="{inputPane.height*0.8}"/>
 		</s:Transition>
 		
-		<s:Transition fromState="loadCSV" toState="state1Final">
-			<s:Resize target="{panel1}" widthTo="{inputPane.width*0.4}" heightTo="{inputPane.height*0.62}"/>
+		<s:Transition fromState="loadCSV" toState="sampleData">
+			<s:Resize target="{sampleDataPane}" widthTo="{inputPane.width*0.4}" heightTo="{inputPane.height*0.62}"/>
 		</s:Transition>
 		
-		<s:Transition fromState="state1Final" toState="state2">
-			<s:Parallel target="{panel2}">
+		<s:Transition fromState="sampleData" toState="popnData">
+			<s:Parallel target="{popnDataPane}">
 				<s:Move3D zFrom="-100" duration="700"/>
 				<s:Fade duration="500"/>
 			</s:Parallel>
 		</s:Transition>
 		
-		<s:Transition fromState="state2" toState="state3">
-			<s:Parallel targets="{[panel3]}">
+		<s:Transition fromState="popnData" toState="hypotheses">
+			<s:Parallel targets="{[hypoPane]}">
 				<s:Move3D zFrom="-100" duration="700"/>
 				<s:Fade duration="500"/>
 			</s:Parallel>
 		</s:Transition>
 		
-		<s:Transition fromState="state3" toState="result">
+		<s:Transition fromState="hypotheses" toState="result">
 			<s:Parallel targets="{[output,imgViewer]}">
 				<s:AddAction targets="{[output,imgViewer]}"/>
 				<s:Move3D zFrom="-100" duration="700"/>
@@ -512,18 +501,17 @@
 			<s:BasicLayout/>
 		</s:layout>
 		
-		<s:Panel id="panel1" width="40%" height="62%" 
-				 width.loadCSV="80%"
-				 height.loadCSV="80%"
+		<s:Panel id="sampleDataPane" width="40%" height="62%" 
+				 width.loadCSV="80%" height.loadCSV="80%"
 				 x="{inputPane.width*0.07}" y="{inputPane.height*0.06}"
 				 title="Sample Data">
 			
-			<s:VGroup id="OptionsPane" horizontalAlign="center" verticalAlign="middle"
-					  width="100%" height="100%" includeIn="state1">
+			<s:VGroup id="optionsPane" horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="landingPage">
 				<s:Button label="Upload a CSV" click="currentState='loadCSV';"
 						  width="35%" height="17%"/>
 				<s:Spacer height="5%"/>
-				<s:Button label="Enter the Data" click="currentState='state1Final';"
+				<s:Button label="Enter the Data" click="currentState='sampleData';"
 						  width="35%" height="17%"/>
 			</s:VGroup>
 			
@@ -531,15 +519,15 @@
 					  width="100%" height="100%" includeIn="loadCSV">
 				<s:HGroup width="95%" height="15%" horizontalAlign="left" verticalAlign="middle">
 					<s:TextInput width="70%" height="30" id="csvPath" prompt="Browse for the file"
-								 fontSize="14"/>
+								 fontSize="14" editable="false"/>
 					<s:Spacer width="5%"/>
 					<s:Button id="browseButton" label="Browse" click="browseButton_clickHandler(event)"/>
 				</s:HGroup>
 				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
 					<s:Spacer width="1%"/>
-					<s:VGroup width="65%" height="95%" horizontalAlign="center" verticalAlign="middle" id="csvGroup">
+					<s:VGroup width="65%" height="95%" horizontalAlign="center" verticalAlign="middle" id="dataGridGroup">
 						<s:DataGrid width="100%" height="90%" id="csvData" visible="false"
-									horizontalScrollPolicy="auto" maxWidth="{csvGroup.width}"/>
+									horizontalScrollPolicy="auto" maxWidth="{dataGridGroup.width}"/>
 						<s:HGroup width="100%" height="10%" horizontalAlign="right" verticalAlign="middle">
 							<s:Label text="Rows Displayed :" visible="false" id="rowsLabel"/>
 							<s:Label id="rowCountLabel" />
@@ -566,8 +554,8 @@
 				</s:HGroup>
 			</s:VGroup>
 			
-			<s:VGroup id="finalPanel1" horizontalAlign="center" verticalAlign="middle"
-					  width="100%" height="100%" includeIn="state1Final,state2,state3,result">
+			<s:VGroup horizontalAlign="center" verticalAlign="middle"
+					  width="100%" height="100%" includeIn="sampleData,popnData,hypotheses,result">
 				<s:VGroup id="SampleParams" horizontalAlign="left" verticalAlign="middle"
 						  width="80%" height="85%">
 					
@@ -577,18 +565,18 @@
 				<s:HGroup width="100%" height="15%" horizontalAlign="center" verticalAlign="middle">
 					<s:Button id="backToCSVButton" label="Go back to CSV" click="backToCSVButton_clickHandler(event)"
 							  visible="{csvDoneFlag}" includeInLayout="{csvDoneFlag}"/>
-					<s:Button id="panel1NextButton" label="Go to next" click="panel1NextButton_clickHandler(event)"
+					<s:Button id="sampleDataNextButton" label="Go to next" click="sampleDataNextButton_clickHandler(event)"
 							  visible="true" includeInLayout="true"/>
-					<s:Button id="panel1EditButton" label="Edit" click="panel1EditButton_clickHandler(event)"
+					<s:Button id="sampleDataEditButton" label="Edit" click="sampleDataEditButton_clickHandler(event)"
 							  visible="false" includeInLayout="false"/>
-					<s:Button id="panel1DoneButton" label="Done" click="panel1DoneButton_clickHandler(event)"
+					<s:Button id="sampleDataDoneButton" label="Done" click="sampleDataDoneButton_clickHandler(event)"
 							  visible="false" enabled="false" includeInLayout="false"/>
 				</s:HGroup>
 			</s:VGroup>
 			
 		</s:Panel>
 		
-		<s:Panel id="panel2" includeIn="state2,state3,result" width="40%" height="62%" 
+		<s:Panel id="popnDataPane" includeIn="popnData,hypotheses,result" width="40%" height="62%" 
 				 x="{inputPane.width*0.53}" y="{inputPane.height*0.06}"
 				 title="Population Data">
 			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -606,11 +594,11 @@
 					
 				</s:VGroup>
 				<s:HGroup width="100%" height="15%" horizontalAlign="center" verticalAlign="middle">
-					<s:Button id="panel2NextButton" label="Go to Next" click="panel2NextButton_clickHandler(event)"
+					<s:Button id="popnDataNextButton" label="Go to Next" click="popnDataNextButton_clickHandler(event)"
 							  visible = "true" includeInLayout="true"/>
-					<s:Button id="panel2EditButton" label="Edit" click="panel2EditButton_clickHandler(event)"
+					<s:Button id="popnDataEditButton" label="Edit" click="popnDataEditButton_clickHandler(event)"
 							  visible = "false" includeInLayout="false"/>
-					<s:Button id="panel2DoneButton" label="Done" click="panel2DoneButton_clickHandler(event)"
+					<s:Button id="popnDataDoneButton" label="Done" click="popnDataDoneButton_clickHandler(event)"
 							  visible = "false" includeInLayout="false" enabled="false"/>
 				</s:HGroup>
 			</s:VGroup>
@@ -618,7 +606,7 @@
 		
 		<s:HGroup width="95%" height="30%" horizontalAlign="left" verticalAlign="middle"
 				  x="{inputPane.width*0.07}" y="{inputPane.height*0.7}">
-			<s:Panel id="panel3" includeIn="state3,result" width="60%" height="90%"
+			<s:Panel id="hypoPane" includeIn="hypotheses,result" width="60%" height="90%"
 					 title="Hypotheses">
 				<s:HGroup width="100%" height="100%" horizontalAlign="center"
 						  verticalAlign="middle">
@@ -665,7 +653,7 @@
 				
 			</s:Panel>
 			<s:Spacer width="15%"/>
-			<s:Button width="100" height="50" label="Compute" id="compute" includeIn="state3,result"
+			<s:Button width="100" height="50" label="Compute" id="compute" includeIn="hypotheses,result"
 					  click="compute_clickHandler(event)"/>
 		</s:HGroup>
 		
@@ -679,16 +667,16 @@
 		</s:layout>
 		
 		<s:Panel  width="85%" height="30%" 
-				 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.05}"
-				 title="Flow of Execution" excludeFrom="result">
+				  x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.05}"
+				  title="Flow of Execution" excludeFrom="result">
 			<s:TextArea width="100%" height="100%" id="help1" 
 						text="{stringCollection.mainScreenText.parflowHelp}"/>
 			
 		</s:Panel>
 		
 		<s:Panel  width="85%" height="57%" excludeFrom="result"
-				 x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}"
-				 title="General Help">
+				  x="{helpResultPane.width*0.07}" y="{helpResultPane.height*0.38}"
+				  title="General Help">
 			<s:TextArea width="100%" height="100%" id="help2" 
 						/>	
 			

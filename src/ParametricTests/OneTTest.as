@@ -34,7 +34,7 @@ package ParametricTests
 		
 		private var columnSelectedFlag:Boolean = false;
 		
-		//Panel1Final
+		//sampleDataFinal
 		private var sampleMeanLabel:Label;
 		private var sampleMeanInput:TextInput;
 		private var spacer1:Spacer;
@@ -55,16 +55,16 @@ package ParametricTests
 					addToCSVPane();
 				}
 			}
-			if(currentState == 'state1Final')
+			if(currentState == 'sampleData')
 			{
 				if(!backToCSVFlag)
 				{
-					addToPanel1Final();
+					addToSampleData();
 				}
 			}
-			if(currentState == 'state2')
+			if(currentState == 'popnData')
 			{
-				addToPanel2();
+				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
 		}
@@ -149,7 +149,7 @@ package ParametricTests
 			
 		}
 		
-		private function addToPanel1Final():void
+		private function addToSampleData():void
 		{
 			//Mean value Input
 			sampleMeanLabel = new Label();
@@ -204,10 +204,10 @@ package ParametricTests
 			}
 			
 			//For changes during going back to CSV and back
-			this.addEventListener("valuesAvailable",updatePanel1);
+			this.addEventListener("valuesAvailable",updateSampleData);
 		}
 		
-		protected function updatePanel1(event:Event):void
+		protected function updateSampleData(event:Event):void
 		{
 			if(columnSelectedFlag)
 			{
@@ -218,7 +218,7 @@ package ParametricTests
 
 		}		
 		
-		private function checksOnPanel1():Boolean
+		private function checksOnSampleData():Boolean
 		{
 			var result:Boolean = true;
 			if(sampleMeanInput.text =="")
@@ -242,64 +242,64 @@ package ParametricTests
 			return result;
 		}
 		
-		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 		{
 			
-			if(checksOnPanel1())
+			if(checksOnSampleData())
 			{
 				if(varName == null)
 				{
 					varName = "Mean(X)";
 				}
-				panel1Flag = true;
+				sampleDataFlag = true;
 				sampleMeanInput.editable = false;
 				sampleSdInput.editable = false;
 				sampleSizeInput.editable = false;
-				super.panel1NextButton_clickHandler(event);
+				super.sampleDataNextButton_clickHandler(event);
 			}
 			
 		}
 		
-		override protected function panel1EditButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataEditButton_clickHandler(event:MouseEvent):void
 		{
-			panel1Flag = false;
+			sampleDataFlag = false;
 			sampleMeanInput.editable = true;
 			sampleSdInput.editable = true;
 			sampleSizeInput.editable = true;
 			
-			panel1EditButton.enabled = false;
-			panel1DoneButton.enabled = true;
+			sampleDataEditButton.enabled = false;
+			sampleDataDoneButton.enabled = true;
 		}
 		
-		override protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataDoneButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnPanel1())
+			if(checksOnSampleData())
 			{
-				panel1Flag = true;
+				sampleDataFlag = true;
 				sampleMeanInput.editable = false;
 				sampleSdInput.editable = false;
 				sampleSizeInput.editable = false;
 				
-				panel1EditButton.enabled = true;
-				panel1DoneButton.enabled = false;
+				sampleDataEditButton.enabled = true;
+				sampleDataDoneButton.enabled = false;
 			}
 		}
 		
-		private function addToPanel2():void
+		private function addToPopnData():void
 		{
 			
 		}
 		
 		override protected function compute_clickHandler(event:MouseEvent):void
 		{
-			if(!panel1Flag)
+			if(!sampleDataFlag)
 			{
-				Alert.show("Please complete the editing in the Panel1\nAnd try again","Editing in progress!!");
+				Alert.show("Please complete the editing in the Sample Data\nAnd try again","Editing in progress!!");
 			}
 			
-			if(!panel2Flag)
+			if(!popnDataFlag)
 			{
-				Alert.show("Please complete the editing in the Panel2\nAnd try again","Editing in progress!!");
+				Alert.show("Please complete the editing in the Population Data\nAnd try again","Editing in progress!!");
 			}
 			
 			if(!hypoFlag)
@@ -307,7 +307,7 @@ package ParametricTests
 				Alert.show("Please select the hypotheses from the given list","Hypotheses not selected!!");
 			}
 			
-			if(panel1Flag&&panel2Flag&&hypoFlag)
+			if(sampleDataFlag&&popnDataFlag&&hypoFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;
 				testFlag = "0";

@@ -59,7 +59,7 @@ p <- ggplot(data.frame(x=c(-6,6)),aes(x=x)) +
 
 if(tails==0)
 {
-  pValue = 2*pt(tValue,free,lower.tail = TRUE)
+  pValue = 2*pt(-abs(tValue),free,lower.tail = TRUE)
   p <- p + stat_function(fun =twoTails, geom="area", fill='#b14025')
 }else if(tails==1)
 {
