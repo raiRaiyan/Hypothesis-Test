@@ -64,14 +64,14 @@ package ParametricTests
 					addToCSVPane();
 				}
 			}
-			if(currentState == 'state1Final')
+			if(currentState == 'sampleData')
 			{
 				if(!backToCSVFlag)
 				{
 					addToSampleDataFinal();
 				}
 			}
-			if(currentState == 'state2')
+			if(currentState == 'popnData')
 			{
 				addToPopnData();
 			}
@@ -288,7 +288,7 @@ package ParametricTests
 			
 		}
 		
-		private function checksOnsampleData():Boolean
+		private function checksOnSampleData():Boolean
 		{
 			var result:Boolean = true;
 			if(sampleMeanInput.text =="")
@@ -314,7 +314,7 @@ package ParametricTests
 		
 		override protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnsampleData())
+			if(checksOnSampleData())
 			{
 				if(varName == null)
 				{
@@ -341,7 +341,7 @@ package ParametricTests
 		
 		override protected function sampleDataDoneButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnsampleData())
+			if(checksOnSampleData())
 			{
 				sampleDataFlag = true;
 				sampleMeanInput.editable = false;

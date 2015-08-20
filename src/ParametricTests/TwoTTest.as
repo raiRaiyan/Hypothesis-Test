@@ -26,7 +26,6 @@ package ParametricTests
 		
 		//CSV Pane
 		private var column1SelectLabel:Label;
-		private var spacer3:Spacer;
 		private var col1CB:ComboBox;
 		
 		private var replace1:Label;
@@ -46,11 +45,9 @@ package ParametricTests
 		//sampleDataFinal
 		private var sample1MeanLabel:Label;
 		private var sample1MeanInput:TextInput;
-		private var spacer1:Spacer;
 		
 		private var sample1SdLabel:Label;
 		private var sample1SdInput:TextInput;
-		private var spacer2:Spacer;
 		
 		private var sample1SizeLabel:Label;
 		private var sample1SizeInput:TextInput;
@@ -102,15 +99,9 @@ package ParametricTests
 			col1CB.addEventListener(IndexChangeEvent.CHANGE,column1Selected);
 			columnSelectionPane.addElement(col1CB);
 			
-			
-			spacer3 = new Spacer();
-			spacer3.percentHeight = 1;
-			columnSelectionPane.addElement(spacer3);
-			
 			replace1 = new Label();
 			replace1.text = "replace missing values by:";
 			columnSelectionPane.addElement(replace1);
-			
 			
 			replace1Input = new TextInput();
 			replace1Input.prompt="Enter a Numeric Value";
@@ -123,7 +114,6 @@ package ParametricTests
 			column2SelectLabel = new Label();
 			column2SelectLabel.text = "Please select a column";
 			columnSelectionPane.addElement(column2SelectLabel);
-			
 			
 			col2CB = new ComboBox();
 			this.addEventListener("colNamesAvailable",setDataProvider);
@@ -142,20 +132,8 @@ package ParametricTests
 			replace2Input.percentWidth=70;
 			replace2Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace2Input);
-			
-			
-			
-			
-			//Obselete 1
-			//this.addEventListener("valuesAvailable",switchState);
 		}
-		/* Obselete
-		protected function switchState(event:Event):void
-		{
-		currentState = 'state1Final';
-		
-		}
-		*/
+
 		protected function setDataProvider(event:Event):void
 		{
 			col1CB.dataProvider = colnames;
@@ -173,6 +151,7 @@ package ParametricTests
 			{	replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
+				csvPaneDoneButton.enabled = true;
 			}
 		}
 		
@@ -247,10 +226,6 @@ package ParametricTests
 			sample1MeanInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample1MeanInput);
 			
-			spacer1 = new Spacer();
-			spacer1.percentHeight = 5;
-			SampleParams.addElement(spacer1);
-			
 			//Standard Deviation Input
 			sample1SdLabel = new Label();
 			sample1SdLabel.text = "Standard Deviation of First Sample:";
@@ -262,10 +237,6 @@ package ParametricTests
 			sample1SdInput.percentWidth=70;
 			sample1SdInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample1SdInput);
-			
-			spacer2 = new Spacer();
-			spacer2.percentHeight = 5;
-			SampleParams.addElement(spacer2);
 			
 			//Sample size input
 			sample1SizeLabel = new Label();
@@ -345,7 +316,7 @@ package ParametricTests
 			
 		}
 		
-		private function checksOnsampleData():Boolean
+		private function checksOnSampleData():Boolean
 		{
 			var result:Boolean = true;
 			if(sample1MeanInput.text =="")
@@ -391,7 +362,7 @@ package ParametricTests
 		
 		override protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnsampleData())
+			if(checksOnSampleData())
 			{
 				if(varName == null)
 				{
@@ -425,7 +396,7 @@ package ParametricTests
 		
 		override protected function sampleDataDoneButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnsampleData())
+			if(checksOnSampleData())
 			{
 				sampleDataFlag = true;
 				sample1MeanInput.editable = false;
