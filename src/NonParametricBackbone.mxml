@@ -14,6 +14,7 @@
 			import mx.collections.ArrayList;
 			import mx.collections.IViewCursor;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.events.DividerEvent;
 			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
@@ -184,6 +185,9 @@
 			
 			protected function proceedButtonClickHandler(event:MouseEvent):void
 			{
+				cursorManager.setBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = false;
+				
 				nativeProcessInfo.executable = executableFile;
 				nativeProcessInfo.arguments = args;
 				nativeProcessInfo.workingDirectory = workingDirectory;
@@ -213,13 +217,17 @@
 			{
 				// TODO Auto-generated method stub
 				//var tmpString:String = "";
+				cursorManager.removeBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = true;
 				if(hypothesisResultFlag){
 					//tmpString= nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
+					computeButton.enabled = true;
 					
-					outputText.text = "P value for the given contingency table is " + tmpString;
+					outputText.text = "\n\n\nP value for the given contingency table is " + tmpString;
 					imgViewer.source = "/working/chiSquare.png"
 					outputText.text += "\n\n"
 					
+						
 					if(significanceTextInput.text>tmpString){
 						outputText.text += "The null hypothesis is rejected!!";
 					}
@@ -229,13 +237,13 @@
 				}
 				if(errorFlag){
 					Alert.show(errorTmpString,"Error!");
+					computeButton.enabled = true;
 				}
 				else{
 					//tmpString = nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
 					contingencyTableResult = loadCTablefromfile().split("\n");
 					currentState = 'editCsvState';
 				}
-				
 			}
 			
 			protected function proceedButton2_clickHandler(event:MouseEvent):void
@@ -253,6 +261,9 @@
 				else{
 					if(!enterDataFlag)
 						csvLoader.closeStream();
+					computeButton.enabled = false;
+					cursorManager.setBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = false;
 					significanceTextInput.errorString = "";
 					nativeProcessInfo.executable = executableFile;
 					nativeProcessInfo.arguments = args;
@@ -313,16 +324,17 @@
 			<s:Fade targets="{[csvContainerGroup,csvOptionsGroup]}"/>
 		</s:Transition>
 		
-		<s:Transition fromState="*" toState="state2">
+		<s:Transition fromState="editCsvState" toState="state2">
 			<s:Sequence>
 				<s:Resize target="{csvPanel}"/>
+				<s:RemoveAction target="{editCsvPaddingGroup}"/>
 				<s:AddAction target="{hypothesisPanel}"/>
 				<s:Fade target="{hypothesisPanel}"/>
 			</s:Sequence>
 		</s:Transition>
 		
 		<s:Transition fromState="state2" toState="resultState">
-			<s:Fade targets="{[]}"/>
+			<s:Fade targets="{[outputText,imgViewer]}"/>
 		</s:Transition>
 	</s:transitions>
 	<fx:Declarations>
@@ -347,21 +359,21 @@
 				 id="csvPanel">
 			<s:VGroup height="100%" 
 					  width="100%"
-					  paddingTop="10">
+					  paddingTop="20">
 				<s:HGroup height="10%"
-						  width="100%"
+						  width="{csvPanel.width}"
 						  id="hgrp"
-						  horizontalAlign="center"
+						  paddingLeft="10"
+						  paddingRight="10"
 						  verticalAlign="middle"
+						  horizontalAlign="center"
 						  excludeFrom="[editCsvState,state2,resultState]">
-					<s:Label id="path_label" 
-							 fontSize="14" 
-							 paddingLeft="10" 
-							 text="Filepath : "/>
+					
 					<s:TextInput id="filePath"
-								 width="300" 
+								 width="70%" 
 								 prompt="Enter the file directory" 
 								 editable="false"  />
+					<s:Spacer width="10%"/>
 					<s:Button id="browsefButton" 
 							  label="Browse"
 							  click="browsefButtonClickHandler(event)" />
@@ -382,17 +394,16 @@
 				</s:VGroup>
 				
 				<s:HGroup width="95%" height="100%"  excludeFrom="[state1,editCsvState,state2,resultState]">
-					<s:VGroup width="100%" height="100%" id="csvContainerGroup" horizontalAlign="center" paddingLeft="5">
+					<s:VGroup width="100%" height="100%" id="csvContainerGroup" horizontalAlign="center" paddingLeft="10">
 						<s:DataGrid id="csvGrid"
-									width="80%"
+									width="90%"
 									maxWidth="{csvContainerGroup.width}" 
 									height="80%"
 									horizontalScrollPolicy="auto"
 									/>
 						<s:Spacer width="2"/>
-						<s:HGroup width="100%" verticalAlign="middle">
+						<s:HGroup id="buttonGroup" width="90%" verticalAlign="middle" paddingLeft="10" horizontalAlign="right">
 							<s:Button id="prevButton" label="Previous" visible="false" click="prevButton_clickHandler(event)" styleName="customButton" />
-							<s:Spacer width="70%"/>
 							<s:Button id="nextButton" label="Next" visible="false" click="nextButton_clickHandler(event)" styleName="customButton"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
@@ -401,13 +412,14 @@
 						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup height="100%" width="30%" verticalAlign="middle">
-						<s:VGroup id="csvOptionsGroup" width="100%" height="100%" paddingLeft="5" gap="5">
-							<s:Spacer height="5%"/>
-							
+						<s:Spacer height="5%"/>
+						<s:VGroup id="csvOptionsGroup" width="100%" height="100%" paddingLeft="5" gap="5" maxHeight="{buttonGroup.y-csvContainerGroup.y}">
+														
 							<!--Add Childrem form the class that inherits this backbone-->
 							
+							
 						</s:VGroup>
-						<s:HGroup width="100%" height="100%" verticalAlign="middle">
+						<s:HGroup width="100%">
 							<s:Spacer width="90%"/>
 							<s:Button label="Proceed" 
 									  id="proceedButton"
@@ -423,21 +435,23 @@
 				<s:VGroup verticalAlign="middle" paddingLeft="20" width="100%" height="100%" includeIn="[editCsvState,state2,resultState]">
 					<s:Spacer height="4%"/>
 					<s:Label text="Contingency Table: " id="editCsvLabel" fontWeight="bold"/>
-					<s:Spacer height="3%"/>
+					<s:Spacer height="5%"/>
 					<s:HGroup width="75%" height="100%" verticalAlign="middle" horizontalAlign="center" >
-						<s:DataGrid id="editCsvGrid" height="100%" visible="false"/>
+						<s:DataGrid id="editCsvGrid" width="90%" height="100%" visible="false"/>
 						
 							<!-- Can Add other elements -->
 					</s:HGroup>
-					<s:HGroup width="100%" height="100%" verticalAlign="middle">
-						<s:Spacer width="85%"/>
+					<s:HGroup  id="editCsvPaddingGroup" width="100%" height="100%" verticalAlign="bottom" includeIn="editCsvState">
+						<s:Spacer width="85%" />
 						<s:Button label="Proceed" 
 								  id="proceedButton2"
 								  enabled="true"
 								  styleName="customButton"
 								  click="proceedButton2_clickHandler(event)" 
-								  includeIn="editCsvState"/>
+								  visible.state2="false"
+								  />
 					</s:HGroup>
+					<s:Spacer height="5%"/>
 				</s:VGroup>
 				
 			</s:VGroup>

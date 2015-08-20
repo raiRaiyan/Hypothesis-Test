@@ -71,6 +71,7 @@ package NonParametricTests
 				comboBox = new ComboBox;
 				comboBox.dataProvider = columnNames;
 				csvOptionsGroup.addElement(comboBox);
+				comboBox.percentWidth = 85;
 				comboBox.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
 				
 				spacer = new Spacer;
@@ -154,6 +155,8 @@ package NonParametricTests
 			}
 			else{
 				proceedButton.enabled = true;
+				missingValueInput.text = 'R';
+				missingValueInput.selectAll();
 			}
 		}
 		

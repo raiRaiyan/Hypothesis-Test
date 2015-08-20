@@ -165,6 +165,7 @@
 						width="50%"
 						height="60%"
 						borderVisible="false"
+						editable="false"
 						/>
 			<s:Spacer width="4%"/>
 			<s:Panel id="panelData"

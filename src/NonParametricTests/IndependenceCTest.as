@@ -61,12 +61,16 @@ package NonParametricTests
 				
 				comboBox1 = new ComboBox;
 				comboBox1.dataProvider = columnNames;
+				comboBox1.percentWidth = 90;
+				comboBox1.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
 				csvOptionsGroup.addElement(comboBox1);
+				
 				
 				missingValueInput1 = new TextInput;
 				missingValueInput1.prompt = "Replace missing Values by...";
 				missingValueInput1.percentWidth = 90;
 				csvOptionsGroup.addElement(missingValueInput1);
+				
 												
 				var spacer:Spacer = new Spacer;
 				spacer.percentHeight = 5;
@@ -80,6 +84,7 @@ package NonParametricTests
 				comboBox2 = new ComboBox;
 				comboBox2.dataProvider = columnNames;
 				csvOptionsGroup.addElement(comboBox2);
+				comboBox2.percentWidth = 90;
 				comboBox2.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
 				
 				missingValueInput2 = new TextInput;
@@ -191,6 +196,10 @@ package NonParametricTests
 			else if(comboBox1.selectedIndex != -1 && comboBox2.selectedIndex != -1){
 				proceedButton.enabled = true;
 			}
+			if(comboBox1.selectedIndex != -1)
+				missingValueInput1.text = 'NULL';
+			if(comboBox2.selectedIndex != -1)
+				missingValueInput2.text = 'NULL';
 		}		
 		
 		private function loadDataProviderFormR():ArrayCollection

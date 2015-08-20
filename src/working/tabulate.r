@@ -21,16 +21,10 @@ if(args[1] == "goodfittest"){
   col1 = as.character(data[[args[3]]])
   col2 = as.character(data[[args[4]]])
   rm(data)
-  if(args[5] == 'r' || args[5] == 'R'){
-      col1 = col1[col1 != '']
-    }else{
+  if(!is.null(args[5]) && !is.null(args[6])){
       col1[col1 == ''] = args[5]
-    }
-    if(args[6] == 'r' || args[6] == 'R'){
-      col2 = col2[col2 != '']
-    }else{
       col2[col2 == ''] = args[6]
-    }
+  }
   col1 = as.factor(col1)
   col2 = as.factor(col2)
   tabulatedData = table(col1,col2)
