@@ -7,7 +7,7 @@
 					   currentState="landingPage"
 					   showStatusBar="false"
 					   backgroundColor="0xFCFCFC"
-					   applicationComplete="mainWindows_applicationCompleteHandler(event)"
+					   applicationComplete="mainWindow_applicationCompleteHandler(event)"
 					   >
 	<fx:Script>
 		<![CDATA[
@@ -17,9 +17,29 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			
 			import spark.components.gridClasses.GridColumn;
+			
+			//Reading the file
+			private var exeStoredPath:File = null;
+			private var fs:FileStream = null;
+			
+			//Variables for running test on R script runnings
+			private var exePath:File = null;
+			private var rFile:String = File.applicationDirectory.resolvePath("working/R-test.R").nativePath;
+			private var args:Vector.<String> = null;
+			
+			private var proc:NativeProcess;
+			private var procInfo:NativeProcessStartupInfo;
+			
+			private var dataIn:String;
+			
+			public function get returnRexe():File
+			{
+				return exePath;
+			}
 			
 			protected function pairedTTestClickHandler(event:MouseEvent):void
 			{
@@ -65,9 +85,82 @@
 			}
 			
 			
-			protected function mainWindows_applicationCompleteHandler(event:FlexEvent):void
+			protected function mainWindow_applicationCompleteHandler(event:FlexEvent):void
 			{
 				nativeWindow.maximize();
+				exeStoredPath = File.applicationDirectory.resolvePath('strings/R-executable.txt');
+				fs = new FileStream();
+				fs.open(exeStoredPath,FileMode.READ);
+				var path:String = fs.readUTFBytes(fs.bytesAvailable);
+				
+				exePath = new File(path);
+				
+				//disable interactions
+				cursorManager.setBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = false;
+				
+				runRDiagnostics();
+			}
+			
+			private function runRDiagnostics():void
+			{
+				proc = new NativeProcess();
+				procInfo = new NativeProcessStartupInfo();
+				
+				//Check if the exePath exists
+				if(!exePath.exists)
+				{
+					//Ask for R file
+					var filter:FileFilter = new FileFilter("R Script Executable","*.exe");
+					exePath.browseForOpen("Select the RScript.exe",[filter]);
+					exePath.addEventListener(Event.SELECT,newRFileSelected);
+				}
+				else
+				{
+					procInfo.executable = exePath;
+					args = new Vector.<String>;
+					args.push(rFile);
+					procInfo.arguments = args;
+					
+					proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA,onProcessOutput);
+					proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
+					
+					proc.start(procInfo);
+				}
+			}
+			
+			protected function onProcessOutput(event:ProgressEvent):void
+			{
+				dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
+			}
+			/*
+			protected function onProcessError(event:ProgressEvent):void
+			{
+			Alert.show("You dont seem to have R installed","R not found!");
+			}
+			*/
+			protected function onProcessExit(event:NativeProcessExitEvent):void
+			{
+				if(event.exitCode == 0 && dataIn =="cool")
+				{
+					//enable interactions
+					cursorManager.removeBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = true;
+					
+					//Set the location of the file into file again
+					fs.close();
+					var path:String = File.applicationDirectory.nativePath;
+					path = path + "\\strings\\R-executable.txt";5
+					var newFile:File = new File(path);
+					fs.open(newFile,FileMode.WRITE);
+					fs.writeUTFBytes(exePath.nativePath);
+					fs.close();
+				}
+			}
+			
+			protected function newRFileSelected(event:Event):void
+			{
+				runRDiagnostics();
 			}
 			
 		]]>
@@ -234,7 +327,7 @@
 						   includeIn="subTestSelected"
 						   borderVisible="false"
 						   backgroundColor="0xFCFCFC"
-						  
+						   
 						   >
 		</s:BorderContainer>
 		

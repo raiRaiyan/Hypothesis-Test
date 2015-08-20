@@ -70,7 +70,7 @@
 			public var proc:NativeProcess = null;
 			public var procInfo:NativeProcessStartupInfo = null;
 			
-			public var exe:File = new File("C:/Program Files/R/R-3.2.1/bin/Rscript.exe");
+			public var exe:File = mx.core.FlexGlobals.topLevelApplication.returnRexe;
 			public var workingDir:File = File.applicationDirectory.resolvePath("working");
 			public var args:Vector.<String> = null; //set from inherited class
 			public var rFile:String = null; //set from inherited class
