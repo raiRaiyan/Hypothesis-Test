@@ -68,13 +68,20 @@ package ParametricTests
 		
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 		{
+			
 			if(currentState == 'loadCSV')
-			{
-				addToCSVPane();
+			{ 	
+				if(!backToCSVFlag)
+				{
+					addToCSVPane();
+				}
 			}
 			if(currentState == 'state1Final')
 			{
-				addToPanel1Final();
+				if(!backToCSVFlag)
+				{
+					addToPanel1Final();
+				}
 			}
 			if(currentState == 'state2')
 			{
@@ -359,7 +366,7 @@ package ParametricTests
 				sample1SizeInput.errorString = "Enter a value";
 				result = false;
 			}
-			var result:Boolean = true;
+
 			if(sample2MeanInput.text =="")
 			{
 				//Show an error icon
