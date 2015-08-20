@@ -42,7 +42,7 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
     xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:mx="library://ns.adobe.com/flex/mx"
     xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
-    alpha.disabled="0.5" minWidth="89" minHeight="84">
+    alpha.disabled="0.5" minWidth="89" minHeight="84" xmlns:assets="assets.*">
     
     <fx:Metadata>
     <![CDATA[
@@ -135,7 +135,7 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
         <fx:Component id="headerColumnSeparator">
             <s:Line>
                 <s:stroke>
-                    <s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+                    <s:SolidColorStroke color="0xe0e0e0" weight="0" caps="square"/>
                 </s:stroke>
             </s:Line>
         </fx:Component>
@@ -143,7 +143,7 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
         <!--- Defines the value of the headerRenderer property for the columnHeaderGroup. 
               The default is spark.skins.spark.DefaultGridHeaderRenderer -->
         <fx:Component id="headerRenderer">
-            <s:DefaultGridHeaderRenderer />
+            <assets:customHeaderItemRenderer />
         </fx:Component>
         
         <!--- @private -->
@@ -274,7 +274,7 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
         
         <!--- @private -->
         <s:GridColumnHeaderGroup id="columnHeaderGroup"
-            paddingLeft="1" paddingTop="1" paddingRight="1" minHeight="21" 
+            paddingLeft="3" paddingTop="1" paddingRight="1" minHeight="37" 
             headerRenderer="{headerRenderer}"/>
 
         <s:Group height="100%">
@@ -292,7 +292,7 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
                 <!--- @private -->
                 <s:Line id="headerSeparator">
                     <s:stroke>
-                        <s:SolidColorStroke color="0x696969" weight="1" caps="square"/>
+                        <s:SolidColorStroke color="0x696969" weight="0" caps="square"/>
                     </s:stroke>
                 </s:Line>          
                 
@@ -318,7 +318,7 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
     <s:Rect left="0" right="0" top="0" bottom="0" id="border">
         <s:stroke>
             <!--- @private -->
-            <s:SolidColorStroke id="borderStroke" weight="1"/>
+            <s:SolidColorStroke id="borderStroke" weight="0"/>
         </s:stroke>
     </s:Rect>    
 

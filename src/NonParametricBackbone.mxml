@@ -125,7 +125,7 @@
 				filePath.text = file.nativePath;
 				csvLoader = new LoadCsvFiles(file);
 				currentState = 'showCsvState';
-				csvGrid.columns= csvLoader.loadColumnName();
+				csvGrid.columns= csvLoader.loadColumnName(csvGrid.maxWidth);
 				columnNames.source = csvLoader.columnNames;
 				csvGrid.dataProvider = csvLoader.readLines(numRowsDisplayed);
 				if(csvLoader.hasData()){

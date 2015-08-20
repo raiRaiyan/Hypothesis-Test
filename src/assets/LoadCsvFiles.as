@@ -44,6 +44,8 @@ package assets
 			return colname;
 		}
 		
+		
+		
 		public function pushPosition():void{
 			previousPositionArray.push(fileStream.position);
 		}
@@ -74,14 +76,19 @@ package assets
 			return false;
 		}
 		
-		public function loadColumnName():ArrayList{
+		public function loadColumnName(width:uint):ArrayList{
 			var str:String= fileStream.readUTFLine()
 			colname = str.split(",");
 			var col:ArrayList=new ArrayList;
 			for(var i:int=0; i<colname.length;i++){
 				var datag_col:GridColumn = new GridColumn();
 				datag_col.dataField=colname[i];
-				datag_col.width = 60;
+				if(colname.length <= 6){
+					datag_col.width = int(width/(colname.length+1));
+				}
+				else{
+				datag_col.width = 70;
+				}
 				col.addItem(datag_col);
 			}
 			return col;
