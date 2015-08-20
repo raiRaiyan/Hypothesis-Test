@@ -65,13 +65,7 @@ For this test, you need to provide the observed and expected values/distribution
 	
 		</mainScreenText>
 		
-		<secondScreenText>
-
-			<flowhelpText>
-				<independenceCTest>* This is the help for Chi-Square test for Independence
-			</independenceCTest>
-			
-			</flowhelpText>			
+		<secondScreenText>	
 	
 			<commonText>
 				<entervalueText>* Please enter/edit the Sample size(s), mean(s) and standard deviation(s). Mean(s) and standard deviation(s) must be numeric. Size must be a natural number(s). Click Next to  go to the next panel where Population data will be input.
@@ -82,6 +76,7 @@ For this test, you need to provide the observed and expected values/distribution
 				
 				<parcolumnloadText>
 * Please Select the column(s) you want to conduct the test on. 
+
 * The values in the column(s) must be numeric.
 				</parcolumnloadText>
 				
@@ -105,6 +100,7 @@ For this test, you need to provide the observed and expected values/distribution
 				<significanceText>
 * Enter the significance value. The value should be numeric. The commonly used significance values are 0.05, 0.1, 0.15. 
 				</significanceText>
+				
 				<missingvalText>
 * Enter a value to replace the missing values in the file with. The value should be numeric. By default, the value is set to be zero.	
 				</missingvalText>
@@ -134,10 +130,7 @@ For this test, you need to provide the observed and expected values/distribution
 * Please click on Home button to go to the Home Screen.
 				</homebutttonText>
 			</commonText>
-			
-			
-			
-			
+
 			<onesamplebuttontext>
 				
 				<sampleText>
@@ -151,8 +144,6 @@ For this test, you need to provide the observed and expected values/distribution
 				<populationText>
 * Please enter the mean of the population. The value should be numeric.
 				</populationText>
-				
-				
 				
 				
 			</onesamplebuttontext>		

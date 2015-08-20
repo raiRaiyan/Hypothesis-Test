@@ -48,7 +48,7 @@ package NonParametricTests
 			else if(currentState == 'showCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
-				panelHelpText.text += stringCollection.secondScreenText.commonText.missingValueIndependenceText;
+				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.missingValueIndependenceText;
 				contingencyTableCheck = new CheckBox;
 				contingencyTableCheck.label = "This is a Contingency Table";
 				csvOptionsGroup.addElement(contingencyTableCheck);
@@ -119,8 +119,8 @@ package NonParametricTests
 			
 			else if(currentState == 'state2'){
 				
-				panelHelpText.text = stringCollection.secondScreenText.commmonText.significaneText;
-				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
+				panelHelpText.text = stringCollection.secondScreenText.commonText.significanceText;
+				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the variables are independent. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
@@ -203,9 +203,9 @@ package NonParametricTests
 				proceedButton.enabled = true;
 			}
 			if(comboBox1.selectedIndex != -1)
-				missingValueInput1.text = 'NULL';
+				missingValueInput1.text = 'Missing';
 			if(comboBox2.selectedIndex != -1)
-				missingValueInput2.text = 'NULL';
+				missingValueInput2.text = 'Missing';
 		}		
 		
 		private function loadDataProviderFormR():ArrayCollection
