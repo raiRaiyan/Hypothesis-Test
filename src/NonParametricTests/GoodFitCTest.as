@@ -56,6 +56,7 @@ package NonParametricTests
 			if(currentState == 'showCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
+				panelHelpText.text += "\n" + stringCollection.secondScreenText.commonText.missingValueGoodFitText;
 				if(columnNames.length == 3 && !contingencyTableCheck){
 					contingencyTableCheck = new CheckBox;
 					contingencyTableCheck.label = "This is a Contingency Table";
@@ -94,8 +95,8 @@ package NonParametricTests
 			else if(currentState == 'editCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.expectedTest;
-				
 				editCsvGrid.columns = loadColumnName();
+				
 				if(enterDataFlag){
 					
 					panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.editDataExpectedText;
@@ -109,6 +110,7 @@ package NonParametricTests
 					editCsvGrid.dataProvider = loadDataProviderFormR();
 				}
 				editCsvGrid.visible = true;	
+				
 				
 			}
 			else if(currentState == 'state2'){
