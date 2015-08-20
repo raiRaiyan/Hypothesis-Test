@@ -42,10 +42,12 @@ package NonParametricTests
 			csvPanel.title = "The Data for the Hypothesis";
 			if(currentState == 'state1'){
 				displayString.visible = true;
+				panelHelpText.text = stringCollection.secondScreenText.independencebuttontext.observedText;
 				
 			}
 			else if(currentState == 'showCsvState'){
 				
+				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
 				contingencyTableCheck = new CheckBox;
 				contingencyTableCheck.label = "This is a Contingency Table";
 				csvOptionsGroup.addElement(contingencyTableCheck);
@@ -115,6 +117,9 @@ package NonParametricTests
 			}
 			
 			else if(currentState == 'state2'){
+				
+				panelHelpText.text = stringCollection.secondScreenText.commmonText.significaneText;
+				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the variables are independent. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);

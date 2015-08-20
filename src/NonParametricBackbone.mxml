@@ -113,9 +113,6 @@
 			}
 			
 			
-			
-			
-			
 			protected function browsefButtonClickHandler(event:MouseEvent):void
 			{	
 				var fileFilter:FileFilter = new FileFilter("*.csv","*.csv");
@@ -300,7 +297,8 @@
 				var fileStream:FileStream = new FileStream;
 				var file:File = File.applicationDirectory.resolvePath("working/tabulatedDataFile");
 				fileStream.open(file,FileMode.READ);
-				return fileStream.readUTFBytes(file.size);
+				var toReturn:String = fileStream.readUTFBytes(file.size);
+				return toReturn;
 			}
 			
 			protected function imgViewerClickHandler(event:MouseEvent):void
@@ -513,7 +511,7 @@
 		
 		<s:Panel height="48%" width="100%" title="The Process flow" title.resultState="The Output" >
 			<s:TextArea id="processFlowText"
-						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
+						text="{stringCollection.mainScreenText.nparflowHelp}"
 						borderVisible="false"
 						width="100%"
 						height="100%"
@@ -528,7 +526,6 @@
 		
 		<s:Panel height="48%" width="100%" title="The Help" excludeFrom="resultState">
 			<s:TextArea id="panelHelpText"
-						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
 						width="100%"
 						height="100%"/>

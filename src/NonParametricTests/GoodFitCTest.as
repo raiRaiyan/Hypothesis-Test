@@ -26,6 +26,7 @@ package NonParametricTests
 	import spark.components.gridClasses.GridColumn;
 	import spark.events.GridItemEditorEvent;
 	import spark.events.IndexChangeEvent;
+
 	
 	public class GoodFitCTest extends NonParametricBackbone
 	{
@@ -47,12 +48,14 @@ package NonParametricTests
 			
 			dataButton.visible = true;
 			orLabel.visible = true;
+			panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.observedText;
 		}
 		
 		
 		override protected function backboneStateChangeCompleteHandler(event:FlexEvent):void{
 			if(currentState == 'showCsvState'){
 				
+				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
 				if(columnNames.length == 3 && !contingencyTableCheck){
 					contingencyTableCheck = new CheckBox;
 					contingencyTableCheck.label = "This is a Contingency Table";
@@ -90,6 +93,8 @@ package NonParametricTests
 			}
 			else if(currentState == 'editCsvState'){
 				
+				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.expectedTest;
+				
 				editCsvGrid.columns = loadColumnName();
 				if(enterDataFlag){
 					
@@ -106,6 +111,8 @@ package NonParametricTests
 				
 			}
 			else if(currentState == 'state2'){
+				panelHelpText.text = stringCollection.secondScreenText.commmonText.significaneText;
+				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
