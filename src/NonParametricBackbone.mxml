@@ -5,7 +5,7 @@
 		 currentState="state1"
 		 stateChangeComplete="backboneStateChangeCompleteHandler(event)"
 		 creationComplete="backbonecreationCompleteHandler(event)"
-		 contentBackgroundColor="0xeeecec">
+		 contentBackgroundColor="0xFFFFFF">
 	
 	<fx:Script>
 		<![CDATA[
@@ -32,9 +32,11 @@
 			protected var executableFile:File = new File("C:/Program Files/R/R-3.2.1/bin/Rscript.exe");
 			protected var nativeProcess:NativeProcess = new NativeProcess;
 			protected var args:Vector.<String>;
-			private var hypothesisResultFlag:Boolean;
+			protected var hypothesisResultFlag:Boolean;
 			
 			protected var contingencyTableResult:Array;
+			private var errorFlag:Boolean;
+			private var errorTmpString:String;
 			
 			protected function backboneStateChangeCompleteHandler(event:FlexEvent):void
 			{
@@ -122,9 +124,9 @@
 			
 			protected function onSelect(event:Event):void
 			{
+				currentState = 'showCsvState';
 				filePath.text = file.nativePath;
 				csvLoader = new LoadCsvFiles(file);
-				currentState = 'showCsvState';
 				csvGrid.columns= csvLoader.loadColumnName(csvGrid.maxWidth);
 				columnNames.source = csvLoader.columnNames;
 				csvGrid.dataProvider = csvLoader.readLines(numRowsDisplayed);
@@ -202,8 +204,9 @@
 			protected function onErrorData(event:ProgressEvent):void
 			{
 				// TODO Auto-generated method stub
-				var tmpString:String = nativeProcess.standardError.readUTFBytes(nativeProcess.standardError.bytesAvailable);
-				Alert.show(tmpString,"Error!");
+				errorFlag = true;
+				errorTmpString = nativeProcess.standardError.readUTFBytes(nativeProcess.standardError.bytesAvailable);
+				
 			}
 			
 			protected function onProcessExit(event:NativeProcessExitEvent):void
@@ -224,9 +227,11 @@
 						outputText.text += "The null hypothesis canot be rejected. The altenate hypothesis failed to reject the null hypothesis.";
 					}
 				}
+				if(errorFlag){
+					Alert.show(errorTmpString,"Error!");
+				}
 				else{
 					//tmpString = nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
-					
 					contingencyTableResult = loadCTablefromfile().split("\n");
 					currentState = 'editCsvState';
 				}
@@ -246,7 +251,8 @@
 					significanceTextInput.errorString = "Enter a value";
 				}
 				else{
-					csvLoader.closeStream();
+					if(!enterDataFlag)
+						csvLoader.closeStream();
 					significanceTextInput.errorString = "";
 					nativeProcessInfo.executable = executableFile;
 					nativeProcessInfo.arguments = args;
@@ -337,6 +343,7 @@
 				 height.showCsvState="100%"
 				 height.editCsvState="100%"
 				 width="100%"
+				 title="The Data"
 				 id="csvPanel">
 			<s:VGroup height="100%" 
 					  width="100%"
@@ -394,14 +401,14 @@
 						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup height="100%" width="30%" verticalAlign="middle">
-						<s:VGroup id="csvOptionsGroup" width="100%" height="95%" paddingLeft="5" gap="5">
+						<s:VGroup id="csvOptionsGroup" width="100%" height="100%" paddingLeft="5" gap="5">
 							<s:Spacer height="5%"/>
 							
 							<!--Add Childrem form the class that inherits this backbone-->
 							
 						</s:VGroup>
-						<s:HGroup width="100%">
-							<s:Spacer width="100%"/>
+						<s:HGroup width="100%" height="100%" verticalAlign="middle">
+							<s:Spacer width="90%"/>
 							<s:Button label="Proceed" 
 									  id="proceedButton"
 									  enabled="false"
@@ -418,10 +425,12 @@
 					<s:Label text="Contingency Table: " id="editCsvLabel" fontWeight="bold"/>
 					<s:Spacer height="3%"/>
 					<s:HGroup width="75%" height="100%" verticalAlign="middle" horizontalAlign="center" >
-						<s:DataGrid id="editCsvGrid" height="80%" visible="false"/>
+						<s:DataGrid id="editCsvGrid" height="100%" visible="false"/>
+						
+							<!-- Can Add other elements -->
 					</s:HGroup>
-					<s:HGroup width="100%">
-						<s:Spacer width="90%"/>
+					<s:HGroup width="100%" height="100%" verticalAlign="middle">
+						<s:Spacer width="85%"/>
 						<s:Button label="Proceed" 
 								  id="proceedButton2"
 								  enabled="true"
@@ -442,15 +451,16 @@
 				 height="35%"
 				 includeIn="[state2,resultState]"
 				 id="hypothesisPanel"
-				 title="The Hypothesis: ">
+				 title="The Hypothesis ">
 			<s:VGroup id="hypothesisPanelGroup" height="100%" width="100%" verticalAlign="middle" paddingLeft="7" gap="7">
 				
+				<s:Spacer height="5%"/>
 				<s:HGroup width="80%" verticalAlign="middle">
 					<s:Label text="Set a significance level: "/>
-					<s:TextInput id="significanceTextInput" />
+					<s:TextInput id="significanceTextInput" restrict="0-9 ."/>
 				</s:HGroup>			
 				<s:HGroup width="100%">
-					<s:Spacer width="100%"/>
+					<s:Spacer width="80%"/>
 					<s:Button id="computeButton"
 							  click="computeButtonClickHandler(event)"
 							  label="Compute"
@@ -470,7 +480,7 @@
 			  paddingRight="5"
 			  id="resultGroup">
 		
-		<s:Panel height="48%" width="100%" title="Process flow:" excludeFrom="resultState">
+		<s:Panel height="48%" width="100%" title="The Process flow" excludeFrom="resultState">
 			<s:TextArea id="processFlowText"
 						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
@@ -484,7 +494,7 @@
 		
 		<s:Spacer height="4%"/>
 		
-		<s:Panel height="48%" width="100%" title="Panel Help" excludeFrom="resultState">
+		<s:Panel height="48%" width="100%" title="The Help" excludeFrom="resultState">
 			<s:TextArea id="panelHelpText"
 						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"

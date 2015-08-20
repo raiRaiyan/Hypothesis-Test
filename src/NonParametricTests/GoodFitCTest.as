@@ -129,9 +129,6 @@ package NonParametricTests
 		{
 			// TODO Auto-generated method stub
 			if(contingencyTableCheck.selected){
-				selectColumnLabel.visible = false;
-				comboBox.visible = false;
-				missingValueInput.visible = false;
 				if(columnNamesforCTable.toString() == columnNames.toString()){
 					currentState = 'state2';
 					editCsvGrid.dataProvider = csvGrid.dataProvider;
@@ -141,6 +138,7 @@ package NonParametricTests
 					Alert.show("The selected file is not in the recommended format.\nThe Column names should be \"Level\", \"Observed Frequency\" and \"Expected Probability\".\n" +
 						"Please change the csv file to the correct format and upload again.","Unknown Format!");
 					contingencyTableCheck.selected = false;
+					
 				}
 			}
 			else{
@@ -235,6 +233,9 @@ package NonParametricTests
 				Alert.show("Expected Probabilities must sum to 1","Error");
 			}
 			else{
+				if(enterDataFlag){
+					editCsvGrid.dataProvider.removeItemAt(tmpdataprovider.length-1);
+				}
 				super.proceedButton2_clickHandler(event);
 			}
 		}

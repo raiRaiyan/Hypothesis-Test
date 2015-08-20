@@ -25,12 +25,16 @@ s|Button.mainScreenButton
 	fontWeight: bold;
 }
 s|Panel{
-	backgroundColor: #eeecec;
+	skinClass: ClassReference("assets.customPanel");
+	borderColor: #eae9c8;
+	borderAlpha: 1.0;
+	dropShadowVisible: false;
+	backgroundColor: #ffffff;
 }
 
 s|TextArea{
 	borderVisible: false; 
-	contentBackgroundColor: #F6F4F5;
+	contentBackgroundColor: #FFFFFF;
 }
 
 s|DataGrid{

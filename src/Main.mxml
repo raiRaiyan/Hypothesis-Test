@@ -8,7 +8,7 @@
 					   minWidth="800"
 					   currentState="landingPage"
 					   showStatusBar="false"
-					   backgroundColor="0xF6F4F5"
+					   backgroundColor="0xFCFCFC"
 					   applicationComplete="nativeWindow.maximize()"
 					   >
 	<fx:Script>
@@ -228,7 +228,7 @@
 						   y="{mainGroup.height*0.11}" 
 						   includeIn="subTestSelected"
 						   borderVisible="false"
-						   backgroundColor="0xF6F4F5"
+						   backgroundColor="0xFCFCFC"
 						  
 						   >
 		</s:BorderContainer>
