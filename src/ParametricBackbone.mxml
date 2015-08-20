@@ -157,17 +157,21 @@
 			{
 				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
 				Alert.show(err,"Error in getting the Column Names\nPlease check the CSV you have selected");
+				
+				//Set the error flag after capturing the error
+				//errorFlag = true;
 			}
 			
 			protected function onGetColnamesProcessExit(event:NativeProcessExitEvent):void
 			{
-				if(event.exitCode==0)
+				//enable User Interactions
+				cursorManager.removeBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = true;
+				
+				if(event.exitCode==0 && !errorFlag)
 				{
 					colnames = new ArrayCollection(dataIn.split(','));
 					dispatchEvent(new Event("colNamesAvailable"));
-					//enable User Interactions
-					cursorManager.removeBusyCursor();
-					mx.core.FlexGlobals.topLevelApplication.enabled = true;
 				}
 			}
 			
@@ -243,18 +247,19 @@
 			protected function onGetStatsErrorData(event:ProgressEvent):void
 			{
 				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
-				errorFlag=true;
 				Alert.show(err,"Unknown Error");
+				//Set the error flag when u capture any type of error
+				//errorFlag=true;
 			}
 			
 			protected function onGetStatsProcessExit(event:NativeProcessExitEvent):void
 			{
+				//Enable the application interaction
+				cursorManager.removeBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = true;
+				
 				if(event.exitCode==0)
 				{
-					//Enable the application interaction
-					cursorManager.removeBusyCursor();
-					mx.core.FlexGlobals.topLevelApplication.enabled = true;
-					
 					values = dataIn.split(",");
 					dispatchEvent(new Event("valuesAvailable"));
 					currentState = 'sampleData';
@@ -270,8 +275,7 @@
 			
 			protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 			{
-				//set the variable varName if its null
-				//set it as X or X-Y depending on the test
+				//set the varName if its not null
 				
 				//Inherited class must set the flag to true after it gets all the values
 				if(sampleDataFlag==true)
@@ -446,7 +450,6 @@
 					cursorManager.setBusyCursor();
 					mx.core.FlexGlobals.topLevelApplication.enabled = false;
 				}
-				
 			}
 			
 			public function onOutputData(event:ProgressEvent):void
@@ -459,19 +462,21 @@
 			public function onErrorData(event:ProgressEvent):void
 			{
 				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
-				errorFlag = true;
 				Alert.show(err,"Unknown error");
+				//Set the error flag on capture of an error
+				//errorFlag = true;
 			}
 			
 			public function onProcessExit(event:NativeProcessExitEvent):void
 			{
+				
+				//Enable the application interaction
+				cursorManager.removeBusyCursor();
+				mx.core.FlexGlobals.topLevelApplication.enabled = true;
+				
 				if(event.exitCode==0 && !errorFlag)
 				{
 					currentState='result';
-					
-					//Enable the application interaction
-					cursorManager.removeBusyCursor();
-					mx.core.FlexGlobals.topLevelApplication.enabled = true;
 					
 					//Set the text to the TextArea
 					output.visible = false;
@@ -582,10 +587,12 @@
 			<s:VGroup id="optionsPane" horizontalAlign="center" verticalAlign="middle"
 					  width="100%" height="100%" includeIn="landingPage">
 				<s:Button label="Upload a CSV" click="currentState='loadCSV';"
-						  width="35%" height="17%"/>
+						  width="35%" height="13%"/>
+				<s:Spacer height="5%"/>
+				<s:Label text="--------- (Or) ---------"/>
 				<s:Spacer height="5%"/>
 				<s:Button label="Enter the Data" click="currentState='sampleData';"
-						  width="35%" height="17%"/>
+						  width="35%" height="13%"/>
 			</s:VGroup>
 			
 			<s:VGroup id="csvPane" horizontalAlign="center" verticalAlign="middle"

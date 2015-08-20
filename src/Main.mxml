@@ -7,7 +7,7 @@
 					   currentState="landingPage"
 					   showStatusBar="false"
 					   backgroundColor="0xFCFCFC"
-					   applicationComplete="nativeWindow.maximize()"
+					   applicationComplete="mainWindows_applicationCompleteHandler(event)"
 					   >
 	<fx:Script>
 		<![CDATA[
@@ -17,6 +17,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
+			import mx.events.FlexEvent;
 			
 			import spark.components.gridClasses.GridColumn;
 			
@@ -63,6 +64,11 @@
 				currentState='landingPage';
 			}
 			
+			
+			protected function mainWindows_applicationCompleteHandler(event:FlexEvent):void
+			{
+				nativeWindow.maximize();
+			}
 			
 		]]>
 	</fx:Script>
