@@ -104,6 +104,9 @@
 			//Do not disturb this function
 			private function fileSelected(evt:Event):void
 			{
+				//Text for the help panel
+				help2.text = stringCollection.secondScreenText.commonText.parcolumnloadText;
+				
 				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
 				
 				csvLoader = new LoadCsvFiles(csvFile);
@@ -172,16 +175,47 @@
 					procInfo.workingDirectory = workingDir;
 					
 					//Event Handlers
-					proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
-					proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
-					proc.addEventListener(NativeProcessExitEvent.EXIT,onProcessExit);
+					proc.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onGetStatsOutputData);
+					proc.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onGetStatsErrorData);
+					proc.addEventListener(NativeProcessExitEvent.EXIT,onGetStatsProcessExit);
 					
 					errorFlag = false;
 					
 					proc.start(procInfo);
 					csvPaneDoneButton.enabled = false;
+					
+					//Set cursor to busy and disable the interactions
+					cursorManager.setBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = false;
 				}
-			}	
+			}
+			
+			protected function onGetStatsOutputData(event:ProgressEvent):void
+			{
+				dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
+			}
+			
+			protected function onGetStatsErrorData(event:ProgressEvent):void
+			{
+				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
+				errorFlag=true;
+				Alert.show(err,"Unknown Error");
+			}
+			
+			protected function onGetStatsProcessExit(event:NativeProcessExitEvent):void
+			{
+				if(event.exitCode==0)
+				{
+					//Enable the application interaction
+					cursorManager.removeBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = true;
+					
+					values = dataIn.split(",");
+					dispatchEvent(new Event("valuesAvailable"));
+					currentState = 'sampleData';
+					csvPaneDoneButton.enabled = true;
+				}
+			}
 			
 			protected function backToCSVButton_clickHandler(event:MouseEvent):void
 			{
@@ -267,6 +301,9 @@
 					popnDataNextButton.visible = false;
 					popnDataNextButton.includeInLayout = false;
 					
+					//Help for Hypothesis selection
+					help2.text = stringCollection.secondScreenText.commonText.parhypothesisText;
+					
 					//Edit pane enabling
 					popnDataEditButton.visible = true;
 					popnDataEditButton.includeInLayout = true;
@@ -334,6 +371,8 @@
 					}
 					altHypo.visible=true;
 					hypoFlag=true;
+					
+					help2.text = "Press compute to show the result\n";
 				}
 			}
 			
@@ -358,44 +397,36 @@
 					
 					proc.start(procInfo);
 					compute.enabled = false;
+					//Set cursor to busy and disable the interactions
+					cursorManager.setBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = false;
 				}
 				
 			}
 			
 			public function onOutputData(event:ProgressEvent):void
 			{
-				if(hypoFlag)
-				{
-					//Read the P-Value
-					dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
-					pValue = Number(dataIn);
-				}
-				else
-				{
-					dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
-				}
+				//Read the P-Value
+				dataIn = proc.standardOutput.readUTFBytes(proc.standardOutput.bytesAvailable);
+				pValue = Number(dataIn);
 			}
 			
 			public function onErrorData(event:ProgressEvent):void
 			{
-				/* obselete once column dataprovider contains all numeric
-				//Capture the error message
 				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
-				var naError:int = err.search("NA");
-				if(naError!=-1)
-				{
-					errorFlag = true;
-					Alert.show("Please select a numeric column","Oops.!!");
-				}*/
-				var err:String = proc.standardError.readUTFBytes(proc.standardError.bytesAvailable);
-				Alert.show(err,"Unknown Error");
+				errorFlag = true;
+				Alert.show(err,"Unknown error");
 			}
 			
 			public function onProcessExit(event:NativeProcessExitEvent):void
 			{
-				if(event.exitCode==0 && hypoFlag)
+				if(event.exitCode==0 && !errorFlag)
 				{
 					currentState='result';
+					
+					//Enable the application interaction
+					cursorManager.removeBusyCursor();
+					mx.core.FlexGlobals.topLevelApplication.enabled = true;
 					
 					//Set the text to the TextArea
 					output.visible = false;
@@ -419,13 +450,6 @@
 					
 					compute.enabled = true;
 				}
-				if(event.exitCode==0 && csvDoneFlag && !errorFlag)
-				{
-					values = dataIn.split(",");
-					dispatchEvent(new Event("valuesAvailable"));
-					currentState = 'sampleData';
-					csvPaneDoneButton.enabled = true;
-				}
 			}
 			
 			protected function imgViewer_clickHandler(event:MouseEvent):void
@@ -446,6 +470,8 @@
 					event.currentTarget.errorString = "That was an invalid number";
 				}
 			}
+			
+			
 			
 		]]>
 	</fx:Script>
