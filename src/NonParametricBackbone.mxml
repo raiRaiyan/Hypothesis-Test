@@ -215,13 +215,15 @@
 			
 			protected function onProcessExit(event:NativeProcessExitEvent):void
 			{
-				// TODO Auto-generated method stub
-				//var tmpString:String = "";
+				//Disable the UI and change the cursor to busy
 				cursorManager.removeBusyCursor();
 				mx.core.FlexGlobals.topLevelApplication.enabled = true;
+				
+				//if the 
 				if(hypothesisResultFlag){
 					//tmpString= nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
 					computeButton.enabled = true;
+					currentState = 'resultState';
 					
 					outputText.text = "\n\n\nP value for the given contingency table is " + tmpString;
 					imgViewer.source = "/working/chiSquare.png"
@@ -236,11 +238,14 @@
 					}
 				}
 				if(errorFlag){
+					if(errorTmpString.search("version")){
+					}
+					else{
 					Alert.show(errorTmpString,"Error!");
 					computeButton.enabled = true;
+					}
 				}
 				else{
-					//tmpString = nativeProcess.standardOutput.readUTFBytes(nativeProcess.standardOutput.bytesAvailable);
 					contingencyTableResult = loadCTablefromfile().split("\n");
 					currentState = 'editCsvState';
 				}
@@ -269,7 +274,7 @@
 					nativeProcessInfo.arguments = args;
 					nativeProcessInfo.workingDirectory = workingDirectory;
 					hypothesisResultFlag = true;
-					currentState = 'resultState';
+					
 					
 					nativeProcess.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
 					nativeProcess.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
@@ -294,6 +299,11 @@
 				return fileStream.readUTFBytes(file.size);
 			}
 			
+			protected function imgViewerClickHandler(event:MouseEvent):void
+			{
+				var img:File = File.applicationDirectory.resolvePath("working/outputImg.png");
+				img.openWithDefaultApplication();
+			}
 		]]>
 	</fx:Script>
 	
@@ -334,7 +344,9 @@
 		</s:Transition>
 		
 		<s:Transition fromState="state2" toState="resultState">
-			<s:Fade targets="{[outputText,imgViewer]}"/>
+			<s:Parallel>
+				<s:Fade targets="{[outputText,imgViewer]}"/>
+			</s:Parallel>
 		</s:Transition>
 	</s:transitions>
 	<fx:Declarations>
@@ -370,10 +382,11 @@
 						  excludeFrom="[editCsvState,state2,resultState]">
 					
 					<s:TextInput id="filePath"
-								 width="70%" 
+								 width="70%"
+								 height="30"
 								 prompt="Enter the file directory" 
 								 editable="false"  />
-					<s:Spacer width="10%"/>
+					<s:Spacer width="5%"/>
 					<s:Button id="browsefButton" 
 							  label="Browse"
 							  click="browsefButtonClickHandler(event)" />
@@ -384,7 +397,7 @@
 							 id="orLabel"
 							 visible="false"/>
 					<s:Spacer height="20%" includeIn="state1"/>
-					<s:Label text="No File Selected" id="displayString" visible="false"/>
+					<s:Label text="No File Selected" id="displayString" visible="false" fontSize="14" fontWeight="bold"/>
 					<s:Button label="Enter the data"
 							  styleName="customButton" 
 							  id="dataButton"
@@ -494,17 +507,18 @@
 			  paddingRight="5"
 			  id="resultGroup">
 		
-		<s:Panel height="48%" width="100%" title="The Process flow" excludeFrom="resultState">
+		<s:Panel height="48%" width="100%" title="The Process flow" title.resultState="The Output" >
 			<s:TextArea id="processFlowText"
 						text="{stringCollection.secondScreenText.flowhelpText.independenceCTest}"
 						borderVisible="false"
 						width="100%"
-						height="100%"/>
+						height="100%"
+						excludeFrom="resultState"/>
+			
+			<s:TextArea width="100%" height="100%"
+						id="outputText" 
+						includeIn="resultState"/>
 		</s:Panel>
-		
-		<s:TextArea width="100%" height="48%"
-					id="outputText" 
-					includeIn="resultState"/>
 		
 		<s:Spacer height="4%"/>
 		
@@ -519,7 +533,8 @@
 		
 		<s:Image width="100%" height="48%"
 				 includeIn="resultState"
-				 id="imgViewer"/>
+				 id="imgViewer"
+				 click="imgViewerClickHandler(event)"/>
 		
 		
 	</s:VGroup>
