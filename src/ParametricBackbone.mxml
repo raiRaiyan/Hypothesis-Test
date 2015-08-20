@@ -112,6 +112,10 @@
 				csvLoader = new LoadCsvFiles(csvFile);
 				csvData.columns= csvLoader.loadColumnName(csvData.maxWidth);
 				
+				//reset the colnames array
+				colnames = null;
+				dispatchEvent(new Event("colNamesAvailable"));
+				
 				//R Script to get only the numeric column names
 				proc=new NativeProcess();
 				procInfo = new NativeProcessStartupInfo();
@@ -564,8 +568,8 @@
 		</s:Transition>
 		
 		<s:Transition fromState="hypotheses" toState="result">
-			<s:Parallel targets="{[output,imgViewer]}">
-				<s:AddAction targets="{[output,imgViewer]}"/>
+			<s:Parallel targets="{[outputPane,imgViewer]}">
+				<s:AddAction targets="{[outputPane,imgViewer]}"/>
 				<s:Move3D zFrom="-100" duration="700"/>
 				<s:Fade duration="500"/>
 			</s:Parallel>
@@ -599,7 +603,7 @@
 					  width="100%" height="100%" includeIn="loadCSV">
 				<s:HGroup width="95%" height="15%" horizontalAlign="left" verticalAlign="middle">
 					<s:TextInput width="70%" height="30" id="csvPath" prompt="Browse for the file"
-								 fontSize="14" editable="false"/>
+								 editable="false"/>
 					<s:Spacer width="5%"/>
 					<s:Button id="browseButton" label="Browse" click="browseButton_clickHandler(event)"/>
 				</s:HGroup>
@@ -661,14 +665,14 @@
 				 title="Population Data">
 			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
 				<s:VGroup id="PopnParams" horizontalAlign="left" verticalAlign="middle"
-						  width="70%" height="85%">
+						  width="80%" height="85%">
 					
 					<s:Label id="popnMeanLabel" text="Population mean"/>
-					<s:TextInput id="popnMeanInput" width="60%" prompt="Enter a numeric value"
+					<s:TextInput id="popnMeanInput" width="70%" prompt="Enter a numeric value"
 								 restrict="0-9." focusOut="checkNumber(event)"/>
 					<s:Spacer height="5%"/>
 					<s:Label text="Significance Value"/>
-					<s:TextInput id="sigLevelInput" width="60%" prompt="Enter a value between 0-1"
+					<s:TextInput id="sigLevelInput" width="70%" prompt="Enter a value between 0-1"
 								 restrict="0-9." text="0.05" focusOut="checkNumber(event)"/>
 					<!-- Placeholder for Population Data elements-->
 					
@@ -762,9 +766,11 @@
 			
 		</s:Panel>
 		
-		<s:TextArea width="85%" height="38%" x="{helpResultPane.width*0.07}"
-					id="output" y="{helpResultPane.height*0.05}"
-					includeIn="result"/>
+		<s:Panel width="85%" height="38%" x="{helpResultPane.width*0.07}"
+				 y="{helpResultPane.height*0.05}" title="The Output"
+				 includeIn="result" id="outputPane">
+			<s:TextArea id="output"	width="100%" height="100%"/>
+		</s:Panel>
 		<s:Image width="96%" height="48%" includeIn="result"
 				 x="{helpResultPane.width*0.02}" y="{helpResultPane.height*0.45}"
 				 id="imgViewer" click="imgViewer_clickHandler(event)"/>
