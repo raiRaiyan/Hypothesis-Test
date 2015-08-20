@@ -105,7 +105,7 @@
 			private function fileSelected(evt:Event):void
 			{
 				//Text for the help panel
-				help2.text = stringCollection.secondScreenText.commonText.parcolumnloadText;
+				help2.text += "\n"+stringCollection.secondScreenText.commonText.parcolumnloadText;
 				
 				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
 				
@@ -119,6 +119,9 @@
 				//R Script to get only the numeric column names
 				proc=new NativeProcess();
 				procInfo = new NativeProcessStartupInfo();
+				
+				//Reset Data-In variable
+				dataIn = null;
 				
 				rFile = File.applicationDirectory.resolvePath("working/getColnames.R").nativePath;
 				args = new Vector.<String>;
@@ -222,6 +225,9 @@
 				{
 					proc=new NativeProcess();
 					procInfo = new NativeProcessStartupInfo();
+					
+					//Reset Data-In variable
+					dataIn = null;
 					
 					procInfo.executable = exe;
 					procInfo.arguments = args;
@@ -438,6 +444,9 @@
 				{
 					proc=new NativeProcess();
 					procInfo = new NativeProcessStartupInfo();
+					
+					//Reset Data-In variable
+					dataIn = null;
 					
 					procInfo.executable = exe;
 					procInfo.arguments = args;
