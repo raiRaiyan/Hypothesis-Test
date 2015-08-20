@@ -43,7 +43,7 @@ package ParametricTests
 		
 		
 		
-		//Panel1Final
+		//sampleDataFinal
 		private var sample1MeanLabel:Label;
 		private var sample1MeanInput:TextInput;
 		private var spacer1:Spacer;
@@ -76,16 +76,16 @@ package ParametricTests
 					addToCSVPane();
 				}
 			}
-			if(currentState == 'state1Final')
+			if(currentState == 'sampleData')
 			{
 				if(!backToCSVFlag)
 				{
-					addToPanel1Final();
+					addToSampleDataFinal();
 				}
 			}
-			if(currentState == 'state2')
+			if(currentState == 'popnData')
 			{
-				addToPanel2();
+				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
 		}
@@ -233,7 +233,7 @@ package ParametricTests
 			
 		}
 		
-		private function addToPanel1Final():void
+		private function addToSampleDataFinal():void
 		{
 			//Mean value Input
 			sample1MeanLabel = new Label();
@@ -327,10 +327,10 @@ package ParametricTests
 				sample2SdInput.text = values[4];
 				sample2SizeInput.text = values[5];
 			}
-			this.addEventListener("valuesAvailable",updatePanel1);
+			this.addEventListener("valuesAvailable",updatesampleData);
 		}
 		
-		protected function updatePanel1(event:Event):void
+		protected function updatesampleData(event:Event):void
 		{
 			if(column1SelectedFlag&&column2SelectedFlag)
 			{
@@ -345,7 +345,7 @@ package ParametricTests
 			
 		}
 		
-		private function checksOnPanel1():Boolean
+		private function checksOnsampleData():Boolean
 		{
 			var result:Boolean = true;
 			if(sample1MeanInput.text =="")
@@ -389,29 +389,29 @@ package ParametricTests
 			return result;
 		}
 		
-		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnPanel1())
+			if(checksOnsampleData())
 			{
 				if(varName == null)
 				{
 					varName = "Mean(X)-Mean(Y)";
 				}
-				panel1Flag = true;
+				sampleDataFlag = true;
 				sample1MeanInput.editable = false;
 				sample1SdInput.editable = false;
 				sample1SizeInput.editable = false;
 				sample2MeanInput.editable = false;
 				sample2SdInput.editable = false;
 				sample2SizeInput.editable = false;
-				super.panel1NextButton_clickHandler(event);
+				super.sampleDataNextButton_clickHandler(event);
 			}		
 			
 		}
 		
-		override protected function panel1EditButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataEditButton_clickHandler(event:MouseEvent):void
 		{
-			panel1Flag = false;
+			sampleDataFlag = false;
 			sample1MeanInput.editable = true;
 			sample1SdInput.editable = true;
 			sample1SizeInput.editable = true;
@@ -419,15 +419,15 @@ package ParametricTests
 			sample2SdInput.editable = true;
 			sample2SizeInput.editable = true;
 			
-			panel1EditButton.enabled = false;
-			panel1DoneButton.enabled = true;
+			sampleDataEditButton.enabled = false;
+			sampleDataDoneButton.enabled = true;
 		}
 		
-		override protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataDoneButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnPanel1())
+			if(checksOnsampleData())
 			{
-				panel1Flag = true;
+				sampleDataFlag = true;
 				sample1MeanInput.editable = false;
 				sample1SdInput.editable = false;
 				sample1SizeInput.editable = false;
@@ -435,33 +435,33 @@ package ParametricTests
 				sample2SdInput.editable = false;
 				sample2SizeInput.editable = false;
 				
-				panel1EditButton.enabled = true;
-				panel1DoneButton.enabled = false;
+				sampleDataEditButton.enabled = true;
+				sampleDataDoneButton.enabled = false;
 			}
 		}
 		
-		private function addToPanel2():void
+		private function addToPopnData():void
 		{
 			popnMeanLabel.text="Difference in Population Means";
 		}
 		
 		override protected function compute_clickHandler(event:MouseEvent):void
 		{	
-			if(!panel1Flag)
+			if(!sampleDataFlag)
 			{
-			Alert.show("Please complete the editing in the Panel1\nAnd try again","Editing in progress!!");
+			Alert.show("Please complete the editing in the sampleData\nAnd try again","Editing in progress!!");
 			}
 			
-			if(!panel2Flag)
+			if(!popnDataFlag)
 			{
-				Alert.show("Please complete the editing in the Panel2\nAnd try again","Editing in progress!!");
+				Alert.show("Please complete the editing in the popnData\nAnd try again","Editing in progress!!");
 			}
 			
 			if(!hypoFlag)
 			{
 				Alert.show("Please select the hypotheses from the given list","Hypotheses not selected!!");
 			}
-			if(panel1Flag&&panel2Flag&&hypoFlag)
+			if(sampleDataFlag&&popnDataFlag&&hypoFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;
 				testFlag = "1";

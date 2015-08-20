@@ -43,7 +43,7 @@ package ParametricTests
 		
 		
 		
-		//Panel1Final
+		//sampleDataFinal
 		private var sampleMeanLabel:Label;
 		private var sampleMeanInput:TextInput;
 		private var spacer1:Spacer;
@@ -68,12 +68,12 @@ package ParametricTests
 			{
 				if(!backToCSVFlag)
 				{
-					addToPanel1Final();
+					addToSampleDataFinal();
 				}
 			}
 			if(currentState == 'state2')
 			{
-				addToPanel2();
+				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
 		}
@@ -222,7 +222,7 @@ package ParametricTests
 			
 		}
 		
-		private function addToPanel1Final():void
+		private function addToSampleDataFinal():void
 		{
 			//Mean value Input
 			sampleMeanLabel = new Label();
@@ -273,11 +273,11 @@ package ParametricTests
 				sampleSdInput.text = values[1];
 				sampleSizeInput.text = values[2];
 			}
-			this.addEventListener("valuesAvailable",updatePanel1);
+			this.addEventListener("valuesAvailable",updatesampleData);
 			
 		}
 		
-		protected function updatePanel1(event:Event):void
+		protected function updatesampleData(event:Event):void
 		{
 			if(column1SelectedFlag&&column2SelectedFlag)
 			{
@@ -288,7 +288,7 @@ package ParametricTests
 			
 		}
 		
-		private function checksOnPanel1():Boolean
+		private function checksOnsampleData():Boolean
 		{
 			var result:Boolean = true;
 			if(sampleMeanInput.text =="")
@@ -312,69 +312,69 @@ package ParametricTests
 			return result;
 		}
 		
-		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataNextButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnPanel1())
+			if(checksOnsampleData())
 			{
 				if(varName == null)
 				{
 					varName = "Mean(X-Y)";
 				}
-				panel1Flag = true;
+				sampleDataFlag = true;
 				sampleMeanInput.editable = false;
 				sampleSdInput.editable = false;
 				sampleSizeInput.editable = false;
-				super.panel1NextButton_clickHandler(event);
+				super.sampleDataNextButton_clickHandler(event);
 			}			
 		}
 		
-		override protected function panel1EditButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataEditButton_clickHandler(event:MouseEvent):void
 		{
-			panel1Flag = false;
+			sampleDataFlag = false;
 			sampleMeanInput.editable = true;
 			sampleSdInput.editable = true;
 			sampleSizeInput.editable = true;
 			
-			panel1EditButton.enabled = false;
-			panel1DoneButton.enabled = true;
+			sampleDataEditButton.enabled = false;
+			sampleDataDoneButton.enabled = true;
 		}
 		
-		override protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+		override protected function sampleDataDoneButton_clickHandler(event:MouseEvent):void
 		{
-			if(checksOnPanel1())
+			if(checksOnsampleData())
 			{
-				panel1Flag = true;
+				sampleDataFlag = true;
 				sampleMeanInput.editable = false;
 				sampleSdInput.editable = false;
 				sampleSizeInput.editable = false;
 				
-				panel1EditButton.enabled = true;
-				panel1DoneButton.enabled = false;
+				sampleDataEditButton.enabled = true;
+				sampleDataDoneButton.enabled = false;
 			}
 		}
 		
-		private function addToPanel2():void
+		private function addToPopnData():void
 		{
 			popnMeanLabel.text="Mean of Population Differences";
 		}
 		
 		override protected function compute_clickHandler(event:MouseEvent):void
 		{
-			if(!panel1Flag)
+			if(!sampleDataFlag)
 			{
-				Alert.show("Please complete the editing in the Panel1\nAnd try again","Editing in progress!!");
+				Alert.show("Please complete the editing in the sampleData\nAnd try again","Editing in progress!!");
 			}
 			
-			if(!panel2Flag)
+			if(!popnDataFlag)
 			{
-				Alert.show("Please complete the editing in the Panel2\nAnd try again","Editing in progress!!");
+				Alert.show("Please complete the editing in the popnData\nAnd try again","Editing in progress!!");
 			}
 			
 			if(!hypoFlag)
 			{
 				Alert.show("Please select the hypotheses from the given list","Hypotheses not selected!!");
 			}
-			if(panel1Flag&&panel2Flag&&hypoFlag)
+			if(sampleDataFlag&&popnDataFlag&&hypoFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;
 				testFlag = "2";
