@@ -50,28 +50,29 @@ package ParametricTests
 		override protected function backbone_stateChangeCompleteHandler(event:FlexEvent):void
 		{
 			if(currentState == 'loadCSV')
-			{
+			{	
 				if(!backToCSVFlag)
 				{
 					addToCSVPane();
 				}
 			}
 			if(currentState == 'sampleData')
-			{
+			{	
 				if(!backToCSVFlag)
 				{
 					addToSampleData();
 				}
 			}
 			if(currentState == 'popnData')
-			{
+			{	
 				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
 		}
 		
 		private function addToCSVPane():void
-		{
+		{	
+			
 			//Column selection combo box
 			columnSelectLabel = new Label();
 			columnSelectLabel.text = "Please select a column";

@@ -3,14 +3,14 @@
 <textData>
 		<mainScreenText>
 			<initialtext> 
-Do you have a hypohtesis? Not sure if the hypothesis is valid? Want to test the hypothesis based on a parameter like mean or want to test a categorical data? You can do it all here.
+Do you have a hypothesis? Not sure if the hypothesis is valid? Want to test the hypothesis based on a parameter like mean or want to test a categorical data? You can do it all here.
 
 
 Please select the type of test you want to conduct. 
 
-Parametric Test:      More suited for numerical data.
+Parametric Test:  More suited for numerical data.
 	
-Non-Paramteric Test:  More suited for categorical data.
+Non-Parametric Test:  More suited for categorical data.
 			</initialtext>
 			
 			<parametricbuttontext>
@@ -79,7 +79,7 @@ For this test, you need to provide the observed and expected values/distribution
 				</filepathText>
 				
 				<parcolumnloadText>Please Select the column(s) you want to conduct the test on. 
-								The values in this column(s) must be numeric.
+								The values in the column(s) must be numeric.
 				</parcolumnloadText>
 				
 				<nparcolumnloadText>
@@ -95,11 +95,11 @@ For this test, you need to provide the observed and expected values/distribution
 				</missingvalText>
 			
 			
-				<parhyptohesisText>
+				<parhypothesisText>
 				Please complete the expression for null hypothesis.
 				The choice of the expression determines the alternate hypothesis.
 				The test will tell you if the null hypothesis can be rejected.
-				</parhyptohesisText>
+				</parhypothesisText>
 				
 				<nparhypothesisText>
 				The hypotheses appear on the screen. These have been fixed by the data and the column you have selected. Please confirm to move to the next panel.
@@ -124,8 +124,9 @@ For this test, you need to provide the observed and expected values/distribution
 			<onesamplebuttontext>
 				
 				<sampleText>
-				Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. 
-				Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
+* Please select "Enter Values" if you wish to enter Sample mean, size and standard deviation. 
+
+* Please select "Upload data" if you wish to upload the sample data. The sample size, mean and standard deviation will be calculated.
 				</sampleText>
 				
 				
@@ -155,12 +156,13 @@ For this test, you need to provide the observed and expected values/distribution
 			<pairedbuttontext>
 			
 				<sampleText>
-				Please select "Enter Values" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
-				Please select "Upload data" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
+* Please select "Enter Values" if you wish to enter Sample means, sizes and standard deviations. You need to provide these for two samples. 
+
+* Please select "Upload data" if you wish to upload the sample data. The sample sizes, means and standard deviations will be calculated.
 				</sampleText>
 				
 				<populationText>
-				Please enter the mean of the population. The value should be numeric.
+				Please enter the mean of the population differences. The value should be numeric.
 				</populationText>
 			
 			</pairedbuttontext>
