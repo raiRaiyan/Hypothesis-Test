@@ -180,6 +180,16 @@ package ParametricTests
 				else
 				{
 					//Show an error icon
+					if(replace1Input.text=="")
+					{
+						replace1Input.errorString="Enter a Value";
+					}
+					
+					if(replace2Input.text=="")
+					{
+						replace2Input.errorString="Enter a Value";
+					}
+					
 				}
 			}
 			
@@ -266,7 +276,8 @@ package ParametricTests
 			else
 			{
 				check1 = false;
-				//Show an error icon
+				
+				sampleMeanInput.errorString="Enter a value";//Show an error icon
 			}
 			
 			if(sampleSdInput.text!="")
@@ -276,6 +287,7 @@ package ParametricTests
 			else
 			{
 				check2 = false;
+				sampleSdInput.errorString="Enter a value";
 				//Show an error icon
 			}
 			
@@ -286,6 +298,7 @@ package ParametricTests
 			else
 			{
 				check3 = false;
+				sampleSizeInput.errorString="Enter a value";
 				//Show an error icon
 			}
 			

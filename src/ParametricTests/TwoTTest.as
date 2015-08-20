@@ -191,6 +191,15 @@ package ParametricTests
 				else
 				{
 					//Show an error icon
+					if(replace1Input.text=="")
+					{
+						replace1Input.errorString="Enter a Value";
+					}
+					
+					if(replace2Input.text=="")
+					{
+						replace2Input.errorString="Enter a Value";
+					}
 				}
 			}
 			
@@ -326,6 +335,7 @@ package ParametricTests
 			else
 			{
 				check1 = false;
+				sample1MeanInput.errorString="Enter a Value";
 				//Show an error icon
 			}
 			
@@ -336,6 +346,7 @@ package ParametricTests
 			else
 			{
 				check2 = false;
+				sample1SdInput.errorString="Enter a Value";
 				//Show an error icon
 			}
 			
@@ -346,6 +357,7 @@ package ParametricTests
 			else
 			{
 				check3 = false;
+				sample1SizeInput.errorString="Enter a Value";
 				//Show an error icon
 			}
 			if(sample2MeanInput.text!="")
@@ -355,6 +367,7 @@ package ParametricTests
 			else
 			{
 				check4 = false;
+				sample2MeanInput.errorString="Enter a Value";
 				//Show an error icon
 			}
 			
@@ -365,6 +378,7 @@ package ParametricTests
 			else
 			{
 				check5 = false;
+				sample2SdInput.errorString="Enter a Value";
 				//Show an error icon
 			}
 			
@@ -375,6 +389,7 @@ package ParametricTests
 			else
 			{
 				check6 = false;
+				sample2SizeInput.errorString="Enter a Value";
 				//Show an error icon
 			}
 			
