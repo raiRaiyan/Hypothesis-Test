@@ -132,6 +132,7 @@ package ParametricTests
 				}
 			}
 			
+			//write the structure of the R script
 			if(csvDoneFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/getStats.R").nativePath;

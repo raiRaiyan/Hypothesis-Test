@@ -74,7 +74,6 @@ if(tails==0)
 p <- p + theme(panel.grid.major=element_blank(), 
                panel.grid.minor=element_blank(),
                panel.background=element_rect(fill="#eae9c8") )
-plot(p)
 ggsave("outputImg.png",width = 8,height = 8)
 
-paste0(cat(pValue))
+cat(paste0(pValue))

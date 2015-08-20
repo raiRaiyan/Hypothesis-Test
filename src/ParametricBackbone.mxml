@@ -128,7 +128,7 @@
 				rowCountLabel.text = (csvLoader.numRows-csvData.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
 				
 				csvData.visible=true;
-				rowsLabel.visible = false;
+				rowsLabel.visible = true;
 				columnSelectionPane.visible = true;
 				browseButton.enabled = true;
 			}

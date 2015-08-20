@@ -77,7 +77,7 @@ package assets
 		}
 		
 		public function loadColumnName(width:uint):ArrayList{
-			var str:String= fileStream.readUTFLine()
+			var str:String= fileStream.readUTFLine();
 			colname = str.split(",");
 			var col:ArrayList=new ArrayList;
 			for(var i:int=0; i<colname.length;i++){
@@ -87,7 +87,7 @@ package assets
 					datag_col.width = int(width/(colname.length+1));
 				}
 				else{
-				datag_col.width = 70;
+					datag_col.width = 70;
 				}
 				col.addItem(datag_col);
 			}
@@ -102,7 +102,6 @@ package assets
 			var lines:int = 0;
 			while(lines< numLines){
 				if(fileStream.bytesAvailable){
-					
 					if(rowCount == 0){
 						numRowsDisplayed = numLines;
 						previousPositionArray.push(fileStream.position);
