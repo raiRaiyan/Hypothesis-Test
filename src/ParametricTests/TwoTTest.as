@@ -3,10 +3,12 @@ package ParametricTests
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import flash.events.FocusEvent;
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;
+	import mx.controls.Alert;
 	
 	import spark.components.ComboBox;
 	import spark.components.Label;
@@ -107,6 +109,7 @@ package ParametricTests
 			replace1Input.prompt="Enter a Numeric Value";
 			replace1Input.restrict="0-9.";
 			replace1Input.percentWidth=70;
+			replace1Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace1Input);
 			
 			
@@ -130,6 +133,7 @@ package ParametricTests
 			replace2Input.prompt="Enter a Numeric Value";
 			replace2Input.restrict="0-9.";
 			replace2Input.percentWidth=70;
+			replace2Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace2Input);
 			
 			
@@ -159,7 +163,7 @@ package ParametricTests
 				col1CB.selectedIndex=-1;
 			}
 			else
-			{
+			{	replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
 			}
@@ -172,9 +176,10 @@ package ParametricTests
 				col2CB.selectedIndex=-1;
 			}
 			else
-			{
+			{	replace2Input.text = "0";
 				varName = "Mean("+colnames[col2CB.selectedIndex]+")-Mean("+colnames[col1CB.selectedIndex]+")";
 				column2SelectedFlag = true;
+				csvPaneDoneButton.enabled = true;
 			}
 		}
 		
@@ -232,10 +237,7 @@ package ParametricTests
 			sample1MeanInput.prompt="Enter a Numeric Value";
 			sample1MeanInput.restrict="0-9.";
 			sample1MeanInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sample1MeanInput.text = values[0];
-			}
+			sample1MeanInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample1MeanInput);
 			
 			spacer1 = new Spacer();
@@ -251,10 +253,7 @@ package ParametricTests
 			sample1SdInput.prompt="Enter a numeric value";
 			sample1SdInput.restrict="0-9.";
 			sample1SdInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sample1SdInput.text = values[1];
-			}
+			sample1SdInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample1SdInput);
 			
 			spacer2 = new Spacer();
@@ -270,10 +269,7 @@ package ParametricTests
 			sample1SizeInput.prompt="Enter an integer value";
 			sample1SizeInput.restrict="0-9";
 			sample1SizeInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sample1SizeInput.text = values[2];
-			}
+			sample1SizeInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample1SizeInput);
 			
 			
@@ -286,10 +282,7 @@ package ParametricTests
 			sample2MeanInput.prompt="Enter a Numeric Value";
 			sample2MeanInput.restrict="0-9.";
 			sample2MeanInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sample2MeanInput.text = values[3];
-			}
+			sample2MeanInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample2MeanInput);
 			
 			
@@ -302,109 +295,142 @@ package ParametricTests
 			sample2SdInput.prompt="Enter a numeric value";
 			sample2SdInput.restrict="0-9.";
 			sample2SdInput.percentWidth=70;
-			if(column1SelectedFlag&&column2SelectedFlag)
-			{
-				sample2SdInput.text = values[4];
-			}
+			sample2SdInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			SampleParams.addElement(sample2SdInput);
 			
 			
 			
 			//Sample size input
 			sample2SizeLabel = new Label();
-			sample2SizeLabel.text = "Sample Size:";
+			sample2SizeLabel.text = "Size of the Second Sample:";
 			SampleParams.addElement(sample2SizeLabel);
 			
 			sample2SizeInput = new TextInput();
 			sample2SizeInput.prompt="Enter an integer value";
 			sample2SizeInput.restrict="0-9";
 			sample2SizeInput.percentWidth=70;
+			sample2SizeInput.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
+			SampleParams.addElement(sample2SizeInput);
+			
 			if(column1SelectedFlag&&column2SelectedFlag)
-			{
+			{	sample1MeanInput.text = values[0];
+				sample1SdInput.text = values[1];
+				sample1SizeInput.text = values[2];
+				sample2MeanInput.text = values[3];
+				sample2SdInput.text = values[4];
 				sample2SizeInput.text = values[5];
 			}
-			SampleParams.addElement(sample2SizeInput);
+			this.addEventListener("valuesAvailable",updatePanel1);
+		}
+		
+		protected function updatePanel1(event:Event):void
+		{
+			if(column1SelectedFlag&&column2SelectedFlag)
+			{
+				sample1MeanInput.text = values[0];
+				sample1SdInput.text = values[1];
+				sample1SizeInput.text = values[2];
+				sample2MeanInput.text = values[3];
+				sample2SdInput.text = values[4];
+				sample2SizeInput.text = values[5];
+				
+			}
+			
+		}
+		
+		private function checksOnPanel1():Boolean
+		{
+			var result:Boolean = true;
+			if(sample1MeanInput.text =="")
+			{
+				//Show an error icon
+				sample1MeanInput.errorString = "Enter a value";
+				result = false;
+			}
+			if(sample1SdInput.text=="")
+			{
+				//Show an error icon
+				sample1SdInput.errorString = "Enter a value";
+				result = false;
+			}
+			if(sample1SizeInput.text=="")
+			{
+				//Show an error icon
+				sample1SizeInput.errorString = "Enter a value";
+				result = false;
+			}
+			var result:Boolean = true;
+			if(sample2MeanInput.text =="")
+			{
+				//Show an error icon
+				sample2MeanInput.errorString = "Enter a value";
+				result = false;
+			}
+			if(sample2SdInput.text=="")
+			{
+				//Show an error icon
+				sample2SdInput.errorString = "Enter a value";
+				result = false;
+			}
+			if(sample2SizeInput.text=="")
+			{
+				//Show an error icon
+				sample2SizeInput.errorString = "Enter a value";
+				result = false;
+			}
+			
+			return result;
 		}
 		
 		override protected function panel1NextButton_clickHandler(event:MouseEvent):void
 		{
-			if(sample1MeanInput.text!="")
+			if(checksOnPanel1())
 			{
-				var check1:Boolean = true;
-			}
-			else
-			{
-				check1 = false;
-				sample1MeanInput.errorString="Enter a Value";
-				//Show an error icon
-			}
-			
-			if(sample1SdInput.text!="")
-			{
-				var check2:Boolean = true;
-			}
-			else
-			{
-				check2 = false;
-				sample1SdInput.errorString="Enter a Value";
-				//Show an error icon
-			}
-			
-			if(sample1SizeInput.text!="")
-			{
-				var check3:Boolean = true;
-			}
-			else
-			{
-				check3 = false;
-				sample1SizeInput.errorString="Enter a Value";
-				//Show an error icon
-			}
-			if(sample2MeanInput.text!="")
-			{
-				var check4:Boolean = true;
-			}
-			else
-			{
-				check4 = false;
-				sample2MeanInput.errorString="Enter a Value";
-				//Show an error icon
-			}
-			
-			if(sample2SdInput.text!="")
-			{
-				var check5:Boolean = true;
-			}
-			else
-			{
-				check5 = false;
-				sample2SdInput.errorString="Enter a Value";
-				//Show an error icon
-			}
-			
-			if(sample2SizeInput.text!="")
-			{
-				var check6:Boolean = true;
-			}
-			else
-			{
-				check6 = false;
-				sample2SizeInput.errorString="Enter a Value";
-				//Show an error icon
-			}
-			
-			
-			
-			if(check1&&check2&&check3&&check4&&check5&&check6)
-			{	
-				if (varName == null)
+				if(varName == null)
 				{
-					varName = "Mean(X1)-Mean(X2)"
+					varName = "Mean(X)-Mean(Y)";
 				}
 				panel1Flag = true;
+				sample1MeanInput.editable = false;
+				sample1SdInput.editable = false;
+				sample1SizeInput.editable = false;
+				sample2MeanInput.editable = false;
+				sample2SdInput.editable = false;
+				sample2SizeInput.editable = false;
 				super.panel1NextButton_clickHandler(event);
-			}
+			}		
 			
+		}
+		
+		override protected function panel1EditButton_clickHandler(event:MouseEvent):void
+		{
+			panel1Flag = false;
+			sample1MeanInput.editable = true;
+			sample1SdInput.editable = true;
+			sample1SizeInput.editable = true;
+			sample2MeanInput.editable = true;
+			sample2SdInput.editable = true;
+			sample2SizeInput.editable = true;
+			
+			panel1EditButton.enabled = false;
+			panel1DoneButton.enabled = true;
+		}
+		
+		override protected function panel1DoneButton_clickHandler(event:MouseEvent):void
+		{
+			if(checksOnPanel1())
+			{
+				panel1Flag = true;
+				sample1MeanInput.editable = false;
+				sample1SdInput.editable = false;
+				sample1SizeInput.editable = false;
+				sample2MeanInput.editable = false;
+				sample2SdInput.editable = false;
+				sample2SizeInput.editable = false;
+				
+				panel1EditButton.enabled = true;
+				panel1DoneButton.enabled = false;
+			}
 		}
 		
 		private function addToPanel2():void
@@ -413,7 +439,21 @@ package ParametricTests
 		}
 		
 		override protected function compute_clickHandler(event:MouseEvent):void
-		{
+		{	
+			if(!panel1Flag)
+			{
+			Alert.show("Please complete the editing in the Panel1\nAnd try again","Editing in progress!!");
+			}
+			
+			if(!panel2Flag)
+			{
+				Alert.show("Please complete the editing in the Panel2\nAnd try again","Editing in progress!!");
+			}
+			
+			if(!hypoFlag)
+			{
+				Alert.show("Please select the hypotheses from the given list","Hypotheses not selected!!");
+			}
 			if(panel1Flag&&panel2Flag&&hypoFlag)
 			{
 				rFile = File.applicationDirectory.resolvePath("working/t-test.R").nativePath;
