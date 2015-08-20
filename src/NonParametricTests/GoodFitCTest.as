@@ -24,6 +24,7 @@ package NonParametricTests
 	import spark.components.TextInput;
 	import spark.components.gridClasses.DefaultGridItemEditor;
 	import spark.components.gridClasses.GridColumn;
+	import spark.events.GridItemEditorEvent;
 	import spark.events.IndexChangeEvent;
 	
 	public class GoodFitCTest extends NonParametricBackbone
@@ -92,7 +93,9 @@ package NonParametricTests
 				if(enterDataFlag){
 					
 					editCsvGrid.editable = true;
-					editCsvGrid.dataProvider = createDataProvider();
+					editCsvGrid.dataProvider = new ArrayCollection;
+					editCsvGrid.dataProvider.addItem(createNewRow());
+					editCsvGrid.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE,onItemEdit);
 				}
 				else{
 					editCsvGrid.editable = true;
@@ -111,6 +114,15 @@ package NonParametricTests
 				
 			}
 			
+		}
+		
+		protected function onItemEdit(event:GridItemEditorEvent):void
+		{
+			// TODO Auto-generated method stub
+			if(event.rowIndex == editCsvGrid.dataProviderLength-1 && event.columnIndex == 2 ){
+				editCsvGrid.dataProvider.addItem(createNewRow());
+			}
+				
 		}
 		
 		protected function checkBoxSelectedEventHandler(event:Event):void
@@ -163,18 +175,13 @@ package NonParametricTests
 			return editedCsvData;
 		}
 		
-		private function createDataProvider():ArrayCollection
+		private function createNewRow():Object
 		{
-			// TODO Auto Generated method stub
-			var editedCsvData:ArrayCollection = new ArrayCollection;
-			for(var i:int=0;i<10;i++){
-				var obj:Object = new Object;
-				for(var j:int=0;j<3;j++){
-					obj[columnNamesforCTable[i]] = "";
-				}
-				editedCsvData.addItem(obj);
+			var obj:Object = new Object;
+			for(var i:int =0; i<3;i++){
+				obj[columnNamesforCTable[i]] = "";
 			}
-			return editedCsvData;
+			return obj;
 		}
 		
 		protected function loadColumnName():ArrayList{
@@ -220,8 +227,9 @@ package NonParametricTests
 		{
 			var expectedProb:Number = 0;
 			var tmpdataprovider:ListCollectionView = ListCollectionView(editCsvGrid.dataProvider)
-			for(var i:int=0;i<editCsvGrid.dataProvider.length;i++){
-				expectedProb = expectedProb + Number(tmpdataprovider.getItemAt(i)["Expected Probability"]);
+			for(var i:int=0;i<editCsvGrid.dataProviderLength;i++){
+				if(tmpdataprovider.getItemAt(i)[0] != "")
+					expectedProb += Number(tmpdataprovider.getItemAt(i)["Expected Probability"]);
 			}
 			if(expectedProb != 1){
 				Alert.show("Expected Probabilities must sum to 1","Error");
