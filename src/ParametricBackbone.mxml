@@ -117,7 +117,7 @@
 				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
 				
 				csvLoader = new LoadCsvFiles(csvFile);
-				csvData.columns= csvLoader.loadColumnName();
+				csvData.columns= csvLoader.loadColumnName(csvData.maxWidth);
 				colnames = new ArrayCollection(csvLoader.columnNames);
 				dispatchEvent(new Event("colNamesAvailable"));
 				csvData.dataProvider = csvLoader.readLines(numRowsDisplayed);
@@ -128,6 +128,7 @@
 				rowCountLabel.text = (csvLoader.numRows-csvData.dataProviderLength+1).toString() + " to " + csvLoader.numRows.toString();
 				
 				csvData.visible=true;
+				rowsLabel.visible = false;
 				columnSelectionPane.visible = true;
 				browseButton.enabled = true;
 			}
@@ -536,13 +537,17 @@
 				</s:HGroup>
 				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
 					<s:Spacer width="1%"/>
-					<s:VGroup width="68%" height="95%" horizontalAlign="center" verticalAlign="middle">
-						<s:DataGrid width="100%" height="90%" id="csvData" visible="false"
-									horizontalScrollPolicy="auto"/>
+					<s:VGroup width="100%" height="95%" horizontalAlign="center" verticalAlign="middle" id="csvGroup">
+						<s:DataGrid width="100%"
+									height="90%"
+									id="csvData" 
+									visible="false"
+									horizontalScrollPolicy="auto"
+									maxWidth="{csvGroup.width}"/>
 						<s:HGroup width="100%" height="10%" horizontalAlign="center" verticalAlign="middle">
 							<s:Button id="gridPrevButton" label="Prev" click="gridPrevButton_clickHandler(event)"
 									  visible="false"/>
-							<s:Label text="Rows Displayed :"/>
+							<s:Label text="Rows Displayed :" visible="false" id="rowsLabel"/>
 							<s:Label id="rowCountLabel" />
 							<s:Button id="gridNextButton" label="Next" click="gridNextButton_clickHandler(event)"
 									  visible="false"/>
