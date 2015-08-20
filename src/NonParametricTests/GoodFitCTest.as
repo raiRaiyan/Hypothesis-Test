@@ -17,6 +17,7 @@ package NonParametricTests
 	import mx.controls.dataGridClasses.DataGridDragProxy;
 	import mx.events.FlexEvent;
 	import mx.events.IndexChangedEvent;
+	import mx.utils.StringUtil;
 	
 	import spark.components.CheckBox;
 	import spark.components.ComboBox;
@@ -56,7 +57,7 @@ package NonParametricTests
 			if(currentState == 'showCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
-				panelHelpText.text += "\n" + stringCollection.secondScreenText.commonText.missingValueGoodFitText;
+				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.missingValueGoodFitText;
 				if(columnNames.length == 3 && !contingencyTableCheck){
 					contingencyTableCheck = new CheckBox;
 					contingencyTableCheck.label = "This is a Contingency Table";
@@ -94,8 +95,9 @@ package NonParametricTests
 			}
 			else if(currentState == 'editCsvState'){
 				
-				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.expectedTest;
+				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.expectedText;
 				editCsvGrid.columns = loadColumnName();
+				editCsvGrid.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE,onItemEdit);
 				
 				if(enterDataFlag){
 					
@@ -114,8 +116,8 @@ package NonParametricTests
 				
 			}
 			else if(currentState == 'state2'){
-				panelHelpText.text = stringCollection.secondScreenText.commmonText.significanceText;
-				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
+				panelHelpText.text = stringCollection.secondScreenText.commonText.significanceText;
+				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
 				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
@@ -127,11 +129,32 @@ package NonParametricTests
 			
 		}
 		
+		private function validateValue(s:String):Boolean
+		{
+			var result:Boolean = true;
+			s = StringUtil.trim(s);
+			var num:Number = Number(s);
+			if(isNaN(num))
+			{
+				result = false;
+			}
+			else if(num>1 || num <0)
+			{
+				result = false;
+			}
+			return result;
+		}
 		protected function onItemEdit(event:GridItemEditorEvent):void
 		{
 			// TODO Auto-generated method stub
-			if(event.rowIndex == editCsvGrid.dataProviderLength-1 && event.columnIndex == 2 ){
+			if( enterDataFlag && event.rowIndex == editCsvGrid.dataProviderLength-1 && event.columnIndex == 2 ){
 				editCsvGrid.dataProvider.addItem(createNewRow());
+			}
+			if(event.columnIndex == 2){
+				var string:String = ListCollectionView(editCsvGrid.dataProvider).getItemAt(event.rowIndex)["Expected Probability"];
+				if(!validateValue(string)){
+					editCsvGrid.dataProvider.getItemAt(event.rowIndex)["Expected Probability"] = null;
+				}
 			}
 				
 		}
