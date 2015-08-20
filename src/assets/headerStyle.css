@@ -4,7 +4,7 @@
 
 .titleHeader
 {
-	backgroundColor: #b94827;
+	backgroundColor: #85181B;
 	color: #FFFFFF;
 	fontSize: 16;
 	fontWeight: bold;
@@ -29,7 +29,6 @@ s|Panel{
 	borderColor: #eae9c8;
 	borderAlpha: 1.0;
 	dropShadowVisible: false;
-	backgroundColor: #ffffff;
 }
 
 s|TextArea{
