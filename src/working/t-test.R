@@ -77,4 +77,4 @@ p <- p + theme(panel.grid.major=element_blank(),
 plot(p)
 ggsave("outputImg.png",width = 8,height = 8)
 
-cat(pValue)
+paste0(cat(pValue))

@@ -20,7 +20,7 @@ if(test==0)
   mean1 = mean(colData1)
   SD1 = sd(colData1)
   size1 = length(colData1)
-  cat(mean1,',',SD1,',',size1)
+  cat(paste0(mean1,',',SD1,',',size1))
 }
 
 if(test==1)
@@ -37,7 +37,7 @@ if(test==1)
   SD2 = sd(colData2)
   size2= length(colData2)
   
-  cat(mean1,',',SD1,',',size1,',',mean2,',',SD2,',',size2)
+  cat(paste0(mean1,',',SD1,',',size1,',',mean2,',',SD2,',',size2))
 }
 
 if(test==2)
@@ -52,6 +52,6 @@ if(test==2)
   SD1 = sd(colData1-colData2)
   size1 = length(colData1)
   
-  cat(mean1,',',SD1,',',size1)
+  cat(paste0(mean1,',',SD1,',',size1))
 }
 rm(list = ls())
