@@ -98,6 +98,7 @@ package NonParametricTests
 				editCsvGrid.columns = loadColumnName();
 				if(enterDataFlag){
 					
+					panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.editDataExpectedText;
 					editCsvGrid.editable = true;
 					editCsvGrid.dataProvider = new ArrayCollection;
 					editCsvGrid.dataProvider.addItem(createNewRow());
@@ -111,7 +112,7 @@ package NonParametricTests
 				
 			}
 			else if(currentState == 'state2'){
-				panelHelpText.text = stringCollection.secondScreenText.commmonText.significaneText;
+				panelHelpText.text = stringCollection.secondScreenText.commmonText.significanceText;
 				panelHelpText.text += "\n" + stringCollection.secondScreenText.commmonText.nparhypothesisText;
 				var hypothesisLabel:Label = new Label;
 				hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
@@ -195,15 +196,15 @@ package NonParametricTests
 		protected function loadColumnName():ArrayList{
 			var dataGridColumn:GridColumn = new GridColumn;
 			var columns:ArrayList = new ArrayList;
-			dataGridColumn.width = 140;
+			dataGridColumn.width = 150;
 			dataGridColumn.dataField = columnNamesforCTable[0];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
-			dataGridColumn.width = 140;
+			dataGridColumn.width = 150;
 			dataGridColumn.dataField = columnNamesforCTable[1];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
-			dataGridColumn.width = 140;
+			dataGridColumn.width = 150;
 			dataGridColumn.dataField = columnNamesforCTable[2];
 			dataGridColumn.editable=true;
 			columns.addItem(dataGridColumn);

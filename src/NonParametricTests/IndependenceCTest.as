@@ -43,11 +43,12 @@ package NonParametricTests
 			if(currentState == 'state1'){
 				displayString.visible = true;
 				panelHelpText.text = stringCollection.secondScreenText.independencebuttontext.observedText;
-				
+					
 			}
 			else if(currentState == 'showCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
+				panelHelpText.text += stringCollection.secondScreenText.commonText.missingValueIndependenceText;
 				contingencyTableCheck = new CheckBox;
 				contingencyTableCheck.label = "This is a Contingency Table";
 				csvOptionsGroup.addElement(contingencyTableCheck);
