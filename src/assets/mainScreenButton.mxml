@@ -48,7 +48,7 @@ in accordance with the terms of the license agreement accompanying it.
 	<!--- @private -->
 	<s:Rect id="fill" left="1" right="1" top="1" bottom="1">
 		<s:fill>
-			<s:SolidColor color="0xeeecec" 
+			<s:SolidColor color="0xFFFFFF" 
 						  color.over="0xb94827" 
 						  color.down="0x85181b"
 						  color.disabled="0xeeecec" 
