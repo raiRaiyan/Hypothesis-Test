@@ -76,15 +76,14 @@
 								color="0xFFFFFF" 
 								color.over="0xb94827" 
 								color.down="0x85181b"
-								color.disabled="0xeeecec" 
-								/>
+								color.disabled="0xeeecec"/>
 		</s:stroke>
 	</s:Rect>
     
     <!-- layer 8: text -->
     <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
     <s:Label id="labelDisplay"
-             textAlign="left"
+             textAlign="center"
              maxDisplayedLines="1"
 			 color="0x505050"
 			 color.over="0xFFFFFF"

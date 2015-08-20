@@ -19,6 +19,11 @@ s|Button{
 	fontWeight: bold;
 }
 
+s|Button.mainScreenButton
+{
+	skinClass:ClassReference("assets.mainScreenButton");
+	fontWeight: bold;
+}
 s|Panel{
 	backgroundColor: #eeecec;
 }

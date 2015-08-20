@@ -3,7 +3,6 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
 		 currentState="state1"
-		 contentBackgroundColor="0xeeecec"
 		 stateChangeComplete="backbone_stateChangeCompleteHandler(event)">
 	
 	<s:layout>
@@ -519,8 +518,11 @@
 			
 			<s:VGroup id="OptionsPane" horizontalAlign="center" verticalAlign="middle"
 					  width="100%" height="100%" includeIn="state1">
-				<s:Button label="I have CSV" click="currentState='loadCSV';"/>
-				<s:Button label="I have data" click="currentState='state1Final';"/>
+				<s:Button label="Upload a CSV" click="currentState='loadCSV';"
+						  width="35%" height="17%"/>
+				<s:Spacer height="5%"/>
+				<s:Button label="Enter the Data" click="currentState='state1Final';"
+						  width="35%" height="17%"/>
 			</s:VGroup>
 			
 			<s:VGroup id="csvPane" horizontalAlign="center" verticalAlign="middle"
@@ -529,9 +531,7 @@
 					<s:TextInput width="70%" height="30" id="csvPath" prompt="Browse for the file"
 								 fontSize="14"/>
 					<s:Spacer width="5%"/>
-					<s:Button width="100" height="30" id="browseButton" 
-							  label="Browse" click="browseButton_clickHandler(event)"
-							  fontSize="14"/>
+					<s:Button id="browseButton" label="Browse" click="browseButton_clickHandler(event)"/>
 				</s:HGroup>
 				<s:HGroup width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
 					<s:Spacer width="1%"/>
@@ -557,8 +557,7 @@
 							
 						</s:VGroup>
 						
-						<s:Button click="csvPaneDoneButton_clickHandler(event)" label="Done" id="csvPaneDoneButton"
-								  width="100" height="30" fontSize="14"/>
+						<s:Button click="csvPaneDoneButton_clickHandler(event)" label="Done" id="csvPaneDoneButton"/>
 						
 					</s:VGroup>
 				</s:HGroup>

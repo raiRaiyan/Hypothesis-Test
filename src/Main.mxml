@@ -177,31 +177,31 @@
 							  label="Parametric Tests"
 							  width="100%"
 							  height="40"
-							  styleName="customButton"
+							  styleName="mainScreenButton"
 							  click="currentState='parTestSelected'"/>
 					<s:VGroup id="parTestList" paddingLeft="30" width="100%" includeIn="parTestSelected">
 						<s:Button id="oneTTest" 
 								  label="One Sample t-Test" 
 								  width="75%" height="40" 
 								  click="oneTTestClickHandler(event)"
-								  styleName="customButton"/>
+								  styleName="mainScreenButton"/>
 						<s:Button id="twoTTest" 
 								  label="Two Sample t-Test" 
 								  width="75%" height="40"
 								  click="twoTTestClickHandler(event)"
-								  styleName="customButton"/>
+								  styleName="mainScreenButton"/>
 						<s:Button id="pairedTTest" 
 								  label="Paired Sample t-Test" 
 								  width="75%" height="40" 
 								  click="pairedTTestClickHandler(event)"
-								  styleName="customButton"/>
+								  styleName="mainScreenButton"/>
 					</s:VGroup>
 					
 					<s:Button id="nonParametricTest" 
 							  label="Non-Parametric Tests " 
 							  width="100%"
 							  height="40" 
-							  styleName="customButton"
+							  styleName="mainScreenButton"
 							  click="currentState='nparTestSelected'"/>
 					
 					<s:VGroup id="nparTestList" includeIn="nparTestSelected" width="100%" paddingLeft="20" >
@@ -209,12 +209,12 @@
 								  label="Chi-squared Test for Independence" 
 								  width="75%" height="40" 
 								  click="independenceCTestClickHandler(event)"
-								  styleName="customButton"/>
+								  styleName="mainScreenButton"/>
 						<s:Button id="goodFitCTest" 
 								  label="Chi-squared Test for Goodness Of Fit" 
 								  width="75%" height="40"
 								  click="goodFitCTestClickHandler(event)"
-								  styleName="customButton"/>					
+								  styleName="mainScreenButton"/>					
 					</s:VGroup>
 				</s:VGroup>	
 			</s:Panel>
