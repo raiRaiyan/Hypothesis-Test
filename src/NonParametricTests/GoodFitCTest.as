@@ -27,7 +27,7 @@ package NonParametricTests
 	import spark.components.gridClasses.GridColumn;
 	import spark.events.GridItemEditorEvent;
 	import spark.events.IndexChangeEvent;
-
+	
 	
 	public class GoodFitCTest extends NonParametricBackbone
 	{
@@ -38,6 +38,7 @@ package NonParametricTests
 		protected var contingencyTableCheck:CheckBox;
 		protected var columnNamesforCTable:Array = new Array("Level","Observed Frequency","Expected Probability")		
 		private var significanceValue:String;
+		private var columnChangedFlag:Boolean = false;
 		
 		public function GoodFitCTest()
 		{
@@ -54,78 +55,101 @@ package NonParametricTests
 		
 		
 		override protected function backboneStateChangeCompleteHandler(event:FlexEvent):void{
+			
+			if(currentState == 'state1'){
+				enterDataFlag = false;
+				onPanelClickFlag = false;
+				columnChangedFlag = false;
+				hypothesisResultFlag = false;
+			}
+				
 			if(currentState == 'showCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
 				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.missingValueGoodFitText;
-				if(columnNames.length == 3 && !contingencyTableCheck){
-					contingencyTableCheck = new CheckBox;
-					contingencyTableCheck.label = "This is a Contingency Table";
-					csvOptionsGroup.addElement(contingencyTableCheck);
-					contingencyTableCheck.addEventListener(Event.CHANGE, checkBoxSelectedEventHandler);
+				
+				if(!onBackButtonFlag){
+					if(columnNames.length == 3 && !contingencyTableCheck){
+						contingencyTableCheck = new CheckBox;
+						contingencyTableCheck.label = "This is a Contingency Table";
+						csvOptionsGroup.addElement(contingencyTableCheck);
+						contingencyTableCheck.addEventListener(Event.CHANGE, checkBoxSelectedEventHandler);
+						
+						spacer = new Spacer;
+						spacer.percentHeight = 8;
+						csvOptionsGroup.addElement(spacer);
+					}
+					
+					selectColumnLabel = new Label;
+					selectColumnLabel.text = "Select a Column: ";
+					csvOptionsGroup.addElement(selectColumnLabel);
+					
+					comboBox = new ComboBox;
+					comboBox.dataProvider = columnNames;
+					csvOptionsGroup.addElement(comboBox);
+					comboBox.percentWidth = 85;
+					comboBox.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
 					
 					spacer = new Spacer;
-					spacer.percentHeight = 8;
+					spacer.percentHeight = 5;
 					csvOptionsGroup.addElement(spacer);
+					
+					missingValueInput = new TextInput;
+					missingValueInput.prompt = "Replace missing Values by...";
+					missingValueInput.percentWidth = 85;
+					csvOptionsGroup.addElement(missingValueInput);
+					
+					selectColumnLabel.visible = true;
+					comboBox.visible = true;
+					missingValueInput.visible = true;
+					
+					onBackButtonFlag = false;
 				}
-				
-				selectColumnLabel = new Label;
-				selectColumnLabel.text = "Select a Column: ";
-				csvOptionsGroup.addElement(selectColumnLabel);
-				
-				comboBox = new ComboBox;
-				comboBox.dataProvider = columnNames;
-				csvOptionsGroup.addElement(comboBox);
-				comboBox.percentWidth = 85;
-				comboBox.addEventListener(IndexChangeEvent.CHANGE,columnSelected);
-				
-				spacer = new Spacer;
-				spacer.percentHeight = 5;
-				csvOptionsGroup.addElement(spacer);
-				
-				missingValueInput = new TextInput;
-				missingValueInput.prompt = "Replace missing Values by...";
-				missingValueInput.percentWidth = 85;
-				csvOptionsGroup.addElement(missingValueInput);
-				
-				selectColumnLabel.visible = true;
-				comboBox.visible = true;
-				missingValueInput.visible = true;
 				
 			}
 			else if(currentState == 'editCsvState'){
 				
 				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.expectedText;
+				panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.editDataExpectedText;
+				
 				editCsvGrid.columns = loadColumnName();
 				editCsvGrid.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE,onItemEdit);
 				
-				if(enterDataFlag){
+				if(enterDataFlag && !onPanelClickFlag){
 					
-					panelHelpText.text = stringCollection.secondScreenText.goodnessbuttontext.editDataExpectedText;
 					editCsvGrid.editable = true;
 					editCsvGrid.dataProvider = new ArrayCollection;
 					editCsvGrid.dataProvider.addItem(createNewRow());
 					editCsvGrid.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE,onItemEdit);
 				}
-				else{
+				else if(!enterDataFlag && (!onPanelClickFlag || columnChangedFlag)){
 					editCsvGrid.editable = true;
-					editCsvGrid.dataProvider = loadDataProviderFormR();
+					if(columnChangedFlag){
+						editCsvGrid.dataProvider = loadDataProviderFormR();
+					}
+					columnChangedFlag = false;
+				}
+				if(onPanelClickFlag){
+					csvPanel.removeEventListener(MouseEvent.CLICK,csvPanelClickHandler);
 				}
 				editCsvGrid.visible = true;	
 				
 				
 			}
 			else if(currentState == 'state2'){
-				panelHelpText.text = stringCollection.secondScreenText.commonText.significanceText;
-				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.nparhypothesisText;
-				var hypothesisLabel:Label = new Label;
-				hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
-				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
+				if(!onPanelClickFlag){
+					panelHelpText.text = stringCollection.secondScreenText.commonText.significanceText;
+					panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.nparhypothesisText;
+					var hypothesisLabel:Label = new Label;
+					hypothesisLabel.text = "The Null hypothesis is that the data fits the expected values. The alternate hypothesis would be vice versa."
+					hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
+					onPanelClickFlag = true;
+				}
+				
+				csvPanel.addEventListener(MouseEvent.CLICK,csvPanelClickHandler);
 				super.backboneStateChangeCompleteHandler(event);
 			}
-			else{
-				
-			}
+			
 			
 		}
 		
@@ -156,7 +180,7 @@ package NonParametricTests
 					editCsvGrid.dataProvider.getItemAt(event.rowIndex)["Expected Probability"] = null;
 				}
 			}
-				
+			
 		}
 		
 		protected function checkBoxSelectedEventHandler(event:Event):void
@@ -164,9 +188,11 @@ package NonParametricTests
 			// TODO Auto-generated method stub
 			if(contingencyTableCheck.selected){
 				if(columnNamesforCTable.toString() == columnNames.toString()){
+					
 					currentState = 'state2';
 					editCsvGrid.dataProvider = csvGrid.dataProvider;
 					editCsvGrid.visible = true;
+					contingencyTableCheck.enabled = false;
 				}
 				else{
 					Alert.show("The selected file is not in the recommended format.\nThe Column names should be \"Level\", \"Observed Frequency\" and \"Expected Probability\".\n" +
@@ -188,6 +214,7 @@ package NonParametricTests
 			}
 			else{
 				proceedButton.enabled = true;
+				columnChangedFlag = true;
 				missingValueInput.text = 'R';
 				missingValueInput.selectAll();
 			}
@@ -221,15 +248,15 @@ package NonParametricTests
 		protected function loadColumnName():ArrayList{
 			var dataGridColumn:GridColumn = new GridColumn;
 			var columns:ArrayList = new ArrayList;
-			dataGridColumn.width = 150;
+			dataGridColumn.width = 170;
 			dataGridColumn.dataField = columnNamesforCTable[0];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
-			dataGridColumn.width = 150;
+			dataGridColumn.width = 170;
 			dataGridColumn.dataField = columnNamesforCTable[1];
 			columns.addItem(dataGridColumn);
 			dataGridColumn = new GridColumn;
-			dataGridColumn.width = 150;
+			dataGridColumn.width = 170;
 			dataGridColumn.dataField = columnNamesforCTable[2];
 			dataGridColumn.editable=true;
 			columns.addItem(dataGridColumn);
@@ -249,7 +276,6 @@ package NonParametricTests
 				args.push(rFile);
 				args.push("goodfittest");
 				args.push(filePath.text);
-				tabulateDataFlag = true;
 				
 				args.push(comboBox.selectedItem);
 				args.push(missingValueInput.text);
@@ -273,9 +299,11 @@ package NonParametricTests
 				if(enterDataFlag){
 					editCsvGrid.dataProvider.removeItemAt(tmpdataprovider.length-1);
 				}
+				
 				super.proceedButton2_clickHandler(event);
 			}
 		}
+		
 		
 		override protected function computeButtonClickHandler(event:MouseEvent):void
 		{
@@ -289,6 +317,16 @@ package NonParametricTests
 			
 			super.computeButtonClickHandler(event);
 			
+		}
+		
+		override protected function backToShowCsvButtonClickHandler(event:MouseEvent):void{
+			if(enterDataFlag){
+				currentState = 'state1';
+				enterDataFlag = false;
+			}
+			else{
+				super.backToShowCsvButtonClickHandler(event);
+			}
 		}
 	}
 }

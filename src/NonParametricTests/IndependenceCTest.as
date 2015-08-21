@@ -47,6 +47,8 @@ package NonParametricTests
 			}
 			else if(currentState == 'showCsvState'){
 				
+				if(!onBackButtonFlag){
+				
 				panelHelpText.text = stringCollection.secondScreenText.commonText.nparcolumnloadText;
 				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.missingValueIndependenceText;
 				contingencyTableCheck = new CheckBox;
@@ -102,6 +104,9 @@ package NonParametricTests
 				comboBox2.visible = true;
 				missingValueInput1.visible = true;
 				missingValueInput2.visible = true;
+				
+				onBackButtonFlag = false;
+				}
 			}
 			
 			else if(currentState == 'editCsvState'){
@@ -113,18 +118,25 @@ package NonParametricTests
 					editCsvGrid.columns = csvGrid.columns;
 					editCsvGrid.dataProvider = csvGrid.dataProvider;
 				}
-				
+				if(onPanelClickFlag){
+					csvPanel.removeEventListener(MouseEvent.CLICK,csvPanelClickHandler);
+				}
 				editCsvGrid.visible = true;	
 			}
 			
 			else if(currentState == 'state2'){
 				
-				panelHelpText.text = stringCollection.secondScreenText.commonText.significanceText;
-				panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.nparhypothesisText;
-				var hypothesisLabel:Label = new Label;
-				hypothesisLabel.text = "The Null hypothesis is that the variables are independent. The alternate hypothesis would be vice versa."
-				hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
-				significanceValue = significanceTextInput.text;
+				if(!onPanelClickFlag){
+					panelHelpText.text = stringCollection.secondScreenText.commonText.significanceText;
+					panelHelpText.text += "\n\n" + stringCollection.secondScreenText.commonText.nparhypothesisText;
+					var hypothesisLabel:Label = new Label;
+					hypothesisLabel.text = "The Null hypothesis is that the variables are independent. The alternate hypothesis would be vice versa."
+					hypothesisPanelGroup.addElementAt(hypothesisLabel,0);
+					onPanelClickFlag = true;
+				}		
+				
+				csvPanel.addEventListener(MouseEvent.CLICK,csvPanelClickHandler);
+				
 				super.backboneStateChangeCompleteHandler(event);
 			}
 			
@@ -140,7 +152,7 @@ package NonParametricTests
 			var columns:ArrayList = new ArrayList;
 			for(var i:int = 0; i<columnNames.length; i++){
 				var dataGridColumn:GridColumn = new GridColumn;
-				dataGridColumn.width = 80;
+				dataGridColumn.width = 120;
 				if(i == 0){
 				dataGridColumn.dataField = "Levels";
 				}
@@ -158,11 +170,13 @@ package NonParametricTests
 			if(contingencyTableCheck.selected){
 				if(isContingency()){
 				selectColumnLabel1.visible = false;
-				selectColumnLabel1.visible = false;
+				selectColumnLabel2.visible = false;
 				comboBox1.visible = false;
 				comboBox2.visible = false;
 				missingValueInput1.visible = false;
 				missingValueInput2.visible = false;
+				contingencyTableCheck.enabled = false;
+				proceedButton.enabled = true;
 				currentState = 'editCsvState';
 				}
 				
@@ -262,7 +276,6 @@ package NonParametricTests
 					args.push(missingValueInput1.text);
 					args.push(missingValueInput2.text);
 					
-					tabulateDataFlag = true;
 					
 					super.proceedButtonClickHandler(event);
 				}
