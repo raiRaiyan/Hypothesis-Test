@@ -81,6 +81,7 @@ package ParametricTests
 			if(currentState == 'popnData')
 			{	
 				help2.text=stringCollection.secondScreenText.pairedbuttontext.populationText;
+				help2.text+="\n\n"+stringCollection.secondScreenText.commonText.significanceText;
 				addToPopnData();
 			}
 			super.backbone_stateChangeCompleteHandler(event);
@@ -166,7 +167,7 @@ package ParametricTests
 			}
 			else
 			{   
-				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
+				help2.text+="\n\n"+stringCollection.secondScreenText.commonText.missingvalText;
 				replace1Input.text = "0";
 				varName = "Mean("+colnames[col1CB.selectedIndex]+")";
 				column1SelectedFlag = true;
@@ -182,7 +183,7 @@ package ParametricTests
 			}
 			else
 			{	
-				help2.text+="\n"+stringCollection.secondScreenText.commonText.missingvalText;
+				help2.text+="\n\n"+stringCollection.secondScreenText.commonText.missingvalText;
 				replace2Input.text = "0";
 				varName = "Mean("+colnames[col2CB.selectedIndex]+"-"+colnames[col1CB.selectedIndex]+")";
 				column2SelectedFlag = true;

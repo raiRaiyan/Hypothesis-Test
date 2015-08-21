@@ -105,9 +105,12 @@
 			private function fileSelected(evt:Event):void
 			{
 				//Text for the help panel
-				help2.text += "\n"+stringCollection.secondScreenText.commonText.parcolumnloadText;
+				help2.text += "\n\n"+stringCollection.secondScreenText.commonText.parcolumnloadText;
 				
 				csvPath.text = csvFile.name+" { "+csvFile.nativePath+" }";
+				
+				gridNextButton.visible = false;
+				gridPrevButton.visible = false;
 				
 				csvLoader = new LoadCsvFiles(csvFile);
 				csvData.columns= csvLoader.loadColumnName(csvData.maxWidth);
@@ -705,11 +708,11 @@
 						  verticalAlign="middle">
 					
 					<s:VGroup width="40%" height="80%" horizontalAlign="left" verticalAlign="middle">
-						<s:Label text="Null Hypothesis" fontSize="18" fontWeight="bold"/>
+						<s:Label text="Null Hypothesis" fontSize="16" fontWeight="bold"/>
 						<s:Spacer height="10%"/>
 						
 						<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
-							<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
+							<s:Label text="{varName}" fontSize="12"/>
 							<s:ComboBox id="hypoExpression" prompt="Expression" 
 										change="hypoExpression_changeHandler(event)"
 										labelField="text" width="40">
@@ -721,7 +724,7 @@
 									</s:ArrayList>
 								</s:dataProvider>
 							</s:ComboBox>
-							<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
+							<s:Label text="{popnMeanValue}" fontSize="12"/>
 						</s:HGroup>
 						
 					</s:VGroup>
@@ -731,13 +734,13 @@
 					<s:VGroup id="altHypo" width="40%" height="80%" 
 							  horizontalAlign="left" verticalAlign="middle"
 							  visible="false">
-						<s:Label text="Alternative Hypothesis" fontSize="18" fontWeight="bold"/>
+						<s:Label text="Alternative Hypothesis" fontSize="16" fontWeight="bold"/>
 						<s:Spacer height="10%"/>
 						
 						<s:HGroup verticalAlign="middle" paddingLeft="3" paddingRight="3">
-							<s:Label text="{varName}" fontSize="13" fontWeight="bold"/>
-							<s:Label id="alternateExpr" text="" fontSize="13"/>
-							<s:Label text="{popnMeanValue}" fontSize="13" fontWeight="bold"/>
+							<s:Label text="{varName}" fontSize="12"/>
+							<s:Label id="alternateExpr" text="" fontSize="12"/>
+							<s:Label text="{popnMeanValue}" fontSize="12"/>
 						</s:HGroup>
 						
 					</s:VGroup>
