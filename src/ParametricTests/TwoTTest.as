@@ -107,7 +107,7 @@ package ParametricTests
 			columnSelectionPane.addElement(col1CB);
 			
 			replace1 = new Label();
-			replace1.text = "replace missing values by:";
+			replace1.text = "Replace missing values by";
 			columnSelectionPane.addElement(replace1);
 			
 			replace1Input = new TextInput();
@@ -130,7 +130,7 @@ package ParametricTests
 			//how to ensure that a selected column does not appear in the dropdown menu again?
 			
 			replace2 = new Label();
-			replace2.text = "replace missing values by:";
+			replace2.text = "Replace missing values by";
 			columnSelectionPane.addElement(replace2);
 			
 			replace2Input = new TextInput();
@@ -229,7 +229,7 @@ package ParametricTests
 			
 			//Mean value Input
 			sample1MeanLabel = new Label();
-			sample1MeanLabel.text = "Mean of First Sample:";
+			sample1MeanLabel.text = "Mean of 1st Sample";
 			SampleParams.addElement(sample1MeanLabel);
 			
 			sample1MeanInput = new TextInput();
@@ -241,7 +241,7 @@ package ParametricTests
 			
 			//Standard Deviation Input
 			sample1SdLabel = new Label();
-			sample1SdLabel.text = "Standard Deviation of First Sample:";
+			sample1SdLabel.text = "Standard Deviation of 1st Sample";
 			SampleParams.addElement(sample1SdLabel);
 			
 			sample1SdInput = new TextInput();
@@ -253,7 +253,7 @@ package ParametricTests
 			
 			//Sample size input
 			sample1SizeLabel = new Label();
-			sample1SizeLabel.text = "Size of the first Sample:";
+			sample1SizeLabel.text = "Size of the 1st Sample";
 			SampleParams.addElement(sample1SizeLabel);
 			
 			sample1SizeInput = new TextInput();
@@ -266,7 +266,7 @@ package ParametricTests
 			
 			//Mean value Input
 			sample2MeanLabel = new Label();
-			sample2MeanLabel.text = "Mean of Second Sample:";
+			sample2MeanLabel.text = "Mean of 2nd Sample";
 			SampleParams.addElement(sample2MeanLabel);
 			
 			sample2MeanInput = new TextInput();
@@ -279,7 +279,7 @@ package ParametricTests
 			
 			//Standard Deviation Input
 			sample2SdLabel = new Label();
-			sample2SdLabel.text = "Standard Deviation of Second Sample:";
+			sample2SdLabel.text = "Standard Deviation of 2nd Sample";
 			SampleParams.addElement(sample2SdLabel);
 			
 			sample2SdInput = new TextInput();
@@ -293,7 +293,7 @@ package ParametricTests
 			
 			//Sample size input
 			sample2SizeLabel = new Label();
-			sample2SizeLabel.text = "Size of the Second Sample:";
+			sample2SizeLabel.text = "Size of the 2nd Sample";
 			SampleParams.addElement(sample2SizeLabel);
 			
 			sample2SizeInput = new TextInput();

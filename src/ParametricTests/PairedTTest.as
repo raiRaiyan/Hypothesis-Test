@@ -105,7 +105,7 @@ package ParametricTests
 			columnSelectionPane.addElement(spacer3);
 			
 			replace1 = new Label();
-			replace1.text = "replace missing values by:";
+			replace1.text = "Replace missing values by";
 			columnSelectionPane.addElement(replace1);
 			
 			
@@ -130,7 +130,7 @@ package ParametricTests
 			
 			
 			replace2 = new Label();
-			replace2.text = "replace missing values by:";
+			replace2.text = "Replace missing values by";
 			columnSelectionPane.addElement(replace2);
 			
 			replace2Input = new TextInput();
@@ -240,7 +240,7 @@ package ParametricTests
 			
 			//Mean value Input
 			sampleMeanLabel = new Label();
-			sampleMeanLabel.text = "Mean of Sample Differences:";
+			sampleMeanLabel.text = "Mean of Sample Differences";
 			SampleParams.addElement(sampleMeanLabel);
 			
 			sampleMeanInput = new TextInput();
@@ -256,7 +256,7 @@ package ParametricTests
 			
 			//Standard Deviation Input
 			sampleSdLabel = new Label();
-			sampleSdLabel.text = "Standard Deviation of Sample Differences:";
+			sampleSdLabel.text = "Standard Deviation of Sample Differences";
 			SampleParams.addElement(sampleSdLabel);
 			
 			sampleSdInput = new TextInput();
@@ -272,7 +272,7 @@ package ParametricTests
 			
 			//Sample size input
 			sampleSizeLabel = new Label();
-			sampleSizeLabel.text = "Sample Size:";
+			sampleSizeLabel.text = "Sample Size";
 			SampleParams.addElement(sampleSizeLabel);
 			
 			sampleSizeInput = new TextInput();

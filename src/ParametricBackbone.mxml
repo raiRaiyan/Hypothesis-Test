@@ -658,7 +658,7 @@
 				<s:HGroup width="100%" height="15%" horizontalAlign="center" verticalAlign="middle">
 					<s:Button id="backToCSVButton" label="Go back to CSV" click="backToCSVButton_clickHandler(event)"
 							  visible="{csvDoneFlag}" includeInLayout="{csvDoneFlag}"/>
-					<s:Button id="sampleDataNextButton" label="Go to next" click="sampleDataNextButton_clickHandler(event)"
+					<s:Button id="sampleDataNextButton" label="Next" click="sampleDataNextButton_clickHandler(event)"
 							  visible="true" includeInLayout="true"/>
 					<s:Button id="sampleDataEditButton" label="Edit" click="sampleDataEditButton_clickHandler(event)"
 							  visible="false" includeInLayout="false"/>
@@ -687,7 +687,7 @@
 					
 				</s:VGroup>
 				<s:HGroup width="100%" height="15%" horizontalAlign="center" verticalAlign="middle">
-					<s:Button id="popnDataNextButton" label="Go to Next" click="popnDataNextButton_clickHandler(event)"
+					<s:Button id="popnDataNextButton" label="Next" click="popnDataNextButton_clickHandler(event)"
 							  visible = "true" includeInLayout="true"/>
 					<s:Button id="popnDataEditButton" label="Edit" click="popnDataEditButton_clickHandler(event)"
 							  visible = "false" includeInLayout="false"/>

@@ -30,7 +30,7 @@
 			
 			protected var nativeProcessInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo;
 			protected var workingDirectory:File = File.applicationDirectory.resolvePath("working");
-			protected var executableFile:File = new File("C:/Program Files/R/R-3.2.1/bin/Rscript.exe");
+			protected var executableFile:File = mx.core.FlexGlobals.topLevelApplication.returnRexe;
 			protected var nativeProcess:NativeProcess = new NativeProcess;
 			protected var args:Vector.<String>;
 			protected var hypothesisResultFlag:Boolean;

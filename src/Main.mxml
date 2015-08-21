@@ -243,7 +243,7 @@
 				 x="{mainGroup.width*0.02}"
 				 y="{mainGroup.height*0.02}"/>
 		<s:Button id="backButton"
-				  label="Back"
+				  label="Home Screen"
 				  click="backButton_clickHandler(event)"
 				  includeIn="subTestSelected"
 				  x="{mainGroup.width*0.88}"
