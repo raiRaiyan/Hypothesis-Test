@@ -241,10 +241,10 @@
 					imgViewer.source = "/working/chiSquare.png"
 					
 					if(significanceTextInput.text>tmpString){
-						output.text += "The null hypothesis is rejected!!";
+						output.text = "The null hypothesis is rejected!";
 					}
 					else{
-						output.text += "The null hypothesis canot be rejected. The altenate hypothesis failed to reject the null hypothesis.";
+						output.text = "The null hypothesis cannot be rejected!";
 					}
 				}
 				if(tabulateDataFlag){
@@ -554,17 +554,17 @@
 						height="100%"
 						excludeFrom="resultState"/>
 			
-			<s:VGroup height="{outputPanel.height}" width="{outputPanel.width}" paddingLeft="10" id="outputVGroup" 
-					  verticalAlign="middle"
-					  horizontalAlign="center"
-					  includeIn="resultState">
-				<s:VGroup width="85%" height="90%" paddingTop="90">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center"
+					  paddingTop="30"
+					  includeIn="resultState"
+					  id="outputVGroup">
+				<s:VGroup width="85%" height="90%" horizontalAlign="left" verticalAlign="middle">
 					<s:HGroup>
-						<s:Label  text="P Value is"	 />
-						<s:Label id="pValue" fontWeight="bold"/>
+						<s:Label text="P Value is" fontSize="12"/>
+						<s:Label id="pValue" fontSize="12" fontWeight="bold"/>
 					</s:HGroup>
-						<s:Spacer height="2%"/>
-						<s:Label id="output" fontWeight="bold"/>
+					<s:Spacer height="5%"/>
+					<s:Label id="output" fontSize="12" fontWeight="bold"/>
 				</s:VGroup>
 			</s:VGroup>
 			
