@@ -32,6 +32,8 @@ package ParametricTests
 		private var replace1:Label;
 		private var replace1Input:TextInput;
 		
+		private var spacer1:Spacer;
+		
 		private var column2SelectLabel:Label;
 		private var col2CB:ComboBox;
 		
@@ -118,6 +120,9 @@ package ParametricTests
 			replace1Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace1Input);
 			
+			spacer1 = new Spacer();
+			spacer1.percentHeight= 3;
+			columnSelectionPane.addElement(spacer1);
 			
 			column2SelectLabel = new Label();
 			column2SelectLabel.text = "Please select a column";

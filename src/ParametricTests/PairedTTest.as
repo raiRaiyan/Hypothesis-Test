@@ -100,15 +100,9 @@ package ParametricTests
 			col1CB.addEventListener(IndexChangeEvent.CHANGE,column1Selected);
 			columnSelectionPane.addElement(col1CB);
 			
-			
-			spacer3 = new Spacer();
-			spacer3.percentHeight = 1;
-			columnSelectionPane.addElement(spacer3);
-			
 			replace1 = new Label();
 			replace1.text = "Replace missing values by";
 			columnSelectionPane.addElement(replace1);
-			
 			
 			replace1Input = new TextInput();
 			replace1Input.prompt="Enter a Numeric Value";
@@ -117,6 +111,9 @@ package ParametricTests
 			replace1Input.addEventListener(FocusEvent.FOCUS_OUT,checkNumber);
 			columnSelectionPane.addElement(replace1Input);
 			
+			spacer3 = new Spacer();
+			spacer3.percentHeight = 3;
+			columnSelectionPane.addElement(spacer3);
 			
 			column2SelectLabel = new Label();
 			column2SelectLabel.text = "Please select a column";
