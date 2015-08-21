@@ -499,11 +499,11 @@
 					pVal.text =String(pValue);
 					if(pValue<sigLevel)
 					{
-						output.text = "Null Hypothesis is rejected\n";
+						output.text = "Null Hypothesis is rejected!";
 					}
 					else
 					{
-						output.text = "Null Hypothesis cannot be rejected\n";
+						output.text = "Null Hypothesis cannot be rejected!";
 					}
 					output.visible = true;
 					
