@@ -6,7 +6,6 @@ package NonParametricTests
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	import mx.collections.IList;
 	import mx.collections.ListCollectionView;
 	import mx.controls.Alert;
 	import mx.controls.Spacer;

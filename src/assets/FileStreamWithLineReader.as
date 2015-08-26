@@ -1,7 +1,6 @@
 package assets
 {
 	import flash.filesystem.FileStream;
-	import flash.geom.PerspectiveProjection;
 	import flash.utils.ByteArray;
 	
 	/**

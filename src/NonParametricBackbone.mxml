@@ -15,10 +15,7 @@
 			import mx.collections.IViewCursor;
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
-			import mx.events.DividerEvent;
-			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
-			import mx.rpc.events.ResultEvent;
 			
 			import spark.components.gridClasses.GridColumn;
 			

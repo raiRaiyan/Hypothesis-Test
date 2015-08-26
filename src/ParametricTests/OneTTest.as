@@ -5,7 +5,6 @@ package ParametricTests
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	
-	import mx.binding.utils.BindingUtils;
 	import mx.controls.Alert;
 	import mx.controls.Spacer;
 	import mx.events.FlexEvent;

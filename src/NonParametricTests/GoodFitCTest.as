@@ -1,29 +1,21 @@
 package NonParametricTests
 {
-	import flash.debugger.enterDebugger;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	
-	import flashx.textLayout.formats.Float;
-	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	import mx.collections.IList;
 	import mx.collections.ListCollectionView;
 	import mx.controls.Alert;
 	import mx.controls.Spacer;
-	import mx.controls.Text;
-	import mx.controls.dataGridClasses.DataGridDragProxy;
 	import mx.events.FlexEvent;
-	import mx.events.IndexChangedEvent;
 	import mx.utils.StringUtil;
 	
 	import spark.components.CheckBox;
 	import spark.components.ComboBox;
 	import spark.components.Label;
 	import spark.components.TextInput;
-	import spark.components.gridClasses.DefaultGridItemEditor;
 	import spark.components.gridClasses.GridColumn;
 	import spark.events.GridItemEditorEvent;
 	import spark.events.IndexChangeEvent;
